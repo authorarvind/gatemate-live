@@ -1,49 +1,12 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Privacy Policy for GATEMATE.co.in - Learn how we protect your data while using our GATE, UGC NET, BPSC TRE, and technical training platform">
-    <title>Privacy Policy - GATEMATE.co.in</title>
+    <meta name="description" content="GateMate.co.in Privacy Policy, Terms & Conditions, Refund Policy, and Contact Us details for GATE, BPSC, Bihar Police, and internship programs.">
+    <meta name="keywords" content="GateMate privacy policy, GateMate terms, GateMate refund policy, GateMate contact, Bihar education platform, Razorpay compliance">
+    <meta name="author" content="GateMate Team">
+    <title>GateMate Policies & Contact - GateMate.co.in</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -62,9 +25,8 @@
             color: #007bff !important;
         }
         .hero-section {
-            background: linear-gradient(135deg, #007bff, #00d4ff), url('https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+            background: linear-gradient(135deg, #007bff, #00d4ff);
             background-size: cover;
-            background-blend-mode: overlay;
             color: white;
             padding: 100px 0;
             text-align: center;
@@ -80,7 +42,7 @@
             height: 100%;
             background: rgba(0, 0, 0, 0.3);
         }
-        .hero-section h1, .hero-section p, .hero-section a {
+        .hero-section h1, .hero-section p {
             position: relative;
             z-index: 1;
         }
@@ -88,63 +50,22 @@
             font-size: 3rem;
             font-weight: 600;
         }
-        .privacy-card {
-            border: none;
+        .policy-section {
+            background: #fff;
+            padding: 40px;
             border-radius: 15px;
-            overflow: hidden;
-            background: linear-gradient(145deg, #ffffff, #e6e6e6);
-            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        .policy-section h2 {
+            color: #007bff;
             margin-bottom: 20px;
         }
-        .privacy-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
-        }
-        .privacy-card .card-body {
+        .contact-form {
+            background: #fff;
             padding: 30px;
-        }
-        .marquee {
-            background: #007bff;
-            color: white;
-            padding: 10px;
-            overflow: hidden;
-            white-space: nowrap;
-        }
-        .marquee span {
-            display: inline-block;
-            animation: marquee 20s linear infinite;
-        }
-        .marquee:hover span {
-            animation-play-state: paused;
-        }
-        .popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-            width: 90%;
-            max-width: 400px;
-        }
-        .popup.show {
-            display: block;
-            animation: fadeIn 0.5s;
-        }
-        .flash-message {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #28a745;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            z-index: 1000;
-            animation: slideIn 0.5s, fadeOut 5s 2s forwards;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
         .footer {
             background: #343a40;
@@ -180,35 +101,21 @@
             color: #ffffff;
         }
         .dark-mode .hero-section {
-            background: linear-gradient(135deg, #004085, #0083b0), url('https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+            background: linear-gradient(135deg, #004085, #0083b0);
         }
-        .dark-mode .privacy-card {
-            background: linear-gradient(145deg, #2c2c2c, #1a1a1a);
-        }
-        .dark-mode .marquee {
-            background: #004085;
+        .dark-mode .policy-section, .dark-mode .contact-form {
+            background: #2c2c2c;
         }
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        @keyframes slideIn {
-            from { transform: translateX(100%); }
-            to { transform: translateX(0); }
-        }
-        @keyframes fadeOut {
-            to { opacity: 0; display: none; }
-        }
-        @keyframes marquee {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
-        }
         @media (max-width: 768px) {
             .hero-section h1 {
                 font-size: 2rem;
             }
-            .popup {
-                width: 90%;
+            .policy-section, .contact-form {
+                padding: 20px;
             }
         }
     </style>
@@ -217,7 +124,7 @@
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
-            <a class="navbar-brand" href="/">GATEMATE.co.in</a>
+            <a class="navbar-brand" href="/">GateMate.co.in</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -225,11 +132,19 @@
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="/index.html">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="/courses.html">Courses</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/workshops.html">Workshops</a></li>
                     <li class="nav-item"><a class="nav-link" href="/resources.html">Resources</a></li>
                     <li class="nav-item"><a class="nav-link" href="/about.html">About</a></li>
                     <li class="nav-item"><a class="nav-link" href="/contact.html">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/notice.html">Notice Board</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/internships.html">Internships</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/test-series.html">Test Series</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/certificate.html">Certificates</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/bpsc-tre.html">BPSC TRE 4.0</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/bihar-recruitment.html">Bihar Recruitment</a></li>
                     <li class="nav-item"><a class="nav-link" href="/login.html">Login</a></li>
                     <li class="nav-item"><a class="nav-link" href="/register.html">Register</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/admin.html">Admin</a></li>
                 </ul>
                 <button id="themeToggle" class="btn btn-outline-secondary ms-3" aria-label="Toggle Dark Mode">Toggle Dark Mode</button>
             </div>
@@ -239,62 +154,181 @@
     <!-- Hero Section -->
     <section class="hero-section">
         <div class="container">
-            <h1>Privacy Policy</h1>
-            <p>Learn how GATEMATE protects your personal information while you use our educational platform for GATE, UGC NET, BPSC TRE, and technical training.</p>
-            <a href="#privacy-content" class="btn btn-light btn-lg mt-3">Read Policy</a>
+            <h1>GateMate Policies & Contact</h1>
+            <p>Explore our Privacy Policy, Terms & Conditions, Refund Policy, and Contact details to learn more about GateMate’s commitment to transparency and user trust.</p>
         </div>
     </section>
 
-    <!-- Privacy Content -->
-    <section id="privacy-content" class="py-5">
+    <!-- Privacy Policy -->
+    <section class="py-5">
         <div class="container">
-            <h2 class="text-center mb-4">Our Privacy Policy</h2>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="privacy-card">
-                        <div class="card-body">
-                            <h3>1. Introduction</h3>
-                            <p>At GATEMATE.co.in, we are committed to protecting your privacy. This Privacy Policy explains how we collect, use, share, and safeguard your personal information when you use our platform, including our courses, resources, and services.</p>
+            <div class="policy-section">
+                <h2>Privacy Policy</h2>
+                <p><strong>Last Updated: April 25, 2025</strong></p>
+                <p>At GateMate.co.in (“GateMate”, “we”, “us”), we value your privacy and are committed to protecting your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your data when you use our website, services, or products, including courses, internships, and certifications for GATE, BPSC TRE, Bihar Police, and other programs.</p>
+                <h4>1. Information We Collect</h4>
+                <p>We collect the following types of information:</p>
+                <ul>
+                    <li><strong>Personal Information:</strong> Name, email address, phone number, and payment details (processed via Razorpay) when you register, enroll, or submit forms (e.g., lead magnets like “Internship Guide PDF”).</li>
+                    <li><strong>Usage Data:</strong> IP address, browser type, pages visited, and time spent on our site, collected via cookies and analytics tools (e.g., Google Analytics).</li>
+                    <li><strong>Course/Internship Data:</strong> Progress, quiz scores, and certificates generated through our platform.</li>
+                </ul>
+                <h4>2. How We Use Your Information</h4>
+                <p>Your data is used to:</p>
+                <ul>
+                    <li>Provide and improve our services (e.g., course access, certificate generation).</li>
+                    <li>Process payments securely via Razorpay.</li>
+                    <li>Send newsletters, promotional offers, and updates (with your consent).</li>
+                    <li>Analyze site usage to enhance user experience.</li>
+                </ul>
+                <h4>3. Data Sharing</h4>
+                <p>We do not sell your personal information. We may share data with:</p>
+                <ul>
+                    <li><strong>Service Providers:</strong> Razorpay for payments, Formspree for form submissions, and Google Analytics for usage insights.</li>
+                    <li><strong>Legal Compliance:</strong> If required by law or to protect our rights.</li>
+                </ul>
+                <h4>4. Data Security</h4>
+                <p>We use SSL encryption, secure servers, and industry-standard practices to protect your data. However, no online platform is 100% secure, and we cannot guarantee absolute security.</p>
+                <h4>5. Your Rights</h4>
+                <p>You may:</p>
+                <ul>
+                    <li>Request access to or deletion of your personal data.</li>
+                    <li>Opt out of marketing emails via the unsubscribe link.</li>
+                    <li>Disable cookies through your browser settings.</li>
+                </ul>
+                <h4>6. Cookies</h4>
+                <p>We use cookies to enhance functionality and track usage. You can manage cookie preferences in your browser.</p>
+                <h4>7. Third-Party Links</h4>
+                <p>Our site may link to external sites (e.g., Razorpay, social media). We are not responsible for their privacy practices.</p>
+                <h4>8. Changes to This Policy</h4>
+                <p>We may update this policy periodically. Changes will be posted on this page with the updated date.</p>
+                <h4>9. Contact Us</h4>
+                <p>For privacy concerns, contact us at <a href="mailto:info@gatemate.co.in">info@gatemate.co.in</a>.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Terms & Conditions -->
+    <section class="py-5">
+        <div class="container">
+            <div class="policy-section">
+                <h2>Terms & Conditions</h2>
+                <p><strong>Last Updated: April 25, 2025</strong></p>
+                <p>By accessing or using GateMate.co.in (“GateMate”, “we”, “us”), you agree to these Terms & Conditions. These terms govern your use of our website, services, and products, including courses, internships, workshops, and certifications.</p>
+                <h4>1. Use of Services</h4>
+                <p>You agree to:</p>
+                <ul>
+                    <li>Use our services for lawful purposes only.</li>
+                    <li>Provide accurate information during registration and enrollment.</li>
+                    <li>Not share your account credentials or course materials with others.</li>
+                </ul>
+                <h4>2. Intellectual Property</h4>
+                <p>All content on GateMate.co.in (e.g., course videos, notes, quizzes) is owned by GateMate or its licensors. You may not reproduce, distribute, or modify our content without permission.</p>
+                <h4>3. Payments</h4>
+                <p>Payments for courses, internships, and workshops are processed via Razorpay. You agree to pay the listed fees and applicable taxes.</p>
+                <h4>4. User Conduct</h4>
+                <p>You shall not:</p>
+                <ul>
+                    <li>Attempt to hack, disrupt, or misuse our platform.</li>
+                    <li>Post harmful or offensive content in forums or reviews.</li>
+                </ul>
+                <h4>5. Termination</h4>
+                <p>We may suspend or terminate your access for violating these terms or engaging in fraudulent activity.</p>
+                <h4>6. Limitation of Liability</h4>
+                <p>GateMate is not liable for indirect, incidental, or consequential damages arising from your use of our services. Our services are provided “as is” without warranties.</p>
+                <h4>7. Governing Law</h4>
+                <p>These terms are governed by the laws of India, with jurisdiction in Patna, Bihar.</p>
+                <h4>8. Changes to Terms</h4>
+                <p>We may update these terms periodically. Continued use of our services constitutes acceptance of the updated terms.</p>
+                <h4>9. Contact Us</h4>
+                <p>For questions, contact us at <a href="mailto:info@gatemate.co.in">info@gatemate.co.in</a>.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Refund & Cancellation Policy -->
+    <section class="py-5">
+        <div class="container">
+            <div class="policy-section">
+                <h2>Refund & Cancellation Policy</h2>
+                <p><strong>Last Updated: April 25, 2025</strong></p>
+                <p>GateMate.co.in is committed to customer satisfaction. This Refund & Cancellation Policy outlines the terms for refunds and cancellations for our courses, internships, workshops, and certifications.</p>
+                <h4>1. Refund Eligibility</h4>
+                <p>Refunds are available for:</p>
+                <ul>
+                    <li><strong>Online Courses:</strong> Within 7 days of purchase, provided less than 10% of the course content has been accessed.</li>
+                    <li><strong>Internships:</strong> Within 7 days of enrollment, if the internship has not started.</li>
+                    <li><strong>Workshops:</strong> Within 24 hours of purchase, if the workshop has not begun.</li>
+                    <li><strong>Technical Issues:</strong> If our platform fails to deliver purchased content (e.g., inaccessible videos), subject to verification.</li>
+                </ul>
+                <h4>2. Non-Refundable Cases</h4>
+                <p>Refunds will not be issued for:</p>
+                <ul>
+                    <li>Completed courses, internships, or workshops.</li>
+                    <li>More than 10% course content accessed.</li>
+                    <li>Certificates issued after completion.</li>
+                    <li>Failure to meet eligibility criteria (e.g., missing refund deadline).</li>
+                </ul>
+                <h4>3. Refund Process</h4>
+                <p>To request a refund:</p>
+                <ul>
+                    <li>Email <a href="mailto:info@gatemate.co.in">info@gatemate.co.in</a> with your order ID, purchase date, and reason for refund.</li>
+                    <li>Refunds will be processed within 7–10 business days via the original payment method (Razorpay).</li>
+                    <li>Processing fees or taxes are non-refundable.</li>
+                </ul>
+                <h4>4. Cancellations</h4>
+                <p>You may cancel your enrollment before the course/internship starts by emailing <a href="mailto:info@gatemate.co.in">info@gatemate.co.in</a>. No refunds apply post-start.</p>
+                <h4>5. GateMate’s Cancellation Rights</h4>
+                <p>We may cancel courses or internships due to unforeseen circumstances (e.g., technical issues, low enrollment). Full refunds will be issued in such cases.</p>
+                <h4>6. Contact Us</h4>
+                <p>For refund or cancellation queries, contact <a href="mailto:info@gatemate.co.in">info@gatemate.co.in</a>.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Us -->
+    <section class="py-5">
+        <div class="container">
+            <div class="policy-section">
+                <h2>Contact Us</h2>
+                <p>Reach out to GateMate for inquiries about our courses, internships, certifications, or any other support. We’re here to help you succeed!</p>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="contact-form">
+                            <h4>Send Us a Message</h4>
+                            <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Name</label>
+                                    <input type="text" class="form-control" id="name" name="name" placeholder="Your Name" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" name="_replyto" placeholder="Your Email" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="message" class="form-label">Message</label>
+                                    <textarea class="form-control" id="message" name="message" rows="5" placeholder="Your Message" required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Send Message</button>
+                            </form>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-12">
-                    <div class="privacy-card">
-                        <div class="card-body">
-                            <h3>2. Data Collection</h3>
-                            <p>We collect information you provide, such as your name, email, and payment details, during registration, course enrollment, or contact form submissions. We also collect usage data, like browsing activity and course progress, to improve our services.</p>
+                    <div class="col-md-6">
+                        <h4>Contact Details</h4>
+                        <p><strong>Address:</strong> 123 Education Park, Patna, Bihar, India - 800001</p>
+                        <p><strong>Phone:</strong> +91 6201259584</p>
+                        <p><strong>Email:</strong> <a href="mailto:info@gatemate.co.in">info@gatemate.co.in</a></p>
+                        <p><strong>Business Hours:</strong> Monday–Saturday, 9:00 AM–7:00 PM</p>
+                        <h4>Follow Us</h4>
+                        <div class="social-icons">
+                            <a href="#" class="me-3" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                            <a href="#" class="me-3" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
                         </div>
-                    </div>
-                </div>
-                <div class="col-md-12">
-                    <div class="privacy-card">
-                        <div class="card-body">
-                            <h3>3. Data Usage</h3>
-                            <p>Your information is used to deliver personalized learning experiences, process payments, send course updates, and improve our platform. We may use anonymized data for analytics to enhance our offerings.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-12">
-                    <div class="privacy-card">
-                        <div class="card-body">
-                            <h3>4. Data Sharing</h3>
-                            <p>We do not sell your personal information. We may share data with trusted third-party providers (e.g., Razorpay for payments) to facilitate services, but only as necessary and under strict confidentiality agreements.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-12">
-                    <div class="privacy-card">
-                        <div class="card-body">
-                            <h3>5. Data Security</h3>
-                            <p>We use industry-standard security measures, such as SSL encryption, to protect your data. However, no system is completely secure, and you share information at your own risk.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-12">
-                    <div class="privacy-card">
-                        <div class="card-body">
-                            <h3>6. User Rights</h3>
-                            <p>You have the right to access, update, or delete your personal information. Contact us at <a href="mailto:info@gatemate.co.in">info@gatemate.co.in</a> to exercise these rights or opt out of non-essential communications.</p>
+                        <h4>Download Our App</h4>
+                        <div class="app-links">
+                            <a href="#"><img src="https://via.placeholder.com/150x50?text=Google+Play" alt="Google Play"></a>
+                            <a href="#"><img src="https://via.placeholder.com/150x50?text=App+Store" alt="App Store"></a>
                         </div>
                     </div>
                 </div>
@@ -302,43 +336,13 @@
         </div>
     </section>
 
-    <!-- Call-to-Action -->
-    <section class="py-5 text-center">
-        <div class="container">
-            <h2>Have Questions?</h2>
-            <p>Contact our support team for clarification on our privacy practices or any other inquiries.</p>
-            <a href="/contact.html" class="btn btn-primary btn-lg">Contact Us</a>
-            <a href="/register.html" class="btn btn-outline-primary btn-lg ms-2">Join Now</a>
-        </div>
-    </section>
-
-    <!-- Marquee for Testimonials -->
-    <div class="marquee">
-        <span>
-            Arjun Sharma, GATE AIR 56: "GATEMATE’s course secured my IIT admission!" | 
-            Priya Patel, UGC NET Qualified: "Mock tests were key to my success!" | 
-            Vikram Mehta, Security Consultant: "Ethical Hacking Workshop transformed my career!" | 
-            Meera Gupta, Teacher: "BPSC TRE prep landed me a top school job!"
-        </span>
-    </div>
-
-    <!-- Welcome Popup -->
-    <div id="welcomePopup" class="popup">
-        <h3>Welcome to GATEMATE!</h3>
-        <p>Review our Privacy Policy to understand how we protect your data.</p>
-        <button id="closePopup" class="btn btn-primary">Get Started</button>
-    </div>
-
-    <!-- Flash Notification -->
-    <div id="flashMessage" class="flash-message">Limited Offer: Get 44% off on GATE CSE Complete Course!</div>
-
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="row">
                 <div class="col-md-4">
-                    <h5>About GATEMATE</h5>
-                    <p>India’s premier platform for GATE, UGC NET, BPSC TRE, and technical training. Expert-led courses and comprehensive study materials.</p>
+                    <h5>About GateMate</h5>
+                    <p>India’s premier platform for GATE, BPSC TRE, Bihar Home Guard, Police, SI, and technical training. Expert-led courses and comprehensive study materials.</p>
                     <div class="social-icons">
                         <a href="#" class="me-3" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
                         <a href="#" class="me-3" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
@@ -349,8 +353,17 @@
                     <h5>Quick Links</h5>
                     <ul class="list-unstyled">
                         <li><a href="/courses.html">Courses</a></li>
+                        <li><a href="/workshops.html">Workshops</a></li>
                         <li><a href="/resources.html">Resources</a></li>
-                        <li><a href="/about.html">About Us</a></li>
+                        <li><a href="/notice.html">Notice Board</a></li>
+                        <li><a href="/internships.html">Internships</a></li>
+                        <li><a href="/test-series.html">Test Series</a></li>
+                        <li><a href="/certificate.html">Certificates</a></li>
+                        <li><a href="/bpsc-tre.html">BPSC TRE 4.0</a></li>
+                        <li><a href="/bihar-recruitment.html">Bihar Recruitment</a></li>
+                        <li><a href="/privacy.html">Privacy Policy</a></li>
+                        <li><a href="/terms.html">Terms & Conditions</a></li>
+                        <li><a href="/refund.html">Refund Policy</a></li>
                         <li><a href="/contact.html">Contact</a></li>
                     </ul>
                 </div>
@@ -367,7 +380,7 @@
                 </div>
             </div>
             <hr>
-            <p class="text-center">© 2025 GATEMATE. All rights reserved. | <a href="/terms.html">Terms of Service</a> | <a href="/privacy.html">Privacy Policy</a> | <a href="/refund.html">Refund Policy</a> | <a href="/sitemap.html">Sitemap</a></p>
+            <p class="text-center">© 2025 GateMate. All rights reserved. | <a href="/privacy.html">Privacy Policy</a> | <a href="/terms.html">Terms & Conditions</a> | <a href="/refund.html">Refund Policy</a> | <a href="/sitemap.html">Sitemap</a></p>
         </div>
     </footer>
 
@@ -383,14 +396,6 @@
         if (localStorage.getItem('theme') === 'dark') {
             document.body.classList.add('dark-mode');
         }
-
-        // Welcome Popup
-        setTimeout(() => {
-            document.getElementById('welcomePopup').classList.add('show');
-        }, 1000);
-        document.getElementById('closePopup').addEventListener('click', () => {
-            document.getElementById('welcomePopup').classList.remove('show');
-        });
     </script>
 </body>
 </html>
