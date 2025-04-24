@@ -1,0 +1,443 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Contact GATEMATE.co.in - Reach out for inquiries about GATE, UGC NET, BPSC TRE, and technical training">
+    <title>Contact Us - GATEMATE.co.in</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f7fa;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .navbar-brand {
+            font-weight: 600;
+            color: #007bff !important;
+        }
+        .hero-section {
+            background: linear-gradient(135deg, #007bff, #00d4ff), url('https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+            background-size: cover;
+            background-blend-mode: overlay;
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+            animation: fadeIn 1s ease-in;
+            position: relative;
+        }
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        .hero-section h1, .hero-section p, .hero-section a {
+            position: relative;
+            z-index: 1;
+        }
+        .hero-section h1 {
+            font-size: 3rem;
+            font-weight: 600;
+        }
+        .contact-card {
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            background: linear-gradient(145deg, #ffffff, #e6e6e6);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+        .contact-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+        }
+        .contact-card .card-body {
+            padding: 20px;
+        }
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+        .map-container {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .marquee {
+            background: #007bff;
+            color: white;
+            padding: 10px;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .marquee span {
+            display: inline-block;
+            animation: marquee 20s linear infinite;
+        }
+        .marquee:hover span {
+            animation-play-state: paused;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            width: 90%;
+            max-width: 400px;
+        }
+        .popup.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        .flash-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            z-index: 1000;
+            animation: slideIn 0.5s, fadeOut 5s 2s forwards;
+        }
+        .footer {
+            background: #343a40;
+            color: white;
+            padding: 40px 0;
+        }
+        .footer a {
+            color: #00d4ff;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        .app-links img {
+            width: 150px;
+            margin: 10px;
+            transition: transform 0.3s;
+        }
+        .app-links img:hover {
+            transform: scale(1.1);
+        }
+        .social-icons a {
+            font-size: 1.5rem;
+            margin: 0 10px;
+            color: #007bff;
+            transition: color 0.3s;
+        }
+        .social-icons a:hover {
+            color: #00d4ff;
+        }
+        .dark-mode {
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+        .dark-mode .hero-section {
+            background: linear-gradient(135deg, #004085, #0083b0), url('https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+        }
+        .dark-mode .contact-card {
+            background: linear-gradient(145deg, #2c2c2c, #1a1a1a);
+        }
+        .dark-mode .marquee {
+            background: #004085;
+        }
+        .dark-mode .form-control {
+            background-color: #2c2c2c;
+            color: #ffffff;
+            border-color: #444;
+        }
+        .dark-mode .form-control:focus {
+            border-color: #00d4ff;
+            box-shadow: 0 0 5px rgba(0, 212, 255, 0.5);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+        @keyframes fadeOut {
+            to { opacity: 0; display: none; }
+        }
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        @media (max-width: 768px) {
+            .hero-section h1 {
+                font-size: 2rem;
+            }
+            .popup {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="/">GATEMATE.co.in</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/courses.html">Courses</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/resources.html">Resources</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/contact.html">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/login.html">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/register.html">Register</a></li>
+                </ul>
+                <button id="themeToggle" class="btn btn-outline-secondary ms-3" aria-label="Toggle Dark Mode">Toggle Dark Mode</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <h1>Get in Touch with GATEMATE</h1>
+            <p>We’re here to answer your questions about GATE, UGC NET, BPSC TRE, and technical training. Reach out today!</p>
+            <a href="#contact-form" class="btn btn-light btn-lg mt-3">Contact Us</a>
+        </div>
+    </section>
+
+    <!-- Contact Form and Details -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="contact-card">
+                        <div class="card-body">
+                            <h2 class="mb-4">Send Us a Message</h2>
+                            <form id="contactForm">
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Name</label>
+                                    <input type="text" class="form-control" id="name" placeholder="Enter your name" required>
+                                    <div class="invalid-feedback">Please enter your name.</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+                                    <div class="invalid-feedback">Please enter a valid email address.</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="subject" class="form-label">Subject</label>
+                                    <input type="text" class="form-control" id="subject" placeholder="Enter subject" required>
+                                    <div class="invalid-feedback">Please enter a subject.</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="message" class="form-label">Message</label>
+                                    <textarea class="form-control" id="message" rows="5" placeholder="Enter your message" required></textarea>
+                                    <div class="invalid-feedback">Please enter your message.</div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Send Message</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="contact-card">
+                        <div class="card-body">
+                            <h2 class="mb-4">Contact Details</h2>
+                            <p><strong>Address:</strong> 123 Education Park, Patna, Bihar, India - 800001</p>
+                            <p><strong>Phone:</strong> <a href="tel:+916201259584">+91 6201259584</a></p>
+                            <p><strong>Email:</strong> <a href="mailto:info@gatemate.co.in">info@gatemate.co.in</a></p>
+                            <p><strong>Hours:</strong> Mon - Sat, 9:00 AM - 7:00 PM</p>
+                            <h5 class="mt-4">Follow Us</h5>
+                            <div class="social-icons">
+                                <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                                <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map Section -->
+    <section class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-4">Find Us</h2>
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3597.6654318030547!2d85.135494615036!3d25.617075983699!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39f2a98b7f2f3b67%3A0x4e4f3b7e4b7f3b67!2sPatna%2C%20Bihar%2C%20India!5e0!3m2!1sen!2sus!4v1697051234567!5m2!1sen!2sus" width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- Marquee for Testimonials -->
+    <div class="marquee">
+        <span>
+            Arjun Sharma, GATE AIR 56: "GATEMATE’s course secured my IIT admission!" | 
+            Priya Patel, UGC NET Qualified: "Mock tests were key to my success!" | 
+            Vikram Mehta, Security Consultant: "Ethical Hacking Workshop transformed my career!" | 
+            Meera Gupta, Teacher: "BPSC TRE prep landed me a top school job!"
+        </span>
+    </div>
+
+    <!-- Welcome Popup -->
+    <div id="welcomePopup" class="popup">
+        <h3>Welcome to GATEMATE!</h3>
+        <p>Contact us to learn more about our expert-led training programs.</p>
+        <button id="closePopup" class="btn btn-primary">Get Started</button>
+    </div>
+
+    <!-- Flash Notification -->
+    <div id="flashMessage" class="flash-message">Limited Offer: Get 44% off on GATE CSE Complete Course!</div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>About GATEMATE</h5>
+                    <p>India’s premier platform for GATE, UGC NET, BPSC TRE, and technical training. Expert-led courses and comprehensive study materials.</p>
+                    <div class="social-icons">
+                        <a href="#" class="me-3" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="me-3" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="/courses.html">Courses</a></li>
+                        <li><a href="/resources.html">Resources</a></li>
+                        <li><a href="/about.html">About Us</a></li>
+                        <li><a href="/contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Contact Us</h5>
+                    <p>123 Education Park, Patna, Bihar, India - 800001<br>
+                    +91 6201259584<br>
+                    <a href="mailto:info@gatemate.co.in">info@gatemate.co.in</a><br>
+                    Mon - Sat: 9:00 AM - 7:00 PM</p>
+                    <div class="app-links">
+                        <a href="#"><img src="https://via.placeholder.com/150x50?text=Google+Play" alt="Google Play"></a>
+                        <a href="#"><img src="https://via.placeholder.com/150x50?text=App+Store" alt="App Store"></a>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <p class="text-center">© 2025 GATEMATE. All rights reserved. | <a href="/terms.html">Terms of Service</a> | <a href="/privacy.html">Privacy Policy</a> | <a href="/refund.html">Refund Policy</a> | <a href="/sitemap.html">Sitemap</a></p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script>
+        // Theme Toggle
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        });
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
+
+        // Welcome Popup
+        setTimeout(() => {
+            document.getElementById('welcomePopup').classList.add('show');
+        }, 1000);
+        document.getElementById('closePopup').addEventListener('click', () => {
+            document.getElementById('welcomePopup').classList.remove('show');
+        });
+
+        // Form Validation
+        document.getElementById('contactForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const form = e.target;
+            let isValid = true;
+
+            ['name', 'email', 'subject', 'message'].forEach(id => {
+                const input = document.getElementById(id);
+                if (!input.value.trim()) {
+                    input.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    input.classList.remove('is-invalid');
+                }
+            });
+
+            const email = document.getElementById('email');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email.value)) {
+                email.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                email.classList.remove('is-invalid');
+            }
+
+            if (isValid) {
+                alert('Form submitted successfully! (Note: This is a demo; no data is sent.)');
+                form.reset();
+            }
+        });
+    </script>
+</body>
+</html>
