@@ -129,6 +129,12 @@
         .card:hover .card-img-top {
             transform: scale(1.05);
         }
+        .card-body {
+            color: #333; /* Default text color for better contrast in light mode */
+        }
+        .card-text {
+            color: #555; /* Slightly lighter for secondary text in light mode */
+        }
         .badge-sticker {
             position: absolute;
             top: 10px;
@@ -176,8 +182,23 @@
         .dark-mode .card {
             background: linear-gradient(145deg, #2c2c2c, #1a1a1a);
         }
+        .dark-mode .card-body {
+            color: #e9ecef; /* Lighter text for dark mode */
+        }
+        .dark-mode .card-text {
+            color: #b0b0b0; /* Slightly muted for secondary text in dark mode */
+        }
         .dark-mode .badge-sticker {
             background-color: #4dabf7;
+            color: #fff; /* Ensure badge text is white for better visibility */
+        }
+        .dark-mode .btn-primary {
+            background-color: #4dabf7;
+            border-color: #4dabf7;
+        }
+        .dark-mode .btn-primary:hover {
+            background-color: #66bfff;
+            border-color: #66bfff;
         }
 
         /* Animations */
@@ -267,6 +288,47 @@
     </style>
 </head>
 <body>
+    <script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+    </script>
+
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
             <a class="navbar-brand" href="/index.html">
@@ -389,7 +451,7 @@
                 <div class="col-md-4 mb-4">
                     <div class="card">
                         <span class="badge-sticker">Bihar Police Prep</span>
-                        <img src="https://images.pexels.com/photos/1632790/pexels-photo-1632790.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="Bihar Police Constable Course">
+                        <img src="https://images.pexels.com/photos/7034988/pexels-photo-7034988.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="Bihar Police Constable Course">
                         <div class="card-body">
                             <h5 class="card-title">Bihar Police Constable Course</h5>
                             <p class="card-text">Type: Courses | ₹999 | 3 Months</p>
@@ -400,7 +462,7 @@
                 <div class="col-md-4 mb-4">
                     <div class="card">
                         <span class="badge-sticker">Bihar Police Prep</span>
-                        <img src="https://images.pexels.com/photos/1638346/pexels-photo-1638346.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="Bihar Police SI Course">
+                        <img src="https://images.pexels.com/photos/7034990/pexels-photo-7034990.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="Bihar Police SI Course">
                         <div class="card-body">
                             <h5 class="card-title">Bihar Police SI Foundation Course</h5>
                             <p class="card-text">Type: Courses | ₹1499 | 6 Months</p>
@@ -411,7 +473,7 @@
                 <div class="col-md-4 mb-4">
                     <div class="card">
                         <span class="badge-sticker">Bihar Police Prep</span>
-                        <img src="https://images.pexels.com/photos/1638347/pexels-photo-1638347.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="Bihar Home Guard Course">
+                        <img src="https://images.pexels.com/photos/7034989/pexels-photo-7034989.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="Bihar Home Guard Course">
                         <div class="card-body">
                             <h5 class="card-title">Bihar Home Guard Recruitment Course</h5>
                             <p class="card-text">Type: Courses | ₹799 | 3 Months</p>
@@ -422,7 +484,7 @@
                 <div class="col-md-4 mb-4">
                     <div class="card">
                         <span class="badge-sticker">Bihar Police Prep</span>
-                        <img src="https://images.pexels.com/photos/5940835/pexels-photo-5940835.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="PET Preparation Program">
+                        <img src="https://images.pexels.com/photos/7034991/pexels-photo-7034991.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="PET Preparation Program">
                         <div class="card-body">
                             <h5 class="card-title">Physical Efficiency Test (PET) Program</h5>
                             <p class="card-text">Type: Courses | ₹499 | 1 Month</p>
@@ -433,7 +495,7 @@
                 <div class="col-md-4 mb-4">
                     <div class="card">
                         <span class="badge-sticker">Bihar Police Prep</span>
-                        <img src="https://images.pexels.com/photos/3183183/pexels-photo-3183183.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="Bihar Police SI Mains Course">
+                        <img src="https://images.pexels.com/photos/7034987/pexels-photo-7034987.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="Bihar Police SI Mains Course">
                         <div class="card-body">
                             <h5 class="card-title">Bihar Police SI Mains + Interview</h5>
                             <p class="card-text">Type: Courses | ₹1999 | Full Package</p>
@@ -503,7 +565,7 @@
                     <h5>Contact Us</h5>
                     <p>123 Education Park, Patna, Bihar, India - 800001<br>
                     +91 6201259584<br>
-                    <a href="mailto:support@gatemate.co.in">support@gatemate.co.in</a><br>
+                    <a href="/cdn-cgi/l/email-protection#cfbcbabfbfa0bdbb8fa8aebbaaa2aebbaae1aca0e1a6a1"><span class="__cf_email__" data-cfemail="0c7f797c7c637e784c6b6d7869616d7869226f63226562">[email&#160;protected]</span></a><br>
                     Mon - Sat: 9:00 AM - 7:00 PM</p>
                 </div>
             </div>
@@ -512,6 +574,7 @@
         </div>
     </footer>
 
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.getElementById('themeToggle').addEventListener('click', () => {
@@ -555,5 +618,6 @@
             cards.forEach(card => prepList.appendChild(card.parentElement));
         }
     </script>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'936681c39b12bf8e',t:'MTc0NTY3NDk4My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>
