@@ -40,42 +40,41 @@
         </script><!DOCTYPE html>
 <html lang="en">
 <head>
+    <head>
         <head>
-                <head>
-  <meta name="google-site-verification" content="YOUR-CODE-HERE" />
-  <!-- Other meta tags -->
-</head>
+            <meta name="google-site-verification" content="YOUR-CODE-HERE" />
+            <!-- Other meta tags -->
+        </head>
 
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Gatemate - Best Courses, Internships, and Training for Students</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <title>Gatemate - Best Courses, Internships, and Training for Students</title>
 
-  <!-- Primary Meta Tags -->
-  <meta name="title" content="Gatemate - Best Courses, Internships, and Training for Students">
-  <meta name="description" content="Gatemate offers trending internships, certifications, courses, and training programs for B.Tech, BCA, BBA, MBA, M.Tech students. Join now and level up your career!">
+        <!-- Primary Meta Tags -->
+        <meta name="title" content="Gatemate - Best Courses, Internships, and Training for Students">
+        <meta name="description" content="Gatemate offers trending internships, certifications, courses, and training programs for B.Tech, BCA, BBA, MBA, M.Tech students. Join now and level up your career!">
 
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://gatemate.co.in/">
-  <meta property="og:title" content="Gatemate - Best Courses, Internships, and Training for Students">
-  <meta property="og:description" content="Enroll in top trending internships and professional courses. Gatemate is your gateway to a successful career.">
-  <meta property="og:image" content="https://gatemate.co.in/your-banner-image.jpg">
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="https://gatemate.co.in/">
+        <meta property="og:title" content="Gatemate - Best Courses, Internships, and Training for Students">
+        <meta property="og:description" content="Enroll in top trending internships and professional courses. Gatemate is your gateway to a successful career.">
+        <meta property="og:image" content="https://gatemate.co.in/your-banner-image.jpg">
 
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="https://gatemate.co.in/">
-  <meta property="twitter:title" content="Gatemate - Best Courses, Internships, and Training for Students">
-  <meta property="twitter:description" content="Trending internships and training programs for CS, IT, Management students. Boost your career with Gatemate!">
-  <meta property="twitter:image" content="https://gatemate.co.in/your-banner-image.jpg">
+        <!-- Twitter -->
+        <meta property="twitter:card" content="summary_large_image">
+        <meta property="twitter:url" content="https://gatemate.co.in/">
+        <meta property="twitter:title" content="Gatemate - Best Courses, Internships, and Training for Students">
+        <meta property="twitter:description" content="Trending internships and training programs for CS, IT, Management students. Boost your career with Gatemate!">
+        <meta property="twitter:image" content="https://gatemate.co.in/your-banner-image.jpg">
 
-  <!-- Favicon -->
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
+        <!-- Favicon -->
+        <link rel="icon" href="favicon.ico" type="image/x-icon">
 
-  <!-- Canonical Link -->
-  <link rel="canonical" href="https://gatemate.co.in/">
-
-</head>
+        <!-- Canonical Link -->
+        <link rel="canonical" href="https://gatemate.co.in/">
+    </head>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -165,7 +164,7 @@
         .search-bar button:hover {
             background-color: #007bff;
         }
-        .course-carousel, .strategy-section {
+        .course-carousel, .strategy-section, .download-section {
             padding: 60px 0;
             background-color: #fff;
         }
@@ -241,6 +240,34 @@
             padding: 60px 0;
             text-align: center;
         }
+        .download-card {
+            border: none;
+            border-radius: 15px;
+            background: linear-gradient(145deg, #ffffff, #f0f0f0);
+            transition: transform 0.3s, box-shadow 0.3s;
+            overflow: hidden;
+        }
+        .download-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+        }
+        .download-card .card-body {
+            color: #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .download-card .card-title {
+            font-weight: 600;
+            margin-bottom: 0;
+        }
+        .download-card .btn {
+            background-color: #007bff;
+            border: none;
+        }
+        .download-card .btn:hover {
+            background-color: #0056b3;
+        }
         .footer {
             background: #343a40;
             color: white;
@@ -269,7 +296,7 @@
         .dark-mode .hero-section {
             background: linear-gradient(135deg, #004085, #0083b0), url('https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
         }
-        .dark-mode .course-carousel, .dark-mode .strategy-section {
+        .dark-mode .course-carousel, .dark-mode .strategy-section, .dark-mode .download-section {
             background-color: #2c2c2c;
         }
         .dark-mode .card {
@@ -301,6 +328,18 @@
         }
         .dark-mode .newsletter-section {
             background: linear-gradient(135deg, #004085, #0083b0);
+        }
+        .dark-mode .download-card {
+            background: linear-gradient(145deg, #2c2c2c, #1a1a1a);
+        }
+        .dark-mode .download-card .card-body {
+            color: #e9ecef;
+        }
+        .dark-mode .download-card .btn {
+            background-color: #4dabf7;
+        }
+        .dark-mode .download-card .btn:hover {
+            background-color: #66bfff;
         }
         .dark-mode .whatsapp-btn {
             background-color: #4dabf7;
@@ -435,6 +474,11 @@
             }
             .card p {
                 font-size: 0.9rem;
+            }
+            .download-card .card-body {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
             }
             .footer .col-md-4 {
                 flex: 0 0 100%;
@@ -747,6 +791,63 @@
         </div>
     </section>
 
+    <section class="download-section">
+        <div class="container">
+            <h2 class="text-center mb-4">Download Resources</h2>
+            <p class="text-center mb-5">Access study materials, forms, and other resources for GATE, UGC NET, and BPSC TRE preparation.</p>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card download-card">
+                        <div class="card-body">
+                            <h5 class="card-title">GATE Computer Science Notes</h5>
+                            <a href="/downloads/gate-cs-notes.pdf" class="btn btn-primary" download><i class="fas fa-download me-2"></i>Download</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card download-card">
+                        <div class="card-body">
+                            <h5 class="card-title">UGC NET Paper 1 Guide</h5>
+                            <a href="/downloads/ugc-net-guide.pdf" class="btn btn-primary" download><i class="fas fa-download me-2"></i>Download</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card download-card">
+                        <div class="card-body">
+                            <h5 class="card-title">BPSC TRE 4.0 Application Form</h5>
+                            <a href="/downloads/bpsc-tre-form.pdf" class="btn btn-primary" download><i class="fas fa-download me-2"></i>Download</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card download-card">
+                        <div class="card-body">
+                            <h5 class="card-title">GateMate Brochure</h5>
+                            <a href="/downloads/gatemate-brochure.pdf" class="btn btn-primary" download><i class="fas fa-download me-2"></i>Download</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card download-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Sample Internship Application</h5>
+                            <a href="/downloads/internship-application.pdf" class="btn btn-primary" download><i class="fas fa-download me-2"></i>Download</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card download-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Research Writing Template</h5>
+                            <a href="/downloads/research-writing-template.pdf" class="btn btn-primary" download><i class="fas fa-download me-2"></i>Download</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="testimonial-section">
         <div class="container">
             <h2 class="text-center mb-4">What Our Students Say</h2>
@@ -895,5 +996,6 @@
     </script>
     <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'936501263fa353ff',t:'MTc0NTY1OTIyOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
     <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9366a719ab84b056',t:'MTc0NTY3NjUxMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'936cec793b0cb061',t:'MTc0NTc0MjI2OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>

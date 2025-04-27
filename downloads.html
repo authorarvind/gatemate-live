@@ -1,0 +1,526 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Download GATE, UGC NET, BPSC TRE study materials, forms, and resources from GateMate.">
+    <meta name="keywords" content="GATE notes, UGC NET guides, BPSC TRE forms, study materials, GateMate downloads">
+    <meta name="author" content="GateMate Team">
+    <meta name="title" content="GateMate Downloads - Study Materials and Forms">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://gatemate.co.in/downloads.html">
+    <meta property="og:title" content="GateMate Downloads - Study Materials and Forms">
+    <meta property="og:description" content="Access downloadable study materials, forms, and resources for GATE, UGC NET, and BPSC TRE.">
+    <meta property="og:image" content="https://gatemate.co.in/your-banner-image.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://gatemate.co.in/downloads.html">
+    <meta property="twitter:title" content="GateMate Downloads - Study Materials and Forms">
+    <meta property="twitter:description" content="Download study materials and forms for GATE, UGC NET, and BPSC TRE from GateMate.">
+    <meta property="twitter:image" content="https://gatemate.co.in/your-banner-image.jpg">
+
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.png" type="image/png">
+
+    <!-- Canonical Link -->
+    <link rel="canonical" href="https://gatemate.co.in/downloads.html">
+
+    <title>GateMate Downloads - Study Materials and Forms</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f7fa;
+            transition: background-color 0.3s, color 0.3s;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        .navbar-brand {
+            font-weight: 700;
+            color: #007bff !important;
+            display: flex;
+            align-items: center;
+            transition: color 0.3s;
+        }
+        .navbar-brand svg {
+            height: 40px;
+            margin-right: 10px;
+            transition: transform 0.3s;
+        }
+        .navbar-brand .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        .navbar-brand:hover svg {
+            transform: scale(1.1);
+        }
+        .download-section {
+            padding: 60px 0;
+            background-color: #fff;
+        }
+        .download-card {
+            border: none;
+            border-radius: 15px;
+            background: linear-gradient(145deg, #ffffff, #f0f0f0);
+            transition: transform 0.3s, box-shadow 0.3s;
+            overflow: hidden;
+        }
+        .download-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+        }
+        .download-card .card-body {
+            color: #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .download-card .card-title {
+            font-weight: 600;
+            margin-bottom: 0;
+        }
+        .download-card .btn {
+            background-color: #007bff;
+            border: none;
+        }
+        .download-card .btn:hover {
+            background-color: #0056b3;
+        }
+        .footer {
+            background: #343a40;
+            color: white;
+            padding: 40px 0;
+        }
+        .footer a {
+            color: #00d4ff;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        .dark-mode {
+            background-color: #1a1a1a;
+            color: #e9ecef;
+        }
+        .dark-mode .navbar-brand {
+            color: #4dabf7 !important;
+        }
+        .dark-mode .navbar-brand .logo-text {
+            color: #4dabf7;
+        }
+        .dark-mode .navbar-brand svg .gradient-fill {
+            fill: url(#gradient-dark);
+        }
+        .dark-mode .download-section {
+            background-color: #2c2c2c;
+        }
+        .dark-mode .download-card {
+            background: linear-gradient(145deg, #2c2c2c, #1a1a1a);
+        }
+        .dark-mode .download-card .card-body {
+            color: #e9ecef;
+        }
+        .dark-mode .download-card .btn {
+            background-color: #4dabf7;
+        }
+        .dark-mode .download-card .btn:hover {
+            background-color: #66bfff;
+        }
+        .whatsapp-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #25D366;
+            color: white;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s, transform 0.3s;
+            z-index: 1000;
+        }
+        .whatsapp-btn:hover {
+            background-color: #20b958;
+            transform: scale(1.1);
+        }
+        .whatsapp-btn i {
+            font-size: 30px;
+        }
+        .whatsapp-options {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+            border: 1px solid #dee2e6;
+        }
+        .whatsapp-options a {
+            padding: 10px 20px;
+            color: #333;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background-color 0.3s;
+        }
+        .whatsapp-options a:hover {
+            background: #f0f0f0;
+        }
+        .whatsapp-options a i {
+            font-size: 18px;
+        }
+        .whatsapp-tooltip {
+            position: absolute;
+            bottom: 80px;
+            right: 70px;
+            background: #333;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            display: none;
+            z-index: 1000;
+        }
+        .whatsapp-btn:hover .whatsapp-tooltip {
+            display: block;
+        }
+        @media (max-width: 767.98px) {
+            .navbar-brand svg {
+                height: 30px;
+            }
+            .navbar-brand .logo-text {
+                font-size: 1.2rem;
+            }
+            .download-card .card-body {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .footer .col-md-4 {
+                flex: 0 0 100%;
+                max-width: 100%;
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            .whatsapp-btn {
+                width: 50px;
+                height: 50px;
+            }
+            .whatsapp-btn i {
+                font-size: 24px;
+            }
+            .whatsapp-options {
+                bottom: 80px;
+                right: 15px;
+            }
+        }
+        @media (min-width: 768px) and (max-width: 1023.98px) {
+            .navbar-brand svg {
+                height: 35px;
+            }
+            .navbar-brand .logo-text {
+                font-size: 1.3rem;
+            }
+            .footer .col-md-4 {
+                flex: 0 0 33.33%;
+                max-width: 33.33%;
+                text-align: left;
+            }
+        }
+        @media (min-width: 1024px) {
+            .footer .col-md-4 {
+                flex: 0 0 33.33%;
+                max-width: 33.33%;
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+    <script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+    </script>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="/index.html">
+                <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="gradient-light" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#007bff;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:1" />
+                        </linearGradient>
+                        <linearGradient id="gradient-dark" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#004085;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#0083b0;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <path class="gradient-fill" fill="url(#gradient-light)" d="M10 30 V10 H15 V5 H25 V10 H30 V30 H25 V25 H15 V30 Z M15 15 H25 V20 H15 Z" />
+                    <path fill="#fff" d="M17 17 H23 V18 H17 Z M17 19 H23 V20 H17 Z" />
+                </svg>
+                <span class="logo-text">GateMate</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/courses.html">Courses</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/workshops.html">Workshops</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/resources.html">Resources</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/bihar-prep.html">Bihar Exam Prep</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="careerDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Career Support
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="careerDropdown">
+                            <li><a class="dropdown-item" href="/internship.html">Internships</a></li>
+                            <li><a class="dropdown-item" href="/careers.html">Careers</a></li>
+                            <li><a class="dropdown-item" href="/research-writing.html">Research Writing</a></li>
+                            <li><a class="dropdown-item" href="/hiring.html">Hiring</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="/notice.html">Notice Board</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/contact.html">Contact</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Account
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="/login.html">Login</a></li>
+                            <li><a class="dropdown-item" href="/register.html">Register</a></li>
+                            <li><a class="dropdown-item" href="/student-dashboard.html">Student Dashboard</a></li>
+                            <li><a class="dropdown-item" href="/faculty-dashboard.html">Faculty Dashboard</a></li>
+                            <li><a class="dropdown-item" href="/admin.html">Admin</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <button id="themeToggle" class="btn btn-outline-secondary ms-3" aria-label="Toggle Dark Mode">Toggle Dark Mode</button>
+            </div>
+        </div>
+    </nav>
+
+    <section class="download-section">
+        <div class="container">
+            <h2 class="text-center mb-4">Download Resources</h2>
+            <p class="text-center mb-5">Access study materials, forms, and other resources for GATE, UGC NET, and BPSC TRE preparation.</p>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card download-card">
+                        <div class="card-body">
+                            <h5 class="card-title">GATE Computer Science Notes</h5>
+                            <a href="/downloads/gate-cs-notes.pdf" class="btn btn-primary" download><i class="fas fa-download me-2"></i>Download</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card download-card">
+                        <div class="card-body">
+                            <h5 class="card-title">UGC NET Paper 1 Guide</h5>
+                            <a href="/downloads/ugc-net-guide.pdf" class="btn btn-primary" download><i class="fas fa-download me-2"></i>Download</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card download-card">
+                        <div class="card-body">
+                            <h5 class="card-title">BPSC TRE 4.0 Application Form</h5>
+                            <a href="/downloads/bpsc-tre-form.pdf" class="btn btn-primary" download><i class="fas fa-download me-2"></i>Download</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card download-card">
+                        <div class="card-body">
+                            <h5 class="card-title">GateMate Brochure</h5>
+                            <a href="/downloads/gatemate-brochure.pdf" class="btn btn-primary" download><i class="fas fa-download me-2"></i>Download</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card download-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Sample Internship Application</h5>
+                            <a href="/downloads/internship-application.pdf" class="btn btn-primary" download><i class="fas fa-download me-2"></i>Download</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card download-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Research Writing Template</h5>
+                            <a href="/downloads/research-writing-template.pdf" class="btn btn-primary" download><i class="fas fa-download me-2"></i>Download</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>About GATEMATE</h5>
+                    <p>India’s leading platform for GATE, UGC NET, BPSC TRE, and technical training with expert guidance.</p>
+                    <div class="social-icons">
+                        <a href="#" class="me-3"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-youtube"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="/index.html">Home</a></li>
+                        <li><a href="/courses.html">Courses</a></li>
+                        <li><a href="/workshops.html">Workshops</a></li>
+                        <li><a href="/resources.html">Resources</a></li>
+                        <li><a href="/bihar-prep.html">Bihar Exam Prep</a></li>
+                        <li><a href="/about.html">About Us</a></li>
+                        <li><a href="/contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Contact Us</h5>
+                    <p>123 Education Park, Patna, Bihar, India - 800001<br>
+                    +91 6201259584<br>
+                    <a href="/cdn-cgi/l/email-protection#51126461617e636511767065747c7065743f727e3f787f"><span class="__cf_email__" data-cfemail="af9c9a9f9f809d9bef888e9b8a828e9b8ac18c80c18681">[email&#160;protected]</span></a><br>
+                    Mon - Sat: 9:00 AM - 7:00 PM</p>
+                </div>
+            </div>
+            <hr>
+            <p class="text-center">© 2025 GATEMATE. All rights reserved. | <a href="/terms.html">Terms</a> | <a href="/privacy.html">Privacy</a> | <a href="/refund.html">Refund</a> | <a href="/sitemap.html">Sitemap</a></p>
+        </div>
+    </footer>
+
+    <div class="whatsapp-btn" id="whatsappBtn">
+        <i class="fab fa-whatsapp"></i>
+        <div class="whatsapp-tooltip">Need Help?</div>
+    </div>
+    <div class="whatsapp-options" id="whatsappOptions">
+        <a href="https://wa.me/916201259584?text=Hello%20GateMate%20Team,%20I%20need%20help%20with%20my%20studies!" target="_blank">
+            <i class="fas fa-comment"></i> Message Us
+        </a>
+        <a href="tel:+916201259584">
+            <i class="fas fa-phone"></i> Call Us
+        </a>
+    </div>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        });
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
+
+        const whatsappBtn = document.getElementById('whatsappBtn');
+        const whatsappOptions = document.getElementById('whatsappOptions');
+        whatsappBtn.addEventListener('click', () => {
+            whatsappOptions.style.display = whatsappOptions.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!whatsappBtn.contains(e.target) && !whatsappOptions.contains(e.target)) {
+                whatsappOptions.style.display = 'none';
+            }
+        });
+    </script>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'936cf7185c9faff5',t:'MTc0NTc0MjcwMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body>
+</html>
