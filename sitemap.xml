@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <url>
+    <loc>https://gatemate.co.in/</loc>
+    <lastmod>2025-04-26</lastmod>
+    <priority>1.00</priority>
+  </url>
+
+  <url>
+    <loc>https://gatemate.co.in/about.html</loc>
+    <lastmod>2025-04-26</lastmod>
+    <priority>0.80</priority>
+  </url>
+
+  <url>
+    <loc>https://gatemate.co.in/contact.html</loc>
+    <lastmod>2025-04-26</lastmod>
+    <priority>0.80</priority>
+  </url>
+
+  <url>
+    <loc>https://gatemate.co.in/courses.html</loc>
+    <lastmod>2025-04-26</lastmod>
+    <priority>0.85</priority>
+  </url>
+
+  <url>
+    <loc>https://gatemate.co.in/workshops.html</loc>
+    <lastmod>2025-04-26</lastmod>
+    <priority>0.85</priority>
+  </url>
+
+  <url>
+    <loc>https://gatemate.co.in/dashboard.html</loc>
+    <lastmod>2025-04-26</lastmod>
+    <priority>0.75</priority>
+  </url>
+
+  <url>
+    <loc>https://gatemate.co.in/register.html</loc>
+    <lastmod>2025-04-26</lastmod>
+    <priority>0.70</priority>
+  </url>
+
+  <url>
+    <loc>https://gatemate.co.in/login.html</loc>
+    <lastmod>2025-04-26</lastmod>
+    <priority>0.70</priority>
+  </url>
+
+  <url>
+    <loc>https://gatemate.co.in/privacy.html</loc>
+    <lastmod>2025-04-26</lastmod>
+    <priority>0.50</priority>
+  </url>
+
+  <url>
+    <loc>https://gatemate.co.in/terms.html</loc>
+    <lastmod>2025-04-26</lastmod>
+    <priority>0.50</priority>
+  </url>
+
+  <url>
+    <loc>https://gatemate.co.in/refund.html</loc>
+    <lastmod>2025-04-26</lastmod>
+    <priority>0.50</priority>
+  </url>
+
+</urlset>
