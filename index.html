@@ -1,1019 +1,485 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <head>
-        <head>
-            <meta name="google-site-verification" content="YOUR-CODE-HERE" />
-            <!-- Other meta tags -->
-        </head>
-
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        
-        <title>Gatemate - Best Courses, Internships, and Training for Students</title>
-
-        <!-- Primary Meta Tags -->
-        <meta name="title" content="Gatemate - Best Courses, Internships, and Training for Students">
-        <meta name="description" content="Gatemate offers trending internships, certifications, courses, and training programs for B.Tech, BCA, BBA, MBA, M.Tech students. Join now and level up your career!">
-
-        <!-- Open Graph / Facebook -->
-        <meta property="og:type" content="website">
-        <meta property="og:url" content="https://gatemate.co.in/">
-        <meta property="og:title" content="Gatemate - Best Courses, Internships, and Training for Students">
-        <meta property="og:description" content="Enroll in top trending internships and professional courses. Gatemate is your gateway to a successful career.">
-        <meta property="og:image" content="https://gatemate.co.in/your-banner-image.jpg">
-
-        <!-- Twitter -->
-        <meta property="twitter:card" content="summary_large_image">
-        <meta property="twitter:url" content="https://gatemate.co.in/">
-        <meta property="twitter:title" content="Gatemate - Best Courses, Internships, and Training for Students">
-        <meta property="twitter:description" content="Trending internships and training programs for CS, IT, Management students. Boost your career with Gatemate!">
-        <meta property="twitter:image" content="https://gatemate.co.in/your-banner-image.jpg">
-
-        <!-- Favicon -->
-        <link rel="icon" href="favicon.ico" type="image/x-icon">
-
-        <!-- Canonical Link -->
-        <link rel="canonical" href="https://gatemate.co.in/">
-    </head>
-
+    <!-- ==== META ==== -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GATEMATE.co.in - Your Path to Success</title>
     <meta name="description" content="GATEMATE.co.in - Premier platform for GATE, UGC NET, BPSC TRE with live classes, notes, and interactive learning">
     <meta name="keywords" content="GATE preparation, UGC NET, BPSC TRE, live classes, online learning">
     <meta name="author" content="GateMate Team">
-    <title>GATEMATE.co.in - Your Path to Success</title>
+
+    <!-- Primary Meta Tags -->
+    <meta name="title" content="Gatemate - Best Courses, Internships, and Training for Students">
+    <meta name="description" content="Gatemate offers trending internships, certifications, courses, and training programs for B.Tech, BCA, BBA, MBA, M.Tech students. Join now and level up your career!">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://gatemate.co.in/">
+    <meta property="og:title" content="Gatemate - Best Courses, Internships, and Training for Students">
+    <meta property="og:description" content="Enroll in top trending internships and professional courses. Gatemate is your gateway to a successful career.">
+    <meta property="og:image" content="https://gatemate.co.in/your-banner-image.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://gatemate.co.in/">
+    <meta property="twitter:title" content="Gatemate - Best Courses, Internships, and Training for Students">
+    <meta property="twitter:description" content="Trending internships and training programs for CS, IT, Management students. Boost your career with Gatemate!">
+    <meta property="twitter:image" content="https://gatemate.co.in/your-banner-image.jpg">
+
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <!-- Canonical Link -->
+    <link rel="canonical" href="https://gatemate.co.in/">
+
+    <!-- ==== BOOTSTRAP / FONTS ==== -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- ==== STYLES ==== -->
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f4f7fa;
-            transition: background-color 0.3s, color 0.3s;
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-        }
-        .navbar-brand {
-            font-weight: 700;
-            color: #007bff !important;
-            display: flex;
-            align-items: center;
-            transition: color 0.3s;
-        }
-        .navbar-brand svg {
-            height: 40px;
-            margin-right: 10px;
-            transition: transform 0.3s;
-        }
-        .navbar-brand .logo-text {
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
-        .navbar-brand:hover svg {
-            transform: scale(1.1);
-        }
-        .hero-section {
-            background: linear-gradient(135deg, #007bff, #00d4ff), url('https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
-            background-size: cover;
-            background-blend-mode: overlay;
-            color: white;
-            padding: 120px 0;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            animation: fadeIn 1s ease-in;
-        }
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.4);
-        }
-        .hero-section h1, .hero-section p, .hero-section .search-bar {
-            position: relative;
-            z-index: 1;
-        }
-        .hero-section h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            animation: slideIn 1s ease-out;
-        }
-        .search-bar {
-            max-width: 600px;
-            margin: 20px auto;
-            animation: fadeInUp 1s ease-out 0.5s backwards;
-        }
-        .search-bar input {
-            border-radius: 25px 0 0 25px;
-            border: none;
-            padding: 10px 20px;
-            outline: none;
-        }
-        .search-bar button {
-            border-radius: 0 25px 25px 0;
-            padding: 10px 25px;
-            background-color: #00d4ff;
-            border: none;
-            color: white;
-            transition: background-color 0.3s;
-        }
-        .search-bar button:hover {
-            background-color: #007bff;
-        }
-        .course-carousel, .strategy-section, .download-section {
-            padding: 60px 0;
-            background-color: #fff;
-        }
-        .carousel-item img {
-            height: 300px;
-            object-fit: cover;
-            border-bottom: 4px solid #007bff;
-        }
-        .card {
-            border: none;
-            border-radius: 15px;
-            background: linear-gradient(145deg, #ffffff, #f0f0f0);
-            transition: transform 0.3s, box-shadow 0.3s;
-            overflow: hidden;
-        }
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-        }
-        .card-img-top {
-            transition: transform 0.3s;
-        }
-        .card:hover .card-img-top {
-            transform: scale(1.05);
-        }
-        .card-body {
-            color: #333;
-        }
-        .card-text {
-            background: linear-gradient(to right, #ff0000, #ff6200); /* Red to orange gradient for light mode */
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            font-weight: 600;
-        }
-        .marquee-section {
-            background: #007bff;
-            color: white;
-            padding: 10px 0;
-            overflow: hidden;
-        }
-        .marquee-section marquee {
-            font-size: 1.1rem;
-            animation: scroll 15s linear infinite;
-        }
-        .testimonial-section {
-            padding: 60px 0;
-            background-color: #e9ecef;
-        }
-        .testimonial-card {
-            background: #ffffff;
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            transition: transform 0.3s;
-            border: 1px solid #dee2e6;
-            color: #333;
-        }
-        .testimonial-card:hover {
-            transform: translateY(-5px);
-            background: #f8f9fa;
-        }
-        .testimonial-card img {
-            border: 2px solid #007bff;
-        }
-        .testimonial-card .card-title {
-            font-weight: 600;
-            color: #0056b3;
-        }
-        .newsletter-section {
-            background: linear-gradient(135deg, #007bff, #00d4ff);
-            color: white;
-            padding: 60px 0;
-            text-align: center;
-        }
-        .download-card {
-            border: none;
-            border-radius: 15px;
-            background: linear-gradient(145deg, #ffffff, #f0f0f0);
-            transition: transform 0.3s, box-shadow 0.3s;
-            overflow: hidden;
-        }
-        .download-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-        }
-        .download-card .card-body {
-            color: #333;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .download-card .card-title {
-            font-weight: 600;
-            margin-bottom: 0;
-        }
-        .download-card .btn {
-            background-color: #007bff;
-            border: none;
-        }
-        .download-card .btn:hover {
-            background-color: #0056b3;
-        }
-        .footer {
-            background: #343a40;
-            color: white;
-            padding: 40px 0;
-        }
-        .footer a {
-            color: #00d4ff;
-            text-decoration: none;
-        }
-        .footer a:hover {
-            text-decoration: underline;
-        }
-        .dark-mode {
-            background-color: #1a1a1a;
-            color: #e9ecef;
-        }
-        .dark-mode .navbar-brand {
-            color: #4dabf7 !important;
-        }
-        .dark-mode .navbar-brand .logo-text {
-            color: #4dabf7;
-        }
-        .dark-mode .navbar-brand svg .gradient-fill {
-            fill: url(#gradient-dark);
-        }
-        .dark-mode .hero-section {
-            background: linear-gradient(135deg, #004085, #0083b0), url('https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
-        }
-        .dark-mode .course-carousel, .dark-mode .strategy-section, .dark-mode .download-section {
-            background-color: #2c2c2c;
-        }
-        .dark-mode .card {
-            background: linear-gradient(145deg, #2c2c2c, #1a1a1a);
-        }
-        .dark-mode .card-body {
-            color: #e9ecef;
-        }
-        .dark-mode .card-text {
-            background: linear-gradient(to right, #ff4040, #ff8c40); /* Lighter red to lighter orange for dark mode */
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            font-weight: 600;
-        }
-        .dark-mode .testimonial-section {
-            background-color: #2c2c2c;
-        }
-        .dark-mode .testimonial-card {
-            background: #2f2f2f;
-            color: #e9ecef;
-            border: 1px solid #444;
-        }
-        .dark-mode .testimonial-card .card-title {
-            color: #4dabf7;
-        }
-        .dark-mode .testimonial-card img {
-            border-color: #4dabf7;
-        }
-        .dark-mode .newsletter-section {
-            background: linear-gradient(135deg, #004085, #0083b0);
-        }
-        .dark-mode .download-card {
-            background: linear-gradient(145deg, #2c2c2c, #1a1a1a);
-        }
-        .dark-mode .download-card .card-body {
-            color: #e9ecef;
-        }
-        .dark-mode .download-card .btn {
-            background-color: #4dabf7;
-        }
-        .dark-mode .download-card .btn:hover {
-            background-color: #66bfff;
-        }
-        .dark-mode .whatsapp-btn {
-            background-color: #4dabf7;
-        }
-        .dark-mode .whatsapp-btn:hover {
-            background-color: #66bfff;
-        }
-        .dark-mode .whatsapp-options {
-            background: #2f2f2f;
-            border: 1px solid #444;
-        }
-        .dark-mode .whatsapp-options a {
-            color: #e9ecef;
-        }
-        .dark-mode .whatsapp-options a:hover {
-            background: #4dabf7;
-        }
+        body {font-family:'Poppins',sans-serif;background:#f4f7fa;transition:background .3s,color .3s;margin:0;padding:0;overflow-x:hidden;}
+        .navbar-brand{font-weight:700;color:#007bff!important;display:flex;align-items:center;transition:color .3s;}
+        .navbar-brand svg{height:40px;margin-right:10px;transition:transform .3s;}
+        .navbar-brand .logo-text{font-size:1.5rem;font-weight:700;}
+        .navbar-brand:hover svg{transform:scale(1.1);}
 
-        /* WhatsApp Chatbot Styles */
-        .whatsapp-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #25D366;
-            color: white;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            transition: background-color 0.3s, transform 0.3s;
-            z-index: 1000;
+        .hero-section{
+            background:linear-gradient(135deg,#007bff,#00d4ff),url('https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+            background-size:cover;background-blend-mode:overlay;color:#fff;padding:120px 0;text-align:center;position:relative;overflow:hidden;animation:fadeIn 1s ease-in;
         }
-        .whatsapp-btn:hover {
-            background-color: #20b958;
-            transform: scale(1.1);
-        }
-        .whatsapp-btn i {
-            font-size: 30px;
-        }
-        .whatsapp-options {
-            position: fixed;
-            bottom: 90px;
-            right: 20px;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            display: none;
-            flex-direction: column;
-            z-index: 1000;
-            border: 1px solid #dee2e6;
-        }
-        .whatsapp-options a {
-            padding: 10px 20px;
-            color: #333;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: background-color 0.3s;
-        }
-        .whatsapp-options a:hover {
-            background: #f0f0f0;
-        }
-        .whatsapp-options a i {
-            font-size: 18px;
-        }
-        .whatsapp-tooltip {
-            position: absolute;
-            bottom: 80px;
-            right: 70px;
-            background: #333;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 0.9rem;
-            display: none;
-            z-index: 1000;
-        }
-        .whatsapp-btn:hover .whatsapp-tooltip {
-            display: block;
-        }
+        .hero-section::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.4);}
+        .hero-section h1{font-size:3.5rem;font-weight:700;animation:slideIn 1s ease-out;}
+        .hero-section p, .hero-section .search-bar{position:relative;z-index:1;}
 
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes slideIn {
-            from { transform: translateY(-20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        @keyframes fadeInUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        @keyframes scroll {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
-        }
+        .search-bar{max-width:600px;margin:20px auto;animation:fadeInUp 1s ease-out 0.5s backwards;}
+        .search-bar input{border-radius:25px 0 0 25px;border:none;padding:10px 20px;outline:none;}
+        .search-bar button{border-radius:0 25px 25px 0;padding:10px 25px;background:#00d4ff;border:none;color:#fff;transition:background .3s;}
+        .search-bar button:hover{background:#007bff;}
 
-        /* Responsive Design */
-        @media (max-width: 767.98px) {
-            .navbar-brand svg {
-                height: 30px;
-            }
-            .navbar-brand .logo-text {
-                font-size: 1.2rem;
-            }
-            .hero-section {
-                padding: 80px 0;
-            }
-            .hero-section h1 {
-                font-size: 2rem;
-            }
-            .search-bar {
-                max-width: 100%;
-            }
-            .search-bar input, .search-bar button {
-                border-radius: 25px;
-            }
-            .carousel-item img {
-                height: 200px;
-            }
-            .card-body {
-                padding: 15px;
-            }
-            .card h5 {
-                font-size: 1.1rem;
-            }
-            .card p {
-                font-size: 0.9rem;
-            }
-            .download-card .card-body {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
-            .footer .col-md-4 {
-                flex: 0 0 100%;
-                max-width: 100%;
-                text-align: center;
-                margin-bottom: 20px;
-            }
-            .whatsapp-btn {
-                width: 50px;
-                height: 50px;
-            }
-            .whatsapp-btn i {
-                font-size: 24px;
-            }
-            .whatsapp-options {
-                bottom: 80px;
-                right: 15px;
-            }
-        }
+        .marquee-section{background:#007bff;color:#fff;padding:10px 0;overflow:hidden;}
+        .marquee-section marquee{font-size:1.1rem;animation:scroll 15s linear infinite;}
 
-        @media (min-width: 768px) and (max-width: 1023.98px) {
-            .navbar-brand svg {
-                height: 35px;
-            }
-            .navbar-brand .logo-text {
-                font-size: 1.3rem;
-            }
-            .hero-section {
-                padding: 100px 0;
-            }
-            .hero-section h1 {
-                font-size: 2.5rem;
-            }
-            .carousel-item img {
-                height: 250px;
-            }
-            .footer .col-md-4 {
-                flex: 0 0 33.33%;
-                max-width: 33.33%;
-                text-align: left;
-            }
-        }
+        .card{border:none;border-radius:15px;background:linear-gradient(145deg,#fff,#f0f0f0);transition:transform .3s,box-shadow .3s;overflow:hidden;position:relative;}
+        .card:hover{transform:translateY(-10px);box-shadow:0 12px 24px rgba(0,0,0,.1);}
+        .card-img-top{height:200px;object-fit:cover;transition:transform .3s;}
+        .card:hover .card-img-top{transform:scale(1.05);}
+        .badge-sticker{position:absolute;top:10px;left:10px;background:#007bff;color:#fff;padding:5px 10px;border-radius:10px;font-size:.8rem;font-weight:600;z-index:1;transform:rotate(-5deg);}
 
-        @media (min-width: 1024px) {
-            .hero-section {
-                padding: 150px 0;
-            }
-            .hero-section h1 {
-                font-size: 4rem;
-            }
-            .footer .col-md-4 {
-                flex: 0 0 33.33%;
-                max-width: 33.33%;
-                text-align: left;
-            }
+        .testimonial-section{padding:60px 0;background:#f8f9fa;}
+        .testimonial-card{border-radius:15px;background:#fff;padding:20px;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,.05);transition:transform .3s;}
+        .testimonial-card:hover{transform:translateY(-5px);}
+        .testimonial-card img{width:80px;height:80px;border-radius:50%;object-fit:cover;margin-bottom:15px;border:3px solid #007bff;}
+        .testimonial-card p{font-style:italic;color:#555;margin-bottom:10px;}
+        .testimonial-card small{color:#007bff;font-weight:600;}
+
+        .newsletter-section{padding:60px 0;background:linear-gradient(135deg,#007bff,#00d4ff);color:#fff;text-align:center;}
+        .newsletter-section h2{font-size:2.5rem;}
+        .newsletter-section p{font-size:1.2rem;}
+
+        .footer{background:#343a40;color:#fff;padding:40px 0;}
+        .footer a{color:#00d4ff;text-decoration:none;}
+        .footer a:hover{text-decoration:underline;}
+
+        .dark-mode{background:#1a1a1a;color:#e9ecef;}
+        .dark-mode .navbar-brand{color:#4dabf7!important;}
+        .dark-mode .hero-section{background:linear-gradient(135deg,#004085,#0083b0),url('https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');}
+        .dark-mode .card{background:linear-gradient(145deg,#2c2c2c,#1a1a1a);}
+        .dark-mode .badge-sticker{background:#4dabf7;}
+        .dark-mode .btn-primary{background:#4dabf7;border-color:#4dabf7;}
+        .dark-mode .btn-primary:hover{background:#66bfff;border-color:#66bfff;}
+        .dark-mode .testimonial-section{background:#2c2c2c;}
+        .dark-mode .testimonial-card{background:#1a1a1a;color:#e9ecef;}
+        .dark-mode .testimonial-card p{color:#ccc;}
+        .dark-mode .testimonial-card small{color:#66e0ff;}
+        .dark-mode .newsletter-section{background:linear-gradient(135deg,#004085,#0083b0);}
+
+        /* WhatsApp */
+        .whatsapp-btn{position:fixed;bottom:20px;right:20px;background:#25D366;color:#fff;border-radius:50%;width:60px;height:60px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 8px rgba(0,0,0,.2);transition:background .3s,transform .3s;z-index:1000;}
+        .whatsapp-btn:hover{background:#20b958;transform:scale(1.1);}
+        .whatsapp-btn i{font-size:30px;}
+        .whatsapp-tooltip{position:absolute;bottom:80px;right:70px;background:#333;color:#fff;padding:5px 10px;border-radius:5px;font-size:.9rem;display:none;z-index:1000;}
+        .whatsapp-btn:hover .whatsapp-tooltip{display:block;}
+
+        .whatsapp-options{position:fixed;bottom:90px;right:20px;background:#fff;border-radius:12px;padding:10px;box-shadow:0 4px 12px rgba(0,0,0,.15);display:none;flex-direction:column;gap:8px;z-index:1000;width:180px;}
+        .whatsapp-options a{display:flex;align-items:center;gap:10px;color:#333;text-decoration:none;padding:8px 12px;border-radius:8px;transition:background .2s;}
+        .whatsapp-options a:hover{background:#f0f0f0;}
+
+        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+        @keyframes slideIn{from{transform:translateY(-20px);opacity:0}to{transform:translateY(0);opacity:1}}
+        @keyframes fadeInUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+        @keyframes scroll{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+
+        @media (max-width:767.98px){
+            .hero-section{padding:80px 0;}
+            .hero-section h1{font-size:2.5rem;}
+            .card-img-top{height:150px;}
         }
     </style>
 </head>
 <body>
-    <script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
 
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-    </script>
-
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container">
-            <a class="navbar-brand" href="/index.html">
-                <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="gradient-light" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#007bff;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:1" />
-                        </linearGradient>
-                        <linearGradient id="gradient-dark" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#004085;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#0083b0;stop-opacity:1" />
-                        </linearGradient>
-                    </defs>
-                    <path class="gradient-fill" fill="url(#gradient-light)" d="M10 30 V10 H15 V5 H25 V10 H30 V30 H25 V25 H15 V30 Z M15 15 H25 V20 H15 Z" />
-                    <path fill="#fff" d="M17 17 H23 V18 H17 Z M17 19 H23 V20 H17 Z" />
-                </svg>
-                <span class="logo-text">GateMate</span>
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link active" href="/index.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/courses.html">Courses</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/workshops.html">Workshops</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/resources.html">Resources</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/bihar-prep.html">Bihar Exam Prep</a></li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="careerDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Career Support
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="careerDropdown">
-                            <li><a class="dropdown-item" href="/internship.html">Internships</a></li>
-                            <li><a class="dropdown-item" href="/careers.html">Careers</a></li>
-                            <li><a class="dropdown-item" href="/research-writing.html">Research Writing</a></li>
-                            <li><a class="dropdown-item" href="/hiring.html">Hiring</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item"><a class="nav-link" href="/notice.html">Notice Board</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/about.html">About</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/contact.html">Contact</a></li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Account
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item" href="/login.html">Login</a></li>
-                            <li><a class="dropdown-item" href="/register.html">Register</a></li>
-                            <li><a class="dropdown-item" href="/student-dashboard.html">Student Dashboard</a></li>
-                            <li><a class="dropdown-item" href="/faculty-dashboard.html">Faculty Dashboard</a></li>
-                            <li><a class="dropdown-item" href="/admin.html">Admin</a></li>
-                        </ul>
-                    </li>
-                </ul>
-                <button id="themeToggle" class="btn btn-outline-secondary ms-3" aria-label="Toggle Dark Mode">Toggle Dark Mode</button>
-            </div>
-        </div>
-    </nav>
-
-    <div class="marquee-section">
-        <marquee behavior="scroll" direction="left">
-            🎉 20% off on all courses! | Free trial classes this week! | Join our referral program for rewards! 🎉
-        </marquee>
-    </div>
-
-    <section class="hero-section">
-        <div class="container">
-            <h1>Unlock Your Exam Success with GateMate</h1>
-            <p class="lead mb-4">Expert-led courses for GATE, UGC NET, and BPSC TRE with live classes and interactive learning.</p>
-            <div class="search-bar">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search courses or resources..." id="searchInput">
-                    <button class="btn" onclick="searchCourses()"><i class="fas fa-search"></i></button>
-                </div>
-            </div>
-            <div class="mt-4">
-                <a href="/courses.html" class="btn btn-light btn-lg me-2">Explore Courses</a>
-                <a href="/register.html" class="btn btn-outline-light btn-lg">Get Started</a>
-            </div>
-        </div>
-    </section>
-
-    <section class="course-carousel">
-        <div class="container">
-            <h2 class="text-center mb-4">Featured Courses</h2>
-            <div id="courseCarousel" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="card">
-                                    <img src="https://images.pexels.com/photos/261895/pexels-photo-261895.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="GATE CS Course">
-                                    <div class="card-body">
-                                        <h5 class="card-title">GATE Computer Science</h5>
-                                        <p class="card-text">₹9999 • 6 Months • Live Classes</p>
-                                        <a href="/enroll.html?course=gate-cs" class="btn btn-primary">Enroll Now</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="card">
-                                    <img src="https://images.pexels.com/photos/256541/pexels-photo-256541.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="UGC NET Course">
-                                    <div class="card-body">
-                                        <h5 class="card-title">UGC NET Paper 1</h5>
-                                        <p class="card-text">₹7999 • 4 Months • Recorded + Live</p>
-                                        <a href="/enroll.html?course=ugc-net" class="btn btn-primary">Enroll Now</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="card">
-                                    <img src="https://images.pexels.com/photos/1438081/pexels-photo-1438081.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="BPSC TRE Course">
-                                    <div class="card-body">
-                                        <h5 class="card-title">BPSC TRE 4.0</h5>
-                                        <p class="card-text">₹5999 • 3 Months • Mock Tests</p>
-                                        <a href="/enroll.html?course=bpsc-tre" class="btn btn-primary">Enroll Now</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="card">
-                                    <img src="https://images.pexels.com/photos/3184297/pexels-photo-3184297.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="Workshop 1">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Workshop: Data Structures</h5>
-                                        <p class="card-text">₹1999 • 1 Week</p>
-                                        <a href="/workshops.html" class="btn btn-primary">Join Now</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="card">
-                                    <img src="https://images.pexels.com/photos/159711/books-bookstore-book-reading-159711.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="Workshop 2">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Workshop: Research Writing</h5>
-                                        <p class="card-text">₹1499 • 5 Days</p>
-                                        <a href="/research-writing.html" class="btn btn-primary">Join Now</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="card">
-                                    <img src="https://images.pexels.com/photos/3184431/pexels-photo-3184431.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="Bihar Prep">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Bihar Exam Prep</h5>
-                                        <p class="card-text">₹4999 • 2 Months</p>
-                                        <a href="/bihar-prep.html" class="btn btn-primary">Enroll Now</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#courseCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#courseCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
-            </div>
-            <div class="text-center mt-4">
-                <a href="/courses.html" class="btn btn-outline-primary btn-lg">View All Courses</a>
-            </div>
-        </div>
-    </section>
-<form><script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_QNvkmdeFepVdoB" async> </script> </form>
-    <section class="strategy-section">
-        <div class="container">
-            <h2 class="text-center mb-4">Boost Your Learning Journey</h2>
-            <p class="text-center mb-5">Explore exclusive opportunities to enhance your preparation.</p>
-            <div class="row">
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <img src="https://images.pexels.com/photos/208061/pexels-photo-208061.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="YouTube Lectures">
-                        <div class="card-body">
-                            <h5 class="card-title">Free YouTube Lectures</h5>
-                            <p class="card-text">Access free lectures to start your journey.</p>
-                            <a href="https://youtube.com" target="_blank" class="btn btn-primary">Watch Now</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <img src="https://images.pexels.com/photos/3184306/pexels-photo-3184306.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="Referral Program">
-                        <div class="card-body">
-                            <h5 class="card-title">Referral Program</h5>
-                            <p class="card-text">Invite friends and earn discounts.</p>
-                            <a href="/referral.html" class="btn btn-primary">Refer Now</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <img src="https://images.pexels.com/photos/5428000/pexels-photo-5428000.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="Trial Classes">
-                        <div class="card-body">
-                            <h5 class="card-title">Free Trial Classes</h5>
-                            <p class="card-text">Try a class before enrolling.</p>
-                            <a href="/trial.html" class="btn btn-primary">Try Now</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="download-section">
-        <div class="container">
-            <h2 class="text-center mb-4">Download Resources</h2>
-            <p class="text-center mb-5">Access study materials, forms, and other resources for GATE, UGC NET, and BPSC TRE preparation.</p>
-            <div class="row">
-                <div class="col-md-6 mb-4">
-                    <div class="card download-card">
-                        <div class="card-body">
-                            <h5 class="card-title">GATE Computer Science Notes</h5>
-                            <a href="/downloads/gate-cs-notes.pdf" class="btn btn-primary" download><i class="fas fa-download me-2"></i>Download</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 mb-4">
-                    <div class="card download-card">
-                        <div class="card-body">
-                            <h5 class="card-title">UGC NET Paper 1 Guide</h5>
-                            <a href="/downloads/ugc-net-guide.pdf" class="btn btn-primary" download><i class="fas fa-download me-2"></i>Download</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 mb-4">
-                    <div class="card download-card">
-                        <div class="card-body">
-                            <h5 class="card-title">BPSC TRE 4.0 Application Form</h5>
-                            <a href="/downloads/bpsc-tre-form.pdf" class="btn btn-primary" download><i class="fas fa-download me-2"></i>Download</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 mb-4">
-                    <div class="card download-card">
-                        <div class="card-body">
-                            <h5 class="card-title">GateMate Brochure</h5>
-                            <a href="/downloads/gatemate-brochure.pdf" class="btn btn-primary" download><i class="fas fa-download me-2"></i>Download</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 mb-4">
-                    <div class="card download-card">
-                        <div class="card-body">
-                            <h5 class="card-title">Sample Internship Application</h5>
-                            <a href="/downloads/internship-application.pdf" class="btn btn-primary" download><i class="fas fa-download me-2"></i>Download</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 mb-4">
-                    <div class="card download-card">
-                        <div class="card-body">
-                            <h5 class="card-title">Research Writing Template</h5>
-                            <a href="/downloads/research-writing-template.pdf" class="btn btn-primary" download><i class="fas fa-download me-2"></i>Download</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="testimonial-section">
-        <div class="container">
-            <h2 class="text-center mb-4">What Our Students Say</h2>
-            <div class="row">
-                <div class="col-md-4 mb-4">
-                    <div class="card testimonial-card">
-                        <div class="card-body">
-                            <img src="https://images.pexels.com/photos/6147148/pexels-photo-6147148.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg';" class="rounded-circle mb-3" alt="Student 1" style="width: 80px; height: 80px; object-fit: cover;">
-                            <p class="card-text">"GateMate’s live classes helped me crack GATE 2024!"</p>
-                            <h6 class="card-title">Rahul Sharma</h6>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card testimonial-card">
-                        <div class="card-body">
-                            <img src="https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg';" class="rounded-circle mb-3" alt="Student 2" style="width: 80px; height: 80px; object-fit: cover;">
-                            <p class="card-text">"The study material is excellent and well-structured."</p>
-                            <h6 class="card-title">Priya Singh</h6>
-                        </div>
-                    </div>
-                </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="newsletter-section">
-        <div class="container">
-            <h2 class="mb-4">Stay Updated</h2>
-            <p class="mb-4">Subscribe for the latest courses, offers, and tips.</p>
-            <form action="/api/newsletter" method="POST" class="row justify-content-center">
-                <div class="col-md-6">
-                    <div class="input-group">
-                        <input type="email" class="form-control" placeholder="Enter your email" name="email" required>
-                        <button type="submit" class="btn btn-light">Subscribe</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </section>
-
-    <section class="py-5 text-center">
-        <div class="container">
-            <h2 class="mb-4">Download Our Mobile App</h2>
-            <p class="mb-4">Learn on the go with our app!</p>
-            <a href="#" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play" style="width: 150px; margin-right: 10px;"></a>
-            <a href="#" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="App Store" style="width: 150px;"></a>
-        </div>
-    </section>
-
-    <footer class="footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4">
-                    <h5>About GATEMATE</h5>
-                    <p>India’s leading platform for GATE, UGC NET, BPSC TRE, and technical training with expert guidance.</p>
-                    <div class="social-icons">
-                        <a href="#" class="me-3"><i class="fab fa-facebook"></i></a>
-                        <a href="#" class="me-3"><i class="fab fa-youtube"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <h5>Quick Links</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="/index.html">Home</a></li>
-                        <li><a href="/courses.html">Courses</a></li>
-                        <li><a href="/workshops.html">Workshops</a></li>
-                        <li><a href="/resources.html">Resources</a></li>
-                        <li><a href="/bihar-prep.html">Bihar Exam Prep</a></li>
-                        <li><a href="/about.html">About Us</a></li>
-                        <li><a href="/contact.html">Contact</a></li>
+<!-- ====================== NAVBAR ====================== -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+        <a class="navbar-brand" href="/index.html">
+            <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="gradient-light" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#007bff;stop-opacity:1"/>
+                        <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:1"/>
+                    </linearGradient>
+                    <linearGradient id="gradient-dark" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#004085;stop-opacity:1"/>
+                        <stop offset="100%" style="stop-color:#0083b0;stop-opacity:1"/>
+                    </linearGradient>
+                </defs>
+                <path class="gradient-fill" fill="url(#gradient-light)" d="M10 30 V10 H15 V5 H25 V10 H30 V30 H25 V25 H15 V30 Z M15 15 H25 V20 H15 Z"/>
+                <path fill="#fff" d="M17 17 H23 V18 H17 Z M17 19 H23 V20 H17 Z"/>
+            </svg>
+            <span class="logo-text">GateMate</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link active" href="/index.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="/courses.html">Courses</a></li>
+                <li class="nav-item"><a class="nav-link" href="/workshops.html">Workshops</a></li>
+                <li class="nav-item"><a class="nav-link" href="/resources.html">Resources</a></li>
+                <li class="nav-item"><a class="nav-link" href="/bihar-prep.html">Bihar Exam Prep</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="careerDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">Career Support</a>
+                    <ul class="dropdown-menu" aria-labelledby="careerDropdown">
+                        <li><a class="dropdown-item" href="/internship.html">Internships</a></li>
+                        <li><a class="dropdown-item" href="/careers.html">Careers</a></li>
+                        <li><a class="dropdown-item" href="/research-writing.html">Research Writing</a></li>
+                        <li><a class="dropdown-item" href="/hiring.html">Hiring</a></li>
                     </ul>
-                </div>
-                <div class="col-md-4">
-<section id="contact" style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px;">
-  <h2>Contact Us</h2>
+                </li>
+                <li class="nav-item"><a class="nav-link" href="/notice.html">Notice Board</a></li>
+                <li class="nav-item"><a class="nav-link" href="/about.html">About</a></li>
+                <li class="nav-item"><a class="nav-link" href="/contact.html">Contact</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">Account</a>
+                    <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" href="/login.html">Login</a></li>
+                        <li><a class="dropdown-item" href="/register.html">Register</a></li>
+                        <li><a class="dropdown-item" href="/student-dashboard.html">Student Dashboard</a></li>
+                        <li><a class="dropdown-item" href="/faculty-dashboard.html">Faculty Dashboard</a></li>
+                        <li><a class="dropdown-item" href="/admin.html">Admin</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <button id="themeToggle" class="btn btn-outline-secondary ms-3" aria-label="Toggle Dark Mode">
+                Toggle Dark Mode
+            </button>
+        </div>
+    </div>
+</nav>
 
-  <p><strong>For general inquiries:</strong><br>
-  ✉️ <a href="mailto:info@gatemate.co.in">info@gatemate.co.in</a></p>
+<!-- ====================== MARQUEE ====================== -->
+<div class="marquee-section">
+    <marquee behavior="scroll" direction="left">
+        New Batch Starting Soon! | GATE 2026 Crash Course | UGC NET Dec 2025 | BPSC TRE 4.0
+    </marquee>
+</div>
 
-  <p><strong>For career opportunities:</strong><br>
-  ✉️ <a href="mailto:careers@gatemate.co.in">careers@gatemate.co.in</a></p>
-
-  <p><strong>For internship programs:</strong><br>
-  ✉️ <a href="mailto:internships@gatemate.co.in">internships@gatemate.co.in</a></p>
-
-  <p><strong>For customer support:</strong><br>
-  ✉️ <a href="mailto:support@gatemate.co.in">support@gatemate.co.in</a></p>
-
-  <p><strong>Alternative email:</strong><br>
-  ✉️ <a href="mailto:gatemate.co@gmail.com">gatemate.co@gmail.com</a></p>
-
-  <hr>
-
-  <p><strong>Contact Person:</strong><br>
-  Ms. Anjali Kumari<br>
-  Assistant HR <br>
-  📞 <a href="tel:+919534427131">+91 9534427131</a><br>
-  ✉️ <a href="mailto:anjali@gatemate.co.in">anjali@gatemate.co.in</a></p>
-
-  <p><strong>Business Hours:</strong><br>
-  Mon - Sat: 9:00 AM - 7:00 PM</p>
+<!-- ====================== HERO ====================== -->
+<section class="hero-section">
+    <div class="container">
+        <h1>Your Path to Success Starts Here</h1>
+        <p class="lead mb-4">Master GATE, UGC NET, BPSC TRE with expert live classes & structured guidance.</p>
+        <div class="search-bar d-flex">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search courses, exams, or topics...">
+            <button class="btn" onclick="searchCourses()">Search</button>
+        </div>
+        <a href="/register.html" class="btn btn-outline-light btn-lg mt-3">Join Now</a>
+    </div>
 </section>
 
+<!-- ====================== FEATURED COURSES ====================== -->
+<section class="py-5 bg-white">
+    <div class="container">
+        <h2 class="text-center mb-5">Featured Courses</h2>
+        <div class="row" id="featuredCourses">
+            <!-- Cards injected by JS -->
+        </div>
+    </div>
+</section>
+
+<!-- ====================== TESTIMONIALS ====================== -->
+<section class="testimonial-section">
+    <div class="container">
+        <h2 class="text-center mb-5">What Our Students Say</h2>
+        <div class="row justify-content-center g-4">
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <img src="https://images.pexels.com/photos/6147148/pexels-photo-6147148.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Rahul Sharma">
+                    <p>"GateMate’s live classes helped me crack GATE 2024!"</p>
+                    <small>Rahul Sharma</small>
                 </div>
             </div>
-            <hr>
-            <p class="text-center">© 2025 GATEMATE. All rights reserved. | <a href="/terms.html">Terms</a> | <a href="/privacy.html">Privacy</a> | <a href="/refund.html">Refund</a> | <a href="/sitemap.html">Sitemap</a></p>
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <img src="https://images.pexels.com/photos/3184297/pexels-photo-3184297.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Priya Singh">
+                    <p>"The study material is excellent and well-structured."</p>
+                    <small>Priya Singh</small>
+                </div>
+            </div>
         </div>
-    </footer>
-
-    <!-- WhatsApp Chatbot -->
-    <div class="whatsapp-btn" id="whatsappBtn">
-        <i class="fab fa-whatsapp"></i>
-        <div class="whatsapp-tooltip">Need Help?</div>
     </div>
-    <div class="whatsapp-options" id="whatsappOptions">
-        <a href="https://wa.me/9534427131?text=Hello%20GateMate%20Team,%20I%20need%20help%20with%20my%20studies!" target="_blank">
-            <i class="fas fa-comment"></i> Message Us
-        </a>
-        <a href="tel:+919534427131">
-            <i class="fas fa-phone"></i> Call Us
-        </a>
+</section>
+
+<!-- ====================== NEWSLETTER ====================== -->
+<section class="newsletter-section">
+    <div class="container">
+        <h2>Stay Updated</h2>
+        <p>Subscribe for the latest courses, offers, and tips.</p>
+        <!-- Form or link here if needed -->
     </div>
+</section>
 
-    <script data-cfasync="false" src="/cdn-cgiyards/5c5dd728/cloudflare-static/email-decode.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.getElementById('themeToggle').addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
-        });
-        if (localStorage.getItem('theme') === 'dark') {
-            document.body.classList.add('dark-mode');
+<!-- ====================== RAZORPAY ====================== -->
+<form class="my-4 text-center">
+    <script src="https://checkout.razorpay.com/v1/payment-button.js"
+            data-payment_button_id="pl_QNvkmdeFepVdoB" async></script>
+</form>
+
+<!-- ====================== FOOTER ====================== -->
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h5>About GATEMATE</h5>
+                <p>India’s leading platform for GATE, UGC NET, BPSC TRE, and technical training with expert guidance.</p>
+                <div class="social-icons">
+                    <a href="#" class="me-3"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="me-3"><i class="fab fa-youtube"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <h5>Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li><a href="/index.html">Home</a></li>
+                    <li><a href="/courses.html">Courses</a></li>
+                    <li><a href="/workshops.html">Workshops</a></li>
+                    <li><a href="/resources.html">Resources</a></li>
+                    <li><a href="/bihar-prep.html">Bihar Exam Prep</a></li>
+                    <li><a href="/about.html">About Us</a></li>
+                    <li><a href="/contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h5>Contact Us</h5>
+                <p>123 Education Park, Patna, Bihar, India - 800001<br>
+                    +91 9534427131<br>
+                    <a href="/cdn-cgi/l/email-protection#34070104041b06003413150011191500115a171b5a1d1a"><span class="__cf_email__" data-cfemail="736543464659444273515742535b574253185559185f58">[email&#160;protected]</span></a><br>
+                    Mon - Sat: 9:00 AM - 7:00 PM</p>
+            </div>
+        </div>
+        <hr>
+        <p class="text-center">© 2025 GATEMATE. All rights reserved. | <a href="/terms.html">Terms</a> | <a href="/privacy.html">Privacy</a> | <a href="/refund.html">Refund</a> | <a href="/sitemap.html">Sitemap</a></p>
+    </div>
+</footer>
+
+<!-- ====================== WHATSAPP BUTTON ====================== -->
+<div class="whatsapp-btn" id="whatsappBtn">
+    <i class="fab fa-whatsapp"></i>
+    <div class="whatsapp-tooltip">Need Help?</div>
+</div>
+<div class="whatsapp-options" id="whatsappOptions">
+    <a href="https://wa.me/919534427131?text=Hello%20GateMate%20Team,%20I%20need%20help%20with%20my%20studies!" target="_blank">
+        <i class="fas fa-comment"></i> Message Us
+    </a>
+    <a href="tel:+919534427131">
+        <i class="fas fa-phone"></i> Call Us
+    </a>
+</div>
+
+<!-- ====================== COURSE DETAIL MODAL ====================== -->
+<div class="modal fade" id="courseModal" tabindex="-1" aria-labelledby="courseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="courseModalLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Duration:</strong> <span id="modalDuration"></span></p>
+                <p><strong>Price:</strong> <span id="modalPrice"></span></p>
+                <p id="modalDesc"></p>
+
+                <h6 class="mt-4">Syllabus (Module-wise)</h6>
+                <ul id="modalSyllabus" class="list-group list-group-flush"></ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a id="modalEnrollBtn" href="#" class="btn btn-primary">Enroll Now</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ====================== SCRIPTS ====================== -->
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.getElementById('themeToggle').addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    });
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+    }
+
+    function searchCourses() {
+        const query = document.getElementById('searchInput').value;
+        if (query) {
+            alert(`Searching for: ${query}. Redirecting to courses page...`);
+            window.location.href = `/courses.html?search=${encodeURIComponent(query)}`;
         }
+    }
+    document.getElementById('searchInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') searchCourses();
+    });
 
-        function searchCourses() {
-            const query = document.getElementById('searchInput').value;
-            if (query) {
-                alert(`Searching for: ${query}. Redirecting to courses page...`);
-                window.location.href = `/courses.html?search=${encodeURIComponent(query)}`;
-            }
+    // WhatsApp Button Toggle
+    const whatsappBtn = document.getElementById('whatsappBtn');
+    const whatsappOptions = document.getElementById('whatsappOptions');
+    whatsappBtn.addEventListener('click', () => {
+        whatsappOptions.style.display = whatsappOptions.style.display === 'flex' ? 'none' : 'flex';
+    });
+
+    // Close WhatsApp options when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!whatsappBtn.contains(e.target) && !whatsappOptions.contains(e.target)) {
+            whatsappOptions.style.display = 'none';
         }
-        document.getElementById('searchInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') searchCourses();
-        });
+    });
 
-        // WhatsApp Button Toggle
-        const whatsappBtn = document.getElementById('whatsappBtn');
-        const whatsappOptions = document.getElementById('whatsappOptions');
-        whatsappBtn.addEventListener('click', () => {
-            whatsappOptions.style.display = whatsappOptions.style.display === 'flex' ? 'none' : 'flex';
-        });
+    // Featured Courses Data
+    const featuredCourses = [
+        {
+            id: 'gate-cs',
+            title: 'GATE Computer Science',
+            img: 'https://images.pexels.com/photos/159711/books-bookstore-book-reading-159711.jpeg',
+            type: 'exam',
+            price: 4999,
+            duration: '6 Months',
+            badge: 'Popular',
+            desc: 'Complete GATE CS preparation with live classes and mock tests.',
+            syllabus: [
+                'Module 1: Algorithms & Data Structures',
+                'Module 2: Operating Systems',
+                'Module 3: Database Management',
+                'Module 4: Computer Networks',
+                'Module 5: Mock Tests & Revision'
+            ],
+            enrollLink: '/enroll.html?course=gate-cs'
+        },
+        {
+            id: 'ugc-net',
+            title: 'UGC NET Paper 1',
+            img: 'https://images.pexels.com/photos/3184297/pexels-photo-3184297.jpeg',
+            type: 'exam',
+            price: 2999,
+            duration: '4 Months',
+            badge: null,
+            desc: 'In-depth coverage for UGC NET Paper 1 with practice sessions.',
+            syllabus: [
+                'Module 1: Teaching Aptitude',
+                'Module 2: Research Aptitude',
+                'Module 3: Comprehension',
+                'Module 4: Logical Reasoning',
+                'Module 5: Data Interpretation'
+            ],
+            enrollLink: '/enroll.html?course=ugc-net'
+        },
+        {
+            id: 'bpsc-tre',
+            title: 'BPSC TRE 4.0',
+            img: 'https://images.pexels.com/photos/6147148/pexels-photo-6147148.jpeg',
+            type: 'exam',
+            price: 3999,
+            duration: '5 Months',
+            badge: 'New',
+            desc: 'Targeted preparation for BPSC Teacher Recruitment Exam.',
+            syllabus: [
+                'Module 1: General Studies',
+                'Module 2: Teaching Methodology',
+                'Module 3: Subject-Specific',
+                'Module 4: Previous Papers',
+                'Module 5: Mock Tests'
+            ],
+            enrollLink: '/enroll.html?course=bpsc-tre'
+        }
+    ];
 
-        // Close WhatsApp options when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!whatsappBtn.contains(e.target) && !whatsappOptions.contains(e.target)) {
-                whatsappOptions.style.display = 'none';
-            }
+    // Render Featured Courses
+    function renderFeaturedCourses() {
+        const container = document.getElementById('featuredCourses');
+        container.innerHTML = '';
+        featuredCourses.forEach(course => {
+            const col = document.createElement('div');
+            col.className = 'col-md-4 mb-4';
+
+            const badge = course.badge ? `<span class="badge-sticker">${course.badge}</span>` : '';
+
+            col.innerHTML = `
+                <div class="card" data-id="${course.id}">
+                    ${badge}
+                    <img src="${course.img}?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                         onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';"
+                         class="card-img-top" alt="${course.title}">
+                    <div class="card-body">
+                        <h5 class="card-title">${course.title}</h5>
+                        <p class="card-text">Price: ₹${course.price} | Duration: ${course.duration}</p>
+                        <button class="btn btn-primary enroll-btn">Enroll Now</button>
+                    </div>
+                </div>`;
+            container.appendChild(col);
         });
-    </script>
-    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'936501263fa353ff',t:'MTc0NTY1OTIyOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
-    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9366a719ab84b056',t:'MTc0NTY3NjUxMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
-    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'936cec793b0cb061',t:'MTc0NTc0MjI2OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+    }
+
+    // Modal Population
+    document.addEventListener('click', e => {
+        if (e.target.classList.contains('enroll-btn')) {
+            const card = e.target.closest('.card');
+            const id = card.dataset.id;
+            const course = featuredCourses.find(c => c.id === id);
+            if (!course) return;
+
+            document.getElementById('courseModalLabel').textContent = course.title;
+            document.getElementById('modalDuration').textContent = course.duration;
+            document.getElementById('modalPrice').textContent = `₹${course.price}`;
+            document.getElementById('modalDesc').textContent = course.desc;
+
+            const syllabusList = document.getElementById('modalSyllabus');
+            syllabusList.innerHTML = '';
+            course.syllabus.forEach(mod => {
+                const li = document.createElement('li');
+                li.className = 'list-group-item';
+                li.textContent = mod;
+                syllabusList.appendChild(li);
+            });
+
+            document.getElementById('modalEnrollBtn').href = course.enrollLink;
+
+            const modal = new bootstrap.Modal(document.getElementById('courseModal'));
+            modal.show();
+        }
+    });
+
+    // Initial Render
+    renderFeaturedCourses();
+</script>
 </body>
 </html>
