@@ -1,624 +1,534 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-        <form><script src="https://checkout.razorpay.com/v1/payment-button.js" data-payment_button_id="pl_QNvkmdeFepVdoB" async> </script> </form>
+    <!-- ==== BASIC META ==== -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Prepare for Bihar exams like BPSC TRE with expert-led courses and resources at GATEMATE.co.in">
-    <meta name="keywords" content="Bihar exam prep, BPSC TRE, Bihar teacher recruitment, study materials">
-    <meta name="author" content="GateMate Team">
     <title>Bihar Exam Prep - GATEMATE.co.in</title>
+    <meta name="description"
+          content="Prepare for Bihar exams like BPSC TRE, Bihar Police, Home Guard with expert-led courses, mock tests and resources at GATEMATE.co.in">
+    <meta name="keywords"
+          content="Bihar exam prep, BPSC TRE, Bihar teacher recruitment, Bihar Police, study materials, mock tests">
+    <meta name="author" content="GateMate Team">
+
+    <!-- ==== BOOTSTRAP / FONTS ==== -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+          rel="stylesheet">
+
+    <!-- ==== SAME STYLES AS index.html ==== -->
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f4f7fa;
-            transition: background-color 0.3s, color 0.3s;
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-        }
-        .navbar-brand {
-            font-weight: 700;
-            color: #007bff !important;
-            display: flex;
-            align-items: center;
-            transition: color 0.3s;
-        }
-        .navbar-brand svg {
-            height: 40px;
-            margin-right: 10px;
-            transition: transform 0.3s;
-        }
-        .navbar-brand .logo-text {
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
-        .navbar-brand:hover svg {
-            transform: scale(1.1);
-        }
-        .hero-section {
-            background: linear-gradient(135deg, #007bff, #00d4ff), url('https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
-            background-size: cover;
-            background-blend-mode: overlay;
-            color: white;
-            padding: 100px 0;
-            text-align: center;
-            position: relative;
-            animation: fadeIn 1s ease-in;
-        }
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.4);
-        }
-        .hero-section h1 {
-            font-size: 3rem;
-            font-weight: 700;
-            animation: slideIn 1s ease-out;
-        }
-        .prep-filter {
-            padding: 20px 0;
-            background-color: #fff;
-        }
-        .prep-grid {
-            padding: 40px 0;
-            background-color: #f8f9fa;
-        }
-        .card {
-            border: none;
-            border-radius: 15px;
-            background: linear-gradient(145deg, #ffffff, #f0f0f0);
-            transition: transform 0.3s, box-shadow 0.3s;
-            overflow: hidden;
-            position: relative;
-        }
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-        }
-        .card-img-top {
-            height: 200px;
-            object-fit: cover;
-            transition: transform 0.3s;
-        }
-        .card:hover .card-img-top {
-            transform: scale(1.05);
-        }
-        .card-body {
-            color: #333; /* Default text color for better contrast in light mode */
-        }
-        .card-text {
-            color: #555; /* Slightly lighter for secondary text in light mode */
-        }
-        .badge-sticker {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background-color: #007bff;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 10px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            z-index: 1;
-            transform: rotate(-5deg);
-        }
-        .footer {
-            background: #343a40;
-            color: white;
-            padding: 40px 0;
-        }
-        .footer a {
-            color: #00d4ff;
-            text-decoration: none;
-        }
-        .footer a:hover {
-            text-decoration: underline;
-        }
-        .dark-mode {
-            background-color: #1a1a1a;
-            color: #e9ecef;
-        }
-        .dark-mode .navbar-brand {
-            color: #4dabf7 !important;
-        }
-        .dark-mode .navbar-brand .logo-text {
-            color: #4dabf7;
-        }
-        .dark-mode .navbar-brand svg .gradient-fill {
-            fill: url(#gradient-dark);
-        }
-        .dark-mode .hero-section {
-            background: linear-gradient(135deg, #004085, #0083b0), url('https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
-        }
-        .dark-mode .prep-filter, .dark-mode .prep-grid {
-            background-color: #2c2c2c;
-        }
-        .dark-mode .card {
-            background: linear-gradient(145deg, #2c2c2c, #1a1a1a);
-        }
-        .dark-mode .card-body {
-            color: #e9ecef; /* Lighter text for dark mode */
-        }
-        .dark-mode .card-text {
-            color: #b0b0b0; /* Slightly muted for secondary text in dark mode */
-        }
-        .dark-mode .badge-sticker {
-            background-color: #4dabf7;
-            color: #fff; /* Ensure badge text is white for better visibility */
-        }
-        .dark-mode .btn-primary {
-            background-color: #4dabf7;
-            border-color: #4dabf7;
-        }
-        .dark-mode .btn-primary:hover {
-            background-color: #66bfff;
-            border-color: #66bfff;
-        }
+        /* ---- Global ---- */
+        body {font-family:'Poppins',sans-serif;background:#f4f7fa;transition:background .3s,color .3s;margin:0;padding:0;overflow-x:hidden;}
+        .navbar-brand{font-weight:700;color:#007bff!important;display:flex;align-items:center;transition:color .3s;}
+        .navbar-brand svg{height:40px;margin-right:10px;transition:transform .3s;}
+        .navbar-brand .logo-text{font-size:1.5rem;font-weight:700;}
+        .navbar-brand:hover svg{transform:scale(1.1);}
 
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes slideIn {
-            from { transform: translateY(-20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
+        /* ---- Hero ---- */
+        .hero-section{background:linear-gradient(135deg,#007bff,#00d4ff),url('https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');background-size:cover;background-blend-mode:overlay;color:#fff;padding:120px 0;text-align:center;position:relative;overflow:hidden;}
+        .hero-section::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.4);}
+        .hero-section h1,.hero-section p{position:relative;z-index:1;}
+        .hero-section h1{font-size:3.5rem;font-weight:700;}
 
-        /* Responsive Design */
-        @media (max-width: 767.98px) {
-            .navbar-brand svg {
-                height: 30px;
-            }
-            .navbar-brand .logo-text {
-                font-size: 1.2rem;
-            }
-            .hero-section {
-                padding: 60px 0;
-            }
-            .hero-section h1 {
-                font-size: 2rem;
-            }
-            .card-img-top {
-                height: 150px;
-            }
-            .card-body {
-                padding: 15px;
-            }
-            .card h5 {
-                font-size: 1.1rem;
-            }
-            .card p {
-                font-size: 0.9rem;
-            }
-            .badge-sticker {
-                font-size: 0.7rem;
-                padding: 4px 8px;
-            }
-            .footer .col-md-4 {
-                flex: 0 0 100%;
-                max-width: 100%;
-                text-align: center;
-                margin-bottom: 20px;
-            }
-        }
+        /* ---- Cards ---- */
+        .card{border:none;border-radius:15px;background:linear-gradient(145deg,#fff,#f0f0f0);transition:transform .3s,box-shadow .3s;overflow:hidden;position:relative;}
+        .card:hover{transform:translateY(-10px);box-shadow:0 12px 24px rgba(0,0,0,.1);}
+        .card-img-top{height:200px;object-fit:cover;transition:transform .3s;}
+        .card:hover .card-img-top{transform:scale(1.05);}
+        .badge-sticker{position:absolute;top:10px;left:10px;background:#007bff;color:#fff;padding:5px 10px;border-radius:10px;font-size:.8rem;font-weight:600;z-index:1;transform:rotate(-5deg);}
 
-        @media (min-width: 768px) and (max-width: 1023.98px) {
-            .navbar-brand svg {
-                height: 35px;
-            }
-            .navbar-brand .logo-text {
-                font-size: 1.3rem;
-            }
-            .hero-section {
-                padding: 80px 0;
-            }
-            .hero-section h1 {
-                font-size: 2.5rem;
-            }
-            .card-img-top {
-                height: 180px;
-            }
-            .footer .col-md-4 {
-                flex: 0 0 33.33%;
-                max-width: 33.33%;
-                text-align: left;
-            }
-        }
+        /* ---- Marquee ---- */
+        .marquee-section{background:#007bff;color:#fff;padding:10px 0;overflow:hidden;}
+        .marquee-section marquee{font-size:1.1rem;animation:scroll 15s linear infinite;}
 
-        @media (min-width: 1024px) {
-            .hero-section {
-                padding: 100px 0;
-            }
-            .hero-section h1 {
-                font-size: 3.5rem;
-            }
-            .footer .col-md-4 {
-                flex: 0 0 33.33%;
-                max-width: 33.33%;
-                text-align: left;
-            }
+        /* ---- Footer ---- */
+        .footer{background:#343a40;color:#fff;padding:40px 0;}
+        .footer a{color:#00d4ff;text-decoration:none;}
+        .footer a:hover{text-decoration:underline;}
+
+        /* ---- Dark mode (same as index) ---- */
+        .dark-mode{background:#1a1a1a;color:#e9ecef;}
+        .dark-mode .navbar-brand{color:#4dabf7!important;}
+        .dark-mode .hero-section{background:linear-gradient(135deg,#004085,#0083b0),url('https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');}
+        .dark-mode .card{background:linear-gradient(145deg,#2c2c2c,#1a1a1a);}
+        .dark-mode .badge-sticker{background:#4dabf7;}
+        .dark-mode .btn-primary{background:#4dabf7;border-color:#4dabf7;}
+        .dark-mode .btn-primary:hover{background:#66bfff;border-color:#66bfff;}
+
+        /* ---- WhatsApp button ---- */
+        .whatsapp-btn{position:fixed;bottom:20px;right:20px;background:#25D366;color:#fff;border-radius:50%;width:60px;height:60px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 8px rgba(0,0,0,.2);transition:background .3s,transform .3s;z-index:1000;}
+        .whatsapp-btn:hover{background:#20b958;transform:scale(1.1);}
+        .whatsapp-btn i{font-size:30px;}
+        .whatsapp-tooltip{position:absolute;bottom:80px;right:70px;background:#333;color:#fff;padding:5px 10px;border-radius:5px;font-size:.9rem;display:none;z-index:1000;}
+        .whatsapp-btn:hover .whatsapp-tooltip{display:block;}
+
+        /* ---- Animations ---- */
+        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+        @keyframes slideIn{from{transform:translateY(-20px);opacity:0}to{transform:translateY(0);opacity:1}}
+        @keyframes scroll{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+
+        /* ---- Responsive ---- */
+        @media (max-width:767.98px){
+            .hero-section{padding:80px 0;}
+            .hero-section h1{font-size:2rem;}
+            .card-img-top{height:150px;}
         }
     </style>
 </head>
 <body>
-    <script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
 
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-    </script>
-
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container">
-            <a class="navbar-brand" href="/index.html">
-                <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="gradient-light" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#007bff;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:1" />
-                        </linearGradient>
-                        <linearGradient id="gradient-dark" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#004085;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#0083b0;stop-opacity:1" />
-                        </linearGradient>
-                    </defs>
-                    <path class="gradient-fill" fill="url(#gradient-light)" d="M10 30 V10 H15 V5 H25 V10 H30 V30 H25 V25 H15 V30 Z M15 15 H25 V20 H15 Z" />
-                    <path fill="#fff" d="M17 17 H23 V18 H17 Z M17 19 H23 V20 H17 Z" />
-                </svg>
-                <span class="logo-text">GateMate</span>
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="/index.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/courses.html">Courses</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/workshops.html">Workshops</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/resources.html">Resources</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="/bihar-prep.html">Bihar Exam Prep</a></li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="careerDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Career Support
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="careerDropdown">
-                            <li><a class="dropdown-item" href="/internship.html">Internships</a></li>
-                            <li><a class="dropdown-item" href="/careers.html">Careers</a></li>
-                            <li><a class="dropdown-item" href="/research-writing.html">Research Writing</a></li>
-                            <li><a class="dropdown-item" href="/hiring.html">Hiring</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item"><a class="nav-link" href="/notice.html">Notice Board</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/about.html">About</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/contact.html">Contact</a></li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Account
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item" href="/login.html">Login</a></li>
-                            <li><a class="dropdown-item" href="/register.html">Register</a></li>
-                            <li><a class="dropdown-item" href="/student-dashboard.html">Student Dashboard</a></li>
-                            <li><a class="dropdown-item" href="/faculty-dashboard.html">Faculty Dashboard</a></li>
-                            <li><a class="dropdown-item" href="/admin.html">Admin</a></li>
-                        </ul>
-                    </li>
-                </ul>
-                <button id="themeToggle" class="btn btn-outline-secondary ms-3" aria-label="Toggle Dark Mode">Toggle Dark Mode</button>
-            </div>
-        </div>
-    </nav>
-
-    <div class="marquee-section">
-        <marquee behavior="scroll" direction="left">
-            🎉 20% off on Bihar Exam Prep courses! | Free mock tests available! | Join now! 🎉
-        </marquee>
-    </div>
-
-    <section class="hero-section">
-        <div class="container">
-            <h1>Bihar Exam Prep</h1>
-            <p class="lead mb-4">Ace your Bihar exams like BPSC TRE with expert-led courses and resources.</p>
-            <a href="/register.html" class="btn btn-outline-light btn-lg">Get Started</a>
-        </div>
-    </section>
-
-    <section class="prep-filter">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <select class="form-select" id="typeFilter">
-                        <option value="all">All Types</option>
-                        <option value="courses">Courses</option>
-                        <option value="resources">Resources</option>
-                        <option value="tests">Mock Tests</option>
-                    </select>
-                </div>
-                <div class="col-md-6">
-                    <select class="form-select" id="sortFilter">
-                        <option value="price-asc">Price: Low to High</option>
-                        <option value="price-desc">Price: High to Low</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="prep-grid">
-        <div class="container">
-            <div class="row" id="prepList">
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <img src="https://images.pexels.com/photos/1438081/pexels-photo-1438081.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="BPSC TRE Course">
-                        <div class="card-body">
-                            <h5 class="card-title">BPSC TRE 4.0 Course</h5>
-                            <p class="card-text">Type: Courses | ₹5999 | 3 Months</p>
-                            <a href="/enroll.html?course=bpsc-tre" class="btn btn-primary">Enroll Now</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <img src="https://images.pexels.com/photos/3184431/pexels-photo-3184431.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="Bihar Exam Prep Course">
-                        <div class="card-body">
-                            <h5 class="card-title">Bihar Exam Prep Course</h5>
-                            <p class="card-text">Type: Courses | ₹4999 | 2 Months</p>
-                            <a href="/enroll.html?course=bihar-prep" class="btn btn-primary">Enroll Now</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <span class="badge-sticker">Bihar Police Prep</span>
-                        <img src="https://images.pexels.com/photos/7034988/pexels-photo-7034988.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="Bihar Police Constable Course">
-                        <div class="card-body">
-                            <h5 class="card-title">Bihar Police Constable Course</h5>
-                            <p class="card-text">Type: Courses | ₹999 | 3 Months</p>
-                            <a href="/enroll.html?course=bihar-police-constable" class="btn btn-primary">Enroll Now</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <span class="badge-sticker">Bihar Police Prep</span>
-                        <img src="https://images.pexels.com/photos/7034990/pexels-photo-7034990.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="Bihar Police SI Course">
-                        <div class="card-body">
-                            <h5 class="card-title">Bihar Police SI Foundation Course</h5>
-                            <p class="card-text">Type: Courses | ₹1499 | 6 Months</p>
-                            <a href="/enroll.html?course=bihar-police-si" class="btn btn-primary">Enroll Now</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <span class="badge-sticker">Bihar Police Prep</span>
-                        <img src="https://images.pexels.com/photos/7034989/pexels-photo-7034989.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="Bihar Home Guard Course">
-                        <div class="card-body">
-                            <h5 class="card-title">Bihar Home Guard Recruitment Course</h5>
-                            <p class="card-text">Type: Courses | ₹799 | 3 Months</p>
-                            <a href="/enroll.html?course=bihar-home-guard" class="btn btn-primary">Enroll Now</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <span class="badge-sticker">Bihar Police Prep</span>
-                        <img src="https://images.pexels.com/photos/7034991/pexels-photo-7034991.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="PET Preparation Program">
-                        <div class="card-body">
-                            <h5 class="card-title">Physical Efficiency Test (PET) Program</h5>
-                            <p class="card-text">Type: Courses | ₹499 | 1 Month</p>
-                            <a href="/enroll.html?course=pet-prep" class="btn btn-primary">Enroll Now</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <span class="badge-sticker">Bihar Police Prep</span>
-                        <img src="https://images.pexels.com/photos/7034987/pexels-photo-7034987.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="Bihar Police SI Mains Course">
-                        <div class="card-body">
-                            <h5 class="card-title">Bihar Police SI Mains + Interview</h5>
-                            <p class="card-text">Type: Courses | ₹1999 | Full Package</p>
-                            <a href="/enroll.html?course=bihar-police-si-mains" class="btn btn-primary">Enroll Now</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <img src="https://images.pexels.com/photos/159711/books-bookstore-book-reading-159711.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="BPSC Notes">
-                        <div class="card-body">
-                            <h5 class="card-title">BPSC TRE Notes</h5>
-                            <p class="card-text">Type: Resources | Free</p>
-                            <a href="https://example.com/bpsc-notes.pdf" class="btn btn-primary" download>Download</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <img src="https://images.pexels.com/photos/3184297/pexels-photo-3184297.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="BPSC Video">
-                        <div class="card-body">
-                            <h5 class="card-title">BPSC TRE Video Lectures</h5>
-                            <p class="card-text">Type: Resources | Premium</p>
-                            <a href="https://example.com/bpsc-video.mp4" class="btn btn-primary" download>Download</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <img src="https://images.pexels.com/photos/6147148/pexels-photo-6147148.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="BPSC Mock Test">
-                        <div class="card-body">
-                            <h5 class="card-title">BPSC TRE Mock Test</h5>
-                            <p class="card-text">Type: Mock Tests | Free</p>
-                            <a href="https://example.com/bpsc-mock-test.pdf" class="btn btn-primary" download>Download</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer class="footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4">
-                    <h5>About GATEMATE</h5>
-                    <p>India’s leading platform for GATE, UGC NET, BPSC TRE, and technical training with expert guidance.</p>
-                    <div class="social-icons">
-                        <a href="#" class="me-3"><i class="fab fa-facebook"></i></a>
-                        <a href="#" class="me-3"><i class="fab fa-youtube"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <h5>Quick Links</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="/index.html">Home</a></li>
-                        <li><a href="/courses.html">Courses</a></li>
-                        <li><a href="/workshops.html">Workshops</a></li>
-                        <li><a href="/resources.html">Resources</a></li>
-                        <li><a href="/bihar-prep.html">Bihar Exam Prep</a></li>
-                        <li><a href="/about.html">About Us</a></li>
-                        <li><a href="/contact.html">Contact</a></li>
+<!-- ====================== NAVBAR (same as index) ====================== -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+        <a class="navbar-brand" href="/index.html">
+            <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="gradient-light" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#007bff;stop-opacity:1"/>
+                        <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:1"/>
+                    </linearGradient>
+                    <linearGradient id="gradient-dark" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#004085;stop-opacity:1"/>
+                        <stop offset="100%" style="stop-color:#0083b0;stop-opacity:1"/>
+                    </linearGradient>
+                </defs>
+                <path class="gradient-fill" fill="url(#gradient-light)" d="M10 30 V10 H15 V5 H25 V10 H30 V30 H25 V25 H15 V30 Z M15 15 H25 V20 H15 Z"/>
+                <path fill="#fff" d="M17 17 H23 V18 H17 Z M17 19 H23 V20 H17 Z"/>
+            </svg>
+            <span class="logo-text">GateMate</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="/index.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="/courses.html">Courses</a></li>
+                <li class="nav-item"><a class="nav-link" href="/workshops.html">Workshops</a></li>
+                <li class="nav-item"><a class="nav-link" href="/resources.html">Resources</a></li>
+                <li class="nav-item"><a class="nav-link active" href="/bihar-prep.html">Bihar Exam Prep</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="careerDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">Career Support</a>
+                    <ul class="dropdown-menu" aria-labelledby="careerDropdown">
+                        <li><a class="dropdown-item" href="/internship.html">Internships</a></li>
+                        <li><a class="dropdown-item" href="/careers.html">Careers</a></li>
+                        <li><a class="dropdown-item" href="/research-writing.html">Research Writing</a></li>
+                        <li><a class="dropdown-item" href="/hiring.html">Hiring</a></li>
                     </ul>
-                </div>
-                <div class="col-md-4">
-                    <h5>Contact Us</h5>
-                    <p>123 Education Park, Patna, Bihar, India - 800001<br>
-                    +91 .<br>
-                    <a href="/cdn-cgi/l/email-protection#cfbcbabfbfa0bdbb8fa8aebbaaa2aebbaae1aca0e1a6a1"><span class="__cf_email__" data-cfemail="0c7f797c7c637e784c6b6d7869616d7869226f63226562">[email&#160;protected]</span></a><br>
-                    Mon - Sat: 9:00 AM - 7:00 PM</p>
+                </li>
+                <li class="nav-item"><a class="nav-link" href="/notice.html">Notice Board</a></li>
+                <li class="nav-item"><a class="nav-link" href="/about.html">About</a></li>
+                <li class="nav-item"><a class="nav-link" href="/contact.html">Contact</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">Account</a>
+                    <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" href="/login.html">Login</a></li>
+                        <li><a class="dropdown-item" href="/register.html">Register</a></li>
+                        <li><a class="dropdown-item" href="/student-dashboard.html">Student Dashboard</a></li>
+                        <li><a class="dropdown-item" href="/faculty-dashboard.html">Faculty Dashboard</a></li>
+                        <li><a class="dropdown-item" href="/admin.html">Admin</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <button id="themeToggle" class="btn btn-outline-secondary ms-3" aria-label="Toggle Dark Mode">
+                Toggle Dark Mode
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- ====================== MARQUEE ====================== -->
+<div class="marquee-section">
+    <marquee behavior="scroll" direction="left">
+        20% off on Bihar Exam Prep courses! | Free mock tests available! | Join now!
+    </marquee>
+</div>
+
+<!-- ====================== HERO ====================== -->
+<section class="hero-section">
+    <div class="container">
+        <h1>Bihar Exam Prep</h1>
+        <p class="lead mb-4">Ace BPSC TRE, Bihar Police, Home Guard & more with expert-led courses & resources.</p>
+        <a href="/register.html" class="btn btn-outline-light btn-lg">Get Started</a>
+    </div>
+</section>
+
+<!-- ====================== FILTERS ====================== -->
+<section class="prep-filter py-4 bg-white">
+    <div class="container">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <select class="form-select" id="typeFilter">
+                    <option value="all">All Types</option>
+                    <option value="courses">Courses</option>
+                    <option value="resources">Resources</option>
+                    <option value="tests">Mock Tests</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <select class="form-select" id="sortFilter">
+                    <option value="price-asc">Price: Low to High</option>
+                    <option value="price-desc">Price: High to Low</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ====================== COURSE GRID ====================== -->
+<section class="prep-grid py-5">
+    <div class="container">
+        <div class="row" id="prepList">
+            <!-- Cards will be injected by JS -->
+        </div>
+    </div>
+</section>
+
+<!-- ====================== RAZORPAY (optional) ====================== -->
+<form class="my-4 text-center">
+    <script src="https://checkout.razorpay.com/v1/payment-button.js"
+            data-payment_button_id="pl_QNvkmdeFepVdoB" async></script>
+</form>
+
+<!-- ====================== FOOTER (same as index) ====================== -->
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h5>About GATEMATE</h5>
+                <p>India’s leading platform for GATE, UGC NET, BPSC TRE, and technical training with expert guidance.</p>
+                <div class="social-icons">
+                    <a href="#" class="me-3"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="me-3"><i class="fab fa-youtube"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
                 </div>
             </div>
-            <hr>
-            <p class="text-center">© 2025 GATEMATE. All rights reserved. | <a href="/terms.html">Terms</a> | <a href="/privacy.html">Privacy</a> | <a href="/refund.html">Refund</a> | <a href="/sitemap.html">Sitemap</a></p>
+            <div class="col-md-4">
+                <h5>Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li><a href="/index.html">Home</a></li>
+                    <li><a href="/courses.html">Courses</a></li>
+                    <li><a href="/workshops.html">Workshops</a></li>
+                    <li><a href="/resources.html">Resources</a></li>
+                    <li><a href="/bihar-prep.html">Bihar Exam Prep</a></li>
+                    <li><a href="/about.html">About Us</a></li>
+                    <li><a href="/contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h5>Contact Us</h5>
+                <p>123 Education Park, Patna, Bihar, India - 800001<br>
+                    +91 6201259584<br>
+                    <a href="/cdn-cgi/l/email-protection#..."><span class="__cf_email__"
+                           data-cfemail="...">[email&#160;protected]</span></a><br>
+                    Mon - Sat: 9:00 AM - 7:00 PM</p>
+            </div>
         </div>
-    </footer>
+        <hr>
+        <p class="text-center">© 2025 GATEMATE. All rights reserved. |
+            <a href="/terms.html">Terms</a> | <a href="/privacy.html">Privacy</a> |
+            <a href="/refund.html">Refund</a> | <a href="/sitemap.html">Sitemap</a></p>
+    </div>
+</footer>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.getElementById('themeToggle').addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+<!-- ====================== WHATSAPP BUTTON ====================== -->
+<div class="whatsapp-btn" id="whatsappBtn">
+    <i class="fab fa-whatsapp"></i>
+    <div class="whatsapp-tooltip">Need Help?</div>
+</div>
+
+<!-- ====================== COURSE DETAIL MODAL ====================== -->
+<div class="modal fade" id="courseModal" tabindex="-1" aria-labelledby="courseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="courseModalLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Duration:</strong> <span id="modalDuration"></span></p>
+                <p><strong>Price:</strong> <span id="modalPrice"></span></p>
+                <p id="modalDesc"></p>
+
+                <h6 class="mt-4">Syllabus (Module-wise)</h6>
+                <ul id="modalSyllabus" class="list-group list-group-flush"></ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a id="modalEnrollBtn" href="#" class="btn btn-primary">Enroll Now</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ====================== SCRIPTS ====================== -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+/* ---------- Dark mode (same as index) ---------- */
+document.getElementById('themeToggle').addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+});
+if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
+
+/* ---------- WhatsApp button ---------- */
+const wpBtn = document.getElementById('whatsappBtn');
+wpBtn.addEventListener('click', () => {
+    window.open('https://wa.me/919534427131?text=Hello%20GateMate%20Team,%20I%20need%20help%20with%20my%20studies!', '_blank');
+});
+
+/* ---------- Course data (edit here) ---------- */
+const coursesData = [
+    {
+        id: 'bpsc-tre',
+        title: 'BPSC TRE 4.0 Course',
+        img: 'https://images.pexels.com/photos/1438081/pexels-photo-1438081.jpeg',
+        type: 'courses',
+        price: 5999,
+        duration: '3 Months',
+        badge: null,
+        desc: 'Complete preparation for BPSC Teacher Recruitment Exam 4.0 – live classes, mock tests, notes.',
+        syllabus: [
+            'Module 1 – General Studies & Teaching Aptitude',
+            'Module 2 – Subject-specific (Mathematics / Science / Social Science)',
+            'Module 3 – Previous Year Papers & Mock Tests',
+            'Module 4 – Doubt Clearing Sessions'
+        ],
+        enrollLink: '/enroll.html?course=bpsc-tre'
+    },
+    {
+        id: 'bihar-prep',
+        title: 'Bihar Exam Prep Course',
+        img: 'https://images.pexels.com/photos/3184431/pexels-photo-3184431.jpeg',
+        type: 'courses',
+        price: 4999,
+        duration: '2 Months',
+        badge: null,
+        desc: 'Foundation course covering all major Bihar state exams.',
+        syllabus: [
+            'Module 1 – Bihar GK & Current Affairs',
+            'Module 2 – Quantitative Aptitude',
+            'Module 3 – Reasoning & English',
+            'Module 4 – Mock Test Series'
+        ],
+        enrollLink: '/enroll.html?course=bihar-prep'
+    },
+    {
+        id: 'bihar-police-constable',
+        title: 'Bihar Police Constable Course',
+        img: 'https://images.pexels.com/photos/7034988/pexels-photo-7034988.jpeg',
+        type: 'courses',
+        price: 999,
+        duration: '3 Months',
+        badge: 'Bihar Police Prep',
+        desc: 'Targeted preparation for Constable recruitment – physical + written.',
+        syllabus: [
+            'Module 1 – General Hindi',
+            'Module 2 – General Knowledge',
+            'Module 3 – Numerical Ability',
+            'Module 4 – Physical Efficiency Test (PET) Guidance'
+        ],
+        enrollLink: '/enroll.html?course=bihar-police-constable'
+    },
+    {
+        id: 'bihar-police-si',
+        title: 'Bihar Police SI Foundation Course',
+        img: 'https://images.pexels.com/photos/7034990/pexels-photo-7034990.jpeg',
+        type: 'courses',
+        price: 1499,
+        duration: '6 Months',
+        badge: 'Bihar Police Prep',
+        desc: 'Complete SI syllabus – prelims + mains + interview.',
+        syllabus: [
+            'Module 1 – Prelims (GK, Reasoning, Maths)',
+            'Module 2 – Mains (Hindi, English, Essay)',
+            'Module 3 – Physical Standards & PET',
+            'Module 4 – Interview Preparation'
+        ],
+        enrollLink: '/enroll.html?course=bihar-police-si'
+    },
+    {
+        id: 'bihar-home-guard',
+        title: 'Bihar Home Guard Recruitment Course',
+        img: 'https://images.pexels.com/photos/7034989/pexels-photo-7034989.jpeg',
+        type: 'courses',
+        price: 799,
+        duration: '3 Months',
+        badge: 'Bihar Police Prep',
+        desc: 'Focused training for Home Guard written & physical tests.',
+        syllabus: [
+            'Module 1 – General Awareness',
+            'Module 2 – Basic Mathematics',
+            'Module 3 – Physical Fitness Drills',
+            'Module 4 – Mock Tests'
+        ],
+        enrollLink: '/enroll.html?course=bihar-home-guard'
+    },
+    {
+        id: 'pet-prep',
+        title: 'Physical Efficiency Test (PET) Program',
+        img: 'https://images.pexels.com/photos/7034991/pexels-photo-7034991.jpeg',
+        type: 'courses',
+        price: 499,
+        duration: '1 Month',
+        badge: 'Bihar Police Prep',
+        desc: 'Intensive 30-day PET training – running, push-ups, long jump etc.',
+        syllabus: [
+            'Week 1 – Endurance Running',
+            'Week 2 – Strength Training',
+            'Week 3 – Speed & Agility',
+            'Week 4 – Mock PET'
+        ],
+        enrollLink: '/enroll.html?course=pet-prep'
+    },
+    {
+        id: 'bihar-police-si-mains',
+        title: 'Bihar Police SI Mains + Interview',
+        img: 'https://images.pexels.com/photos/7034987/pexels-photo-7034987.jpeg',
+        type: 'courses',
+        price: 1999,
+        duration: 'Full Package',
+        badge: 'Bihar Police Prep',
+        desc: 'Mains paper + interview coaching for SI aspirants.',
+        syllabus: [
+            'Paper I – Hindi',
+            'Paper II – General Studies',
+            'Interview Techniques',
+            'Mock Interviews'
+        ],
+        enrollLink: '/enroll.html?course=bihar-police-si-mains'
+    },
+    {
+        id: 'bpsc-notes',
+        title: 'BPSC TRE Notes',
+        img: 'https://images.pexels.com/photos/159711/books-bookstore-book-reading-159711.jpeg',
+        type: 'resources',
+        price: 0,
+        duration: '',
+        badge: null,
+        desc: 'Free downloadable notes for BPSC TRE.',
+        syllabus: [],
+        enrollLink: 'https://example.com/bpsc-notes.pdf'
+    },
+    {
+        id: 'bpsc-video',
+        title: 'BPSC TRE Video Lectures',
+        img: 'https://images.pexels.com/photos/3184297/pexels-photo-3184297.jpeg',
+        type: 'resources',
+        price: 0,
+        duration: '',
+        badge: null,
+        desc: 'Premium video lectures (downloadable).',
+        syllabus: [],
+        enrollLink: 'https://example.com/bpsc-video.mp4'
+    },
+    {
+        id: 'bpsc-mock',
+        title: 'BPSC TRE Mock Test',
+        img: 'https://images.pexels.com/photos/6147148/pexels-photo-6147148.jpeg',
+        type: 'tests',
+        price: 0,
+        duration: '',
+        badge: null,
+        desc: 'Free mock test PDF.',
+        syllabus: [],
+        enrollLink: 'https://example.com/bpsc-mock-test.pdf'
+    }
+];
+
+/* ---------- Render cards ---------- */
+function renderCards(data) {
+    const container = document.getElementById('prepList');
+    container.innerHTML = '';
+    data.forEach(c => {
+        const col = document.createElement('div');
+        col.className = 'col-md-4 mb-4';
+
+        const badge = c.badge ? `<span class="badge-sticker">${c.badge}</span>` : '';
+
+        const priceText = c.price === 0 ? 'Free' : `₹${c.price}`;
+        const durationText = c.duration ? ` • ${c.duration}` : '';
+
+        col.innerHTML = `
+            <div class="card" data-id="${c.id}">
+                ${badge}
+                <img src="${c.img}?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                     onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';"
+                     class="card-img-top" alt="${c.title}">
+                <div class="card-body">
+                    <h5 class="card-title">${c.title}</h5>
+                    <p class="card-text">
+                        Type: ${c.type.charAt(0).toUpperCase() + c.type.slice(1)} | ${priceText}${durationText}
+                    </p>
+                    <button class="btn btn-primary enroll-btn">Enroll Now</button>
+                </div>
+            </div>`;
+        container.appendChild(col);
+    });
+}
+
+/* ---------- Modal population ---------- */
+document.addEventListener('click', e => {
+    if (e.target.classList.contains('enroll-btn')) {
+        const card = e.target.closest('.card');
+        const id = card.dataset.id;
+        const course = coursesData.find(c => c.id === id);
+        if (!course) return;
+
+        document.getElementById('courseModalLabel').textContent = course.title;
+        document.getElementById('modalDuration').textContent = course.duration || '—';
+        document.getElementById('modalPrice').textContent = course.price === 0 ? 'Free' : `₹${course.price}`;
+        document.getElementById('modalDesc').textContent = course.desc;
+
+        const syllabusList = document.getElementById('modalSyllabus');
+        syllabusList.innerHTML = '';
+        course.syllabus.forEach(mod => {
+            const li = document.createElement('li');
+            li.className = 'list-group-item';
+            li.textContent = mod;
+            syllabusList.appendChild(li);
         });
-        if (localStorage.getItem('theme') === 'dark') {
-            document.body.classList.add('dark-mode');
-        }
 
-        document.getElementById('typeFilter').addEventListener('change', filterPrep);
-        document.getElementById('sortFilter').addEventListener('change', sortPrep);
+        const enrollBtn = document.getElementById('modalEnrollBtn');
+        enrollBtn.href = course.enrollLink;
+        if (course.price === 0) enrollBtn.textContent = 'Download';
+        else enrollBtn.textContent = 'Enroll Now';
 
-        function filterPrep() {
-            const type = document.getElementById('typeFilter').value;
-            const cards = document.querySelectorAll('#prepList .card');
-            cards.forEach(card => {
-                const prepType = card.querySelector('.card-text').textContent.match(/Type: (\w+)/)[1].toLowerCase();
-                if (type === 'all' || type === prepType) {
-                    card.parentElement.style.display = 'block';
-                } else {
-                    card.parentElement.style.display = 'none';
-                }
-            });
-        }
+        const modal = new bootstrap.Modal(document.getElementById('courseModal'));
+        modal.show();
+    }
+});
 
-        function sortPrep() {
-            const sortBy = document.getElementById('sortFilter').value;
-            const cards = Array.from(document.querySelectorAll('#prepList .card'));
-            cards.sort((a, b) => {
-                const aPriceMatch = a.querySelector('.card-text').textContent.match(/₹(\d+)/);
-                const bPriceMatch = b.querySelector('.card-text').textContent.match(/₹(\d+)/);
-                const aPrice = aPriceMatch ? parseInt(aPriceMatch[1]) : 0;
-                const bPrice = bPriceMatch ? parseInt(bPriceMatch[1]) : 0;
-                if (sortBy === 'price-asc') return aPrice - bPrice;
-                if (sortBy === 'price-desc') return bPrice - aPrice;
-                return 0;
-            });
-            const prepList = document.getElementById('prepList');
-            prepList.innerHTML = '';
-            cards.forEach(card => prepList.appendChild(card.parentElement));
-        }
-    </script>
-    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'936681c39b12bf8e',t:'MTc0NTY3NDk4My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+/* ---------- Filtering ---------- */
+document.getElementById('typeFilter').addEventListener('change', filterAndSort);
+document.getElementById('sortFilter').addEventListener('change', filterAndSort);
+
+function filterAndSort() {
+    let filtered = [...coursesData];
+
+    const type = document.getElementById('typeFilter').value;
+    if (type !== 'all') {
+        filtered = filtered.filter(c => c.type === type);
+    }
+
+    const sort = document.getElementById('sortFilter').value;
+    filtered.sort((a, b) => {
+        if (sort === 'price-asc') return a.price - b.price;
+        if (sort === 'price-desc') return b.price - a.price;
+        return 0;
+    });
+
+    renderCards(filtered);
+}
+
+/* ---------- Initial render ---------- */
+renderCards(coursesData);
+</script>
 </body>
 </html>
