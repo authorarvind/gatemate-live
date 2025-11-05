@@ -1,499 +1,414 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- ==== META ==== -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Explore job opportunities and hiring at GATEMATE.co.in for educators and professionals">
+    <title>Hiring - GATEMATE.co.in</title>
+    <meta name="description"
+          content="Explore job opportunities and hiring at GATEMATE.co.in for educators and professionals">
     <meta name="keywords" content="hiring, jobs at gatemate, teaching jobs, career openings">
     <meta name="author" content="GateMate Team">
-    <title>Hiring - GATEMATE.co.in</title>
+
+    <!-- ==== BOOTSTRAP / FONTS ==== -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- ==== STYLES (same as index.html) ==== -->
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f4f7fa;
-            transition: background-color 0.3s, color 0.3s;
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-        }
-        .navbar-brand {
-            font-weight: 700;
-            color: #007bff !important;
-            display: flex;
-            align-items: center;
-            transition: color 0.3s;
-        }
-        .navbar-brand svg {
-            height: 40px;
-            margin-right: 10px;
-            transition: transform 0.3s;
-        }
-        .navbar-brand .logo-text {
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
-        .navbar-brand:hover svg {
-            transform: scale(1.1);
-        }
-        .hero-section {
-            background: linear-gradient(135deg, #007bff, #00d4ff), url('https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
-            background-size: cover;
-            background-blend-mode: overlay;
-            color: white;
-            padding: 100px 0;
-            text-align: center;
-            position: relative;
-            animation: fadeIn 1s ease-in;
-        }
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.4);
-        }
-        .hero-section h1 {
-            font-size: 3rem;
-            font-weight: 700;
-            animation: slideIn 1s ease-out;
-        }
-        .hiring-filter {
-            padding: 20px 0;
-            background-color: #fff;
-        }
-        .hiring-grid {
-            padding: 40px 0;
-            background-color: #f8f9fa;
-        }
-        .card {
-            border: none;
-            border-radius: 15px;
-            background: linear-gradient(145deg, #ffffff, #f0f0f0);
-            transition: transform 0.3s, box-shadow 0.3s;
-            overflow: hidden;
-        }
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-        }
-        .card-img-top {
-            height: 200px;
-            object-fit: cover;
-            transition: transform 0.3s;
-        }
-        .card:hover .card-img-top {
-            transform: scale(1.05);
-        }
-        .footer {
-            background: #343a40;
-            color: white;
-            padding: 40px 0;
-        }
-        .footer a {
-            color: #00d4ff;
-            text-decoration: none;
-        }
-        .footer a:hover {
-            text-decoration: underline;
-        }
-        .dark-mode {
-            background-color: #1a1a1a;
-            color: #e9ecef;
-        }
-        .dark-mode .navbar-brand {
-            color: #4dabf7 !important;
-        }
-        .dark-mode .navbar-brand .logo-text {
-            color: #4dabf7;
-        }
-        .dark-mode .navbar-brand svg .gradient-fill {
-            fill: url(#gradient-dark);
-        }
-        .dark-mode .hero-section {
-            background: linear-gradient(135deg, #004085, #0083b0), url('https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
-        }
-        .dark-mode .hiring-filter, .dark-mode .hiring-grid {
-            background-color: #2c2c2c;
-        }
-        .dark-mode .card {
-            background: linear-gradient(145deg, #2c2c2c, #1a1a1a);
-        }
+        body {font-family:'Poppins',sans-serif;background:#f4f7fa;transition:background .3s,color .3s;margin:0;padding:0;overflow-x:hidden;}
+        .navbar-brand{font-weight:700;color:#007bff!important;display:flex;align-items:center;transition:color .3s;}
+        .navbar-brand svg{height:40px;margin-right:10px;transition:transform .3s;}
+        .navbar-brand .logo-text{font-size:1.5rem;font-weight:700;}
+        .navbar-brand:hover svg{transform:scale(1.1);}
 
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        .hero-section{
+            background:linear-gradient(135deg,#007bff,#00d4ff),url('https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+            background-size:cover;background-blend-mode:overlay;color:#fff;padding:120px 0;text-align:center;position:relative;overflow:hidden;
         }
-        @keyframes slideIn {
-            from { transform: translateY(-20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
+        .hero-section::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.4);}
+        .hero-section h1{font-size:3.5rem;font-weight:700;}
+        .hero-section p{position:relative;z-index:1;}
 
-        /* Responsive Design */
-        @media (max-width: 767.98px) {
-            .navbar-brand svg {
-                height: 30px;
-            }
-            .navbar-brand .logo-text {
-                font-size: 1.2rem;
-            }
-            .hero-section {
-                padding: 60px 0;
-            }
-            .hero-section h1 {
-                font-size: 2rem;
-            }
-            .card-img-top {
-                height: 150px;
-            }
-            .card-body {
-                padding: 15px;
-            }
-            .card h5 {
-                font-size: 1.1rem;
-            }
-            .card p {
-                font-size: 0.9rem;
-            }
-            .footer .col-md-4 {
-                flex: 0 0 100%;
-                max-width: 100%;
-                text-align: center;
-                margin-bottom: 20px;
-            }
-        }
+        .marquee-section{background:#007bff;color:#fff;padding:10px 0;overflow:hidden;}
+        .marquee-section marquee{font-size:1.1rem;animation:scroll 15s linear infinite;}
 
-        @media (min-width: 768px) and (max-width: 1023.98px) {
-            .navbar-brand svg {
-                height: 35px;
-            }
-            .navbar-brand .logo-text {
-                font-size: 1.3rem;
-            }
-            .hero-section {
-                padding: 80px 0;
-            }
-            .hero-section h1 {
-                font-size: 2.5rem;
-            }
-            .card-img-top {
-                height: 180px;
-            }
-            .footer .col-md-4 {
-                flex: 0 0 33.33%;
-                max-width: 33.33%;
-                text-align: left;
-            }
-        }
+        .card{border:none;border-radius:15px;background:linear-gradient(145deg,#fff,#f0f0f0);transition:transform .3s,box-shadow .3s;overflow:hidden;position:relative;}
+        .card:hover{transform:translateY(-10px);box-shadow:0 12px 24px rgba(0,0,0,.1);}
+        .card-img-top{height:200px;object-fit:cover;transition:transform .3s;}
+        .card:hover .card-img-top{transform:scale(1.05);}
+        .badge-sticker{position:absolute;top:10px;left:10px;background:#007bff;color:#fff;padding:5px 10px;border-radius:10px;font-size:.8rem;font-weight:600;z-index:1;transform:rotate(-5deg);}
 
-        @media (min-width: 1024px) {
-            .hero-section {
-                padding: 100px 0;
-            }
-            .hero-section h1 {
-                font-size: 3.5rem;
-            }
-            .footer .col-md-4 {
-                flex: 0 0 33.33%;
-                max-width: 33.33%;
-                text-align: left;
-            }
+        .footer{background:#343a40;color:#fff;padding:40px 0;}
+        .footer a{color:#00d4ff;text-decoration:none;}
+        .footer a:hover{text-decoration:underline;}
+
+        /* Dark Mode */
+        .dark-mode{background:#1a1a1a;color:#e9ecef;}
+        .dark-mode .navbar-brand{color:#4dabf7!important;}
+        .dark-mode .hero-section{background:linear-gradient(135deg,#004085,#0083b0),url('https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');}
+        .dark-mode .card{background:linear-gradient(145deg,#2c2c2c,#1a1a1a);}
+        .dark-mode .badge-sticker{background:#4dabf7;}
+        .dark-mode .btn-primary{background:#4dabf7;border-color:#4dabf7;}
+        .dark-mode .btn-primary:hover{background:#66bfff;border-color:#66bfff;}
+
+        /* WhatsApp */
+        .whatsapp-btn{position:fixed;bottom:20px;right:20px;background:#25D366;color:#fff;border-radius:50%;width:60px;height:60px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 8px rgba(0,0,0,.2);transition:background .3s,transform .3s;z-index:1000;}
+        .whatsapp-btn:hover{background:#20b958;transform:scale(1.1);}
+        .whatsapp-btn i{font-size:30px;}
+        .whatsapp-tooltip{position:absolute;bottom:80px;right:70px;background:#333;color:#fff;padding:5px 10px;border-radius:5px;font-size:.9rem;display:none;z-index:1000;}
+        .whatsapp-btn:hover .whatsapp-tooltip{display:block;}
+
+        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+        @keyframes slideIn{from{transform:translateY(-20px);opacity:0}to{transform:translateY(0);opacity:1}}
+        @keyframes scroll{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+
+        @media (max-width:767.98px){
+            .hero-section{padding:80px 0;}
+            .hero-section h1{font-size:2rem;}
+            .card-img-top{height:150px;}
         }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container">
-            <a class="navbar-brand" href="/index.html">
-                <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="gradient-light" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#007bff;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:1" />
-                        </linearGradient>
-                        <linearGradient id="gradient-dark" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#004085;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#0083b0;stop-opacity:1" />
-                        </linearGradient>
-                    </defs>
-                    <path class="gradient-fill" fill="url(#gradient-light)" d="M10 30 V10 H15 V5 H25 V10 H30 V30 H25 V25 H15 V30 Z M15 15 H25 V20 H15 Z" />
-                    <path fill="#fff" d="M17 17 H23 V18 H17 Z M17 19 H23 V20 H17 Z" />
-                </svg>
-                <span class="logo-text">GateMate</span>
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="/index.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/courses.html">Courses</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/workshops.html">Workshops</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/resources.html">Resources</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/bihar-prep.html">Bihar Exam Prep</a></li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="careerDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Career Support
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="careerDropdown">
-                            <li><a class="dropdown-item" href="/internship.html">Internships</a></li>
-                            <li><a class="dropdown-item" href="/careers.html">Careers</a></li>
-                            <li><a class="dropdown-item" href="/research-writing.html">Research Writing</a></li>
-                            <li><a class="nav-link active" href="/hiring.html">Hiring</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item"><a class="nav-link" href="/notice.html">Notice Board</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/about.html">About</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/contact.html">Contact</a></li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Account
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item" href="/login.html">Login</a></li>
-                            <li><a class="dropdown-item" href="/register.html">Register</a></li>
-                            <li><a class="dropdown-item" href="/student-dashboard.html">Student Dashboard</a></li>
-                            <li><a class="dropdown-item" href="/faculty-dashboard.html">Faculty Dashboard</a></li>
-                            <li><a class="dropdown-item" href="/admin.html">Admin</a></li>
-                        </ul>
-                    </li>
-                </ul>
-                <button id="themeToggle" class="btn btn-outline-secondary ms-3" aria-label="Toggle Dark Mode">Toggle Dark Mode</button>
-            </div>
-        </div>
-    </nav>
 
-    <div class="marquee-section">
-        <marquee behavior="scroll" direction="left">
-            🎉 Join our team! Open positions for educators and tech experts! Apply now! 🎉
-        </marquee>
-    </div>
-
-    <section class="hero-section">
-        <div class="container">
-            <h1>Join Our Team</h1>
-            <p class="lead mb-4">Explore exciting career opportunities at GateMate.</p>
-            <a href="/register.html" class="btn btn-outline-light btn-lg">Get Started</a>
-        </div>
-    </section>
-
-    <section class="hiring-filter">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <select class="form-select" id="categoryFilter">
-                        <option value="all">All Categories</option>
-                        <option value="teaching">Teaching</option>
-                        <option value="tech">Tech</option>
-                        <option value="support">Support</option>
-                    </select>
-                </div>
-                <div class="col-md-6">
-                    <select class="form-select" id="sortFilter">
-                        <option value="salary-asc">Salary: Low to High</option>
-                        <option value="salary-desc">Salary: High to Low</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="hiring-grid">
-        <div class="container">
-            <div class="row" id="hiringList">
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <img src="https://images.pexels.com/photos/3184297/pexels-photo-3184297.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="GATE Instructor">
-                        <div class="card-body">
-                            <h5 class="card-title">GATE Instructor</h5>
-                            <p class="card-text">Category: Teaching | Salary: ₹6,00,000 PA | Remote</p>
-                            <a href="/apply-job.html?job=gate-instructor" class="btn btn-primary">Apply Now</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <img src="https://images.pexels.com/photos/1632790/pexels-photo-1632790.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="Tech Support Specialist">
-                        <div class="card-body">
-                            <h5 class="card-title">Tech Support Specialist</h5>
-                            <p class="card-text">Category: Support | Salary: ₹4,50,000 PA | On-site</p>
-                            <a href="/apply-job.html?job=tech-support" class="btn btn-primary">Apply Now</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <img src="https://images.pexels.com/photos/6147148/pexels-photo-6147148.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="AI Developer">
-                        <div class="card-body">
-                            <h5 class="card-title">AI Developer</h5>
-                            <p class="card-text">Category: Tech | Salary: ₹8,00,000 PA | Remote</p>
-                            <a href="/apply-job.html?job=ai-developer" class="btn btn-primary">Apply Now</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <img src="https://images.pexels.com/photos/3184431/pexels-photo-3184431.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="Content Creator">
-                        <div class="card-body">
-                            <h5 class="card-title">Content Creator</h5>
-                            <p class="card-text">Category: Support | Salary: ₹5,00,000 PA | Remote</p>
-                            <a href="/apply-job.html?job=content-creator" class="btn btn-primary">Apply Now</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="contact-section py-5 bg-light">
-        <div class="container">
-            <h2 class="text-center mb-4">Contact HR</h2>
-            <p class="text-center mb-4">For more details or to submit your resume, reach out to our HR team.</p>
-            <div class="row justify-content-center">
-                <div class="col-md-6">
-                    <form>
-                        <div class="mb-3">
-                            <input type="text" class="form-control" placeholder="Your Name" required>
-                        </div>
-                        <div class="mb-3">
-                            <input type="email" class="form-control" placeholder="Your Email" required>
-                        </div>
-                        <div class="mb-3">
-                            <textarea class="form-control" placeholder="Message" rows="4" required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100">Send Message</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer class="footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4">
-                    <h5>About GATEMATE</h5>
-                    <p>India’s leading platform for GATE, UGC NET, BPSC TRE, and technical training with expert guidance.</p>
-                    <div class="social-icons">
-                        <a href="#" class="me-3"><i class="fab fa-facebook"></i></a>
-                        <a href="#" class="me-3"><i class="fab fa-youtube"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <h5>Quick Links</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="/index.html">Home</a></li>
-                        <li><a href="/courses.html">Courses</a></li>
-                        <li><a href="/workshops.html">Workshops</a></li>
-                        <li><a href="/resources.html">Resources</a></li>
-                        <li><a href="/bihar-prep.html">Bihar Exam Prep</a></li>
-                        <li><a href="/about.html">About Us</a></li>
-                        <li><a href="/contact.html">Contact</a></li>
+<!-- ====================== NAVBAR ====================== -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+        <a class="navbar-brand" href="/index.html">
+            <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="gradient-light" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#007bff;stop-opacity:1"/>
+                        <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:1"/>
+                    </linearGradient>
+                    <linearGradient id="gradient-dark" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#004085;stop-opacity:1"/>
+                        <stop offset="100%" style="stop-color:#0083b0;stop-opacity:1"/>
+                    </linearGradient>
+                </defs>
+                <path class="gradient-fill" fill="url(#gradient-light)" d="M10 30 V10 H15 V5 H25 V10 H30 V30 H25 V25 H15 V30 Z M15 15 H25 V20 H15 Z"/>
+                <path fill="#fff" d="M17 17 H23 V18 H17 Z M17 19 H23 V20 H17 Z"/>
+            </svg>
+            <span class="logo-text">GateMate</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="/index.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="/courses.html">Courses</a></li>
+                <li class="nav-item"><a class="nav-link" href="/workshops.html">Workshops</a></li>
+                <li class="nav-item"><a class="nav-link" href="/resources.html">Resources</a></li>
+                <li class="nav-item"><a class="nav-link" href="/bihar-prep.html">Bihar Exam Prep</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="careerDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">Career Support</a>
+                    <ul class="dropdown-menu" aria-labelledby="careerDropdown">
+                        <li><a class="dropdown-item" href="/internship.html">Internships</a></li>
+                        <li><a class="dropdown-item" href="/careers.html">Careers</a></li>
+                        <li><a class="dropdown-item" href="/research-writing.html">Research Writing</a></li>
+                        <li><a class="dropdown-item active" href="/hiring.html">Hiring</a></li>
                     </ul>
+                </li>
+                <li class="nav-item"><a class="nav-link" href="/notice.html">Notice Board</a></li>
+                <li class="nav-item"><a class="nav-link" href="/about.html">About</a></li>
+                <li class="nav-item"><a class="nav-link" href="/contact.html">Contact</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">Account</a>
+                    <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" href="/login.html">Login</a></li>
+                        <li><a class="dropdown-item" href="/register.html">Register</a></li>
+                        <li><a class="dropdown-item" href="/student-dashboard.html">Student Dashboard</a></li>
+                        <li><a class="dropdown-item" href="/faculty-dashboard.html">Faculty Dashboard</a></li>
+                        <li><a class="dropdown-item" href="/admin.html">Admin</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <button id="themeToggle" class="btn btn-outline-secondary ms-3" aria-label="Toggle Dark Mode">
+                Toggle Dark Mode
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- ====================== MARQUEE ====================== -->
+<div class="marquee-section">
+    <marquee behavior="scroll" direction="left">
+        We're Hiring! | Teaching & Tech Roles Open | Apply Now
+    </marquee>
+</div>
+
+<!-- ====================== HERO ====================== -->
+<section class="hero-section">
+    <div class="container">
+        <h1>Join Our Team</h1>
+        <p class="lead mb-4">Exciting opportunities for educators and professionals.</p>
+        <a href="/register.html" class="btn btn-outline-light btn-lg">Get Started</a>
+    </div>
+</section>
+
+<!-- ====================== FILTERS ====================== -->
+<section class="py-4 bg-white">
+    <div class="container">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <select class="form-select" id="categoryFilter">
+                    <option value="all">All Categories</option>
+                    <option value="teaching">Teaching</option>
+                    <option value="tech">Tech</option>
+                    <option value="support">Support</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <select class="form-select" id="sortFilter">
+                    <option value="salary-asc">Salary: Low to High</option>
+                    <option value="salary-desc">Salary: High to Low</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ====================== HIRING GRID ====================== -->
+<section class="py-5">
+    <div class="container">
+        <div class="row" id="hiringList">
+            <!-- Cards injected by JS -->
+        </div>
+    </div>
+</section>
+
+<!-- ====================== RAZORPAY ====================== -->
+<form class="my-4 text-center">
+    <script src="https://checkout.razorpay.com/v1/payment-button.js"
+            data-payment_button_id="pl_QNvkmdeFepVdoB" async></script>
+</form>
+
+<!-- ====================== FOOTER ====================== -->
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h5>About GATEMATE</h5>
+                <p>India’s leading platform for GATE, UGC NET, BPSC TRE, and technical training with expert guidance.</p>
+                <div class="social-icons">
+                    <a href="#" class="me-3"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="me-3"><i class="fab fa-youtube"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
                 </div>
-                <div class="col-md-4">
-                    <h5>Contact Us</h5>
-                    <p>123 Education Park, Patna, Bihar, India - 800001<br>
+            </div>
+            <div class="col-md-4">
+                <h5>Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li><a href="/index.html">Home</a></li>
+                    <li><a href="/courses.html">Courses</a></li>
+                    <li><a href="/workshops.html">Workshops</a></li>
+                    <li><a href="/resources.html">Resources</a></li>
+                    <li><a href="/bihar-prep.html">Bihar Exam Prep</a></li>
+                    <li><a href="/about.html">About Us</a></li>
+                    <li><a href="/contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h5>Contact Us</h5>
+                <p>123 Education Park, Patna, Bihar, India - 800001<br>
                     +91 6201259584<br>
                     <a href="mailto:support@gatemate.co.in">support@gatemate.co.in</a><br>
                     Mon - Sat: 9:00 AM - 7:00 PM</p>
-                </div>
             </div>
-            <hr>
-            <p class="text-center">© 2025 GATEMATE. All rights reserved. | <a href="/terms.html">Terms</a> | <a href="/privacy.html">Privacy</a> | <a href="/refund.html">Refund</a> | <a href="/sitemap.html">Sitemap</a></p>
         </div>
-    </footer>
+        <hr>
+        <p class="text-center">© 2025 GATEMATE. All rights reserved. | <a href="/terms.html">Terms</a> | <a href="/privacy.html">Privacy</a> | <a href="/refund.html">Refund</a> | <a href="/sitemap.html">Sitemap</a></p>
+    </div>
+</footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.getElementById('themeToggle').addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+<!-- ====================== WHATSAPP BUTTON ====================== -->
+<div class="whatsapp-btn" id="whatsappBtn">
+    <i class="fab fa-whatsapp"></i>
+    <div class="whatsapp-tooltip">Need Help?</div>
+</div>
+
+<!-- ====================== JOB DETAIL MODAL ====================== -->
+<div class="modal fade" id="jobModal" tabindex="-1" aria-labelledby="jobModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="jobModalLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Salary:</strong> <span id="modalSalary"></span></p>
+                <p><strong>Experience:</strong> <span id="modalExperience"></span></p>
+                <p id="modalDesc"></p>
+
+                <h6 class="mt-4">Key Responsibilities</h6>
+                <ul id="modalResponsibilities" class="list-group list-group-flush"></ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a id="modalApplyBtn" href="#" class="btn btn-primary" target="_blank">Apply Now</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ====================== SCRIPTS ====================== -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+/* ---------- Dark Mode ---------- */
+document.getElementById('themeToggle').addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+});
+if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
+
+/* ---------- WhatsApp ---------- */
+document.getElementById('whatsappBtn').addEventListener('click', () => {
+    window.open('https://wa.me/919534427131?text=Hello%20GateMate,%20I%20want%20to%20apply%20for%20a%20job!', '_blank');
+});
+
+/* ---------- Job Data (Edit Here) ---------- */
+const jobsData = [
+    {
+        id: 'teacher',
+        title: 'Teacher (GATE/UGC NET)',
+        img: 'https://images.pexels.com/photos/159711/books-bookstore-book-reading-159711.jpeg',
+        category: 'teaching',
+        salary: '₹50,000 - ₹70,000',
+        experience: '2+ Years',
+        badge: null,
+        desc: 'Deliver live classes for GATE and UGC NET.',
+        responsibilities: [
+            'Conduct live sessions',
+            'Prepare study materials',
+            'Mentor students',
+            'Evaluate progress'
+        ],
+        applyLink: 'https://forms.gle/apply-teacher'
+    },
+    {
+        id: 'developer',
+        title: 'Software Developer',
+        img: 'https://images.pexels.com/photos/3184297/pexels-photo-3184297.jpeg',
+        category: 'tech',
+        salary: '₹60,000 - ₹80,000',
+        experience: '3+ Years',
+        badge: null,
+        desc: 'Build and maintain our learning platform.',
+        responsibilities: [
+            'Develop features',
+            'Optimize code',
+            'Collaborate with team',
+            'Debug issues'
+        ],
+        applyLink: 'https://forms.gle/apply-developer'
+    },
+    {
+        id: 'support',
+        title: 'Customer Support Executive',
+        img: 'https://images.pexels.com/photos/6147148/pexels-photo-6147148.jpeg',
+        category: 'support',
+        salary: '₹30,000 - ₹40,000',
+        experience: '1+ Year',
+        badge: null,
+        desc: 'Assist students with queries and issues.',
+        responsibilities: [
+            'Handle inquiries',
+            'Provide solutions',
+            'Maintain records',
+            'Follow up'
+        ],
+        applyLink: 'https://forms.gle/apply-support'
+    }
+];
+
+/* ---------- Render Cards ---------- */
+function renderJobs(data) {
+    const container = document.getElementById('hiringList');
+    container.innerHTML = '';
+    data.forEach(job => {
+        const col = document.createElement('div');
+        col.className = 'col-md-4 mb-4';
+
+        const badge = job.badge ? `<span class="badge-sticker">${job.badge}</span>` : '';
+
+        col.innerHTML = `
+            <div class="card" data-id="${job.id}">
+                ${badge}
+                <img src="${job.img}?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                     onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';"
+                     class="card-img-top" alt="${job.title}">
+                <div class="card-body">
+                    <h5 class="card-title">${job.title}</h5>
+                    <p class="card-text">
+                        Category: ${job.category.charAt(0).toUpperCase() + job.category.slice(1)} | Salary: ${job.salary} | Experience: ${job.experience}
+                    </p>
+                    <button class="btn btn-primary apply-btn">Apply Now</button>
+                </div>
+            </div>`;
+        container.appendChild(col);
+    });
+}
+
+/* ---------- Modal ---------- */
+document.addEventListener('click', e => {
+    if (e.target.classList.contains('apply-btn')) {
+        const card = e.target.closest('.card');
+        const id = card.dataset.id;
+        const job = jobsData.find(j => j.id === id);
+        if (!job) return;
+
+        document.getElementById('jobModalLabel').textContent = job.title;
+        document.getElementById('modalSalary').textContent = job.salary;
+        document.getElementById('modalExperience').textContent = job.experience;
+        document.getElementById('modalDesc').textContent = job.desc;
+
+        const respList = document.getElementById('modalResponsibilities');
+        respList.innerHTML = '';
+        job.responsibilities.forEach(resp => {
+            const li = document.createElement('li');
+            li.className = 'list-group-item';
+            li.textContent = resp;
+            respList.appendChild(li);
         });
-        if (localStorage.getItem('theme') === 'dark') {
-            document.body.classList.add('dark-mode');
-        }
 
-        document.getElementById('categoryFilter').addEventListener('change', filterJobs);
-        document.getElementById('sortFilter').addEventListener('change', sortJobs);
+        document.getElementById('modalApplyBtn').href = job.applyLink;
 
-        function filterJobs() {
-            const category = document.getElementById('categoryFilter').value;
-            const cards = document.querySelectorAll('#hiringList .card');
-            cards.forEach(card => {
-                const jobCategory = card.querySelector('.card-text').textContent.match(/Category: (\w+)/)[1].toLowerCase();
-                if (category === 'all' || 
-                    (category === 'teaching' && jobCategory.includes('teaching')) ||
-                    (category === 'tech' && jobCategory.includes('tech')) ||
-                    (category === 'support' && jobCategory.includes('support'))) {
-                    card.parentElement.style.display = 'block';
-                } else {
-                    card.parentElement.style.display = 'none';
-                }
-            });
-        }
+        const modal = new bootstrap.Modal(document.getElementById('jobModal'));
+        modal.show();
+    }
+});
 
-        function sortJobs() {
-            const sortBy = document.getElementById('sortFilter').value;
-            const cards = Array.from(document.querySelectorAll('#hiringList .card'));
-            cards.sort((a, b) => {
-                const aSalaryMatch = a.querySelector('.card-text').textContent.match(/Salary: ₹([\d,]+)/);
-                const bSalaryMatch = b.querySelector('.card-text').textContent.match(/Salary: ₹([\d,]+)/);
-                const aSalary = aSalaryMatch ? parseInt(aSalaryMatch[1].replace(/,/g, '')) : 0;
-                const bSalary = bSalaryMatch ? parseInt(bSalaryMatch[1].replace(/,/g, '')) : 0;
-                if (sortBy === 'salary-asc') return aSalary - bSalary;
-                if (sortBy === 'salary-desc') return bSalary - aSalary;
-                return 0;
-            });
-            const hiringList = document.getElementById('hiringList');
-            hiringList.innerHTML = '';
-            cards.forEach(card => hiringList.appendChild(card.parentElement));
-        }
-    </script>
+/* ---------- Filter & Sort ---------- */
+document.getElementById('categoryFilter').addEventListener('change', filterAndSort);
+document.getElementById('sortFilter').addEventListener('change', filterAndSort);
+
+function filterAndSort() {
+    let filtered = [...jobsData];
+
+    const cat = document.getElementById('categoryFilter').value;
+    if (cat !== 'all') {
+        filtered = filtered.filter(j => j.category === cat);
+    }
+
+    const sort = document.getElementById('sortFilter').value;
+    filtered.sort((a, b) => {
+        const salA = parseInt(a.salary.split('-')[0].replace(/[^\d]/g, ''));
+        const salB = parseInt(b.salary.split('-')[0].replace(/[^\d]/g, ''));
+        return sort === 'salary-asc' ? salA - salB : salB - salA;
+    });
+
+    renderJobs(filtered);
+}
+
+/* ---------- Init ---------- */
+renderJobs(jobsData);
+</script>
 </body>
 </html>
