@@ -1,713 +1,398 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- ==== META ==== -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Explore courses at GATEMATE.co.in for GATE, UGC NET, BPSC TRE, and more with live classes and resources">
-    <meta name="keywords" content="GATE courses, UGC NET, BPSC TRE, online learning, live classes">
-    <meta name="author" content="GateMate Team">
     <title>Courses - GATEMATE.co.in</title>
+    <meta name="description"
+          content="Explore GATE, UGC NET, BPSC TRE, Internships, Bihar Exam Prep and more at GATEMATE.co.in">
+    <meta name="keywords" content="GATE, UGC NET, BPSC TRE, internships, Bihar exam prep, online courses">
+    <meta name="author" content="GateMate Team">
+
+    <!-- ==== BOOTSTRAP / FONTS ==== -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- ==== STYLES (identical to index.html) ==== -->
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f4f7fa;
-            transition: background-color 0.3s, color 0.3s;
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-        }
-        .navbar-brand {
-            font-weight: 700;
-            color: #007bff !important;
-            display: flex;
-            align-items: center;
-            transition: color 0.3s;
-        }
-        .navbar-brand svg {
-            height: 40px;
-            margin-right: 10px;
-            transition: transform 0.3s;
-        }
-        .navbar-brand .logo-text {
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
-        .navbar-brand:hover svg {
-            transform: scale(1.1);
-        }
-        .hero-section {
-            background: linear-gradient(135deg, #007bff, #00d4ff), url('https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
-            background-size: cover;
-            background-blend-mode: overlay;
-            color: white;
-            padding: 100px 0;
-            text-align: center;
-            position: relative;
-            animation: fadeIn 1s ease-in;
-        }
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.4);
-        }
-        .hero-section h1 {
-            font-size: 3rem;
-            font-weight: 700;
-            animation: slideIn 1s ease-out;
-        }
-        .course-filter {
-            padding: 20px 0;
-            background-color: #fff;
-        }
-        .course-grid {
-            padding: 40px 0;
-            background-color: #f8f9fa;
-        }
-        .card {
-            border: none;
-            border-radius: 15px;
-            background: linear-gradient(145deg, #ffffff, #f0f0f0);
-            transition: transform 0.3s, box-shadow 0.3s;
-            overflow: hidden;
-        }
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-        }
-        .card-img-top {
-            height: 200px;
-            object-fit: cover;
-            transition: transform 0.3s;
-        }
-        .card:hover .card-img-top {
-            transform: scale(1.05);
-        }
-        .payment-form {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-            width: 90%;
-            max-width: 400px;
-        }
-        .payment-form.active {
-            display: block;
-        }
-        .payment-form .btn-close {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-        .payment-form h5 {
-            margin-bottom: 15px;
-            font-weight: 600;
-        }
-        .payment-form .form-group {
-            margin-bottom: 15px;
-        }
-        .payment-button {
-            background-color: #00d4ff;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-weight: 600;
-            transition: background-color 0.3s;
-        }
-        .payment-button:hover {
-            background-color: #007bff;
-        }
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-        }
-        .overlay.active {
-            display: block;
-        }
-        .footer {
-            background: #343a40;
-            color: white;
-            padding: 40px 0;
-        }
-        .footer a {
-            color: #00d4ff;
-            text-decoration: none;
-        }
-        .footer a:hover {
-            text-decoration: underline;
-        }
-        .dark-mode {
-            background-color: #1a1a1a;
-            color: #e9ecef;
-        }
-        .dark-mode .navbar-brand {
-            color: #4dabf7 !important;
-        }
-        .dark-mode .navbar-brand .logo-text {
-            color: #4dabf7;
-        }
-        .dark-mode .navbar-brand svg .gradient-fill {
-            fill: url(#gradient-dark);
-        }
-        .dark-mode .hero-section {
-            background: linear-gradient(135deg, #004085, #0083b0), url('https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
-        }
-        .dark-mode .course-filter, .dark-mode .course-grid {
-            background-color: #2c2c2c;
-        }
-        .dark-mode .card {
-            background: linear-gradient(145deg, #2c2c2c, #1a1a1a);
-        }
-        .dark-mode .payment-form {
-            background: #2f2f2f;
-            color: #e9ecef;
-        }
-        .dark-mode .payment-button {
-            background-color: #4dabf7;
-        }
-        .dark-mode .payment-button:hover {
-            background-color: #66bfff;
-        }
+        body {font-family:'Poppins',sans-serif;background:#f4f7fa;transition:background .3s,color .3s;margin:0;padding:0;overflow-x:hidden;}
+        .navbar-brand{font-weight:700;color:#007bff!important;display:flex;align-items:center;transition:color .3s;}
+        .navbar-brand svg{height:40px;margin-right:10px;transition:transform .3s;}
+        .navbar-brand .logo-text{font-size:1.5rem;font-weight:700;}
+        .navbar-brand:hover svg{transform:scale(1.1);}
 
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        .hero-section{
+            background:linear-gradient(135deg,#007bff,#00d4ff),url('https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+            background-size:cover;background-blend-mode:overlay;color:#fff;padding:120px 0;text-align:center;position:relative;overflow:hidden;
         }
-        @keyframes slideIn {
-            from { transform: translateY(-20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
+        .hero-section::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.4);}
+        .hero-section h1{font-size:3.5rem;font-weight:700;}
+        .hero-section p{position:relative;z-index:1;}
 
-        /* Responsive Design */
-        @media (max-width: 767.98px) {
-            .navbar-brand svg {
-                height: 30px;
-            }
-            .navbar-brand .logo-text {
-                font-size: 1.2rem;
-            }
-            .hero-section {
-                padding: 60px 0;
-            }
-            .hero-section h1 {
-                font-size: 2rem;
-            }
-            .card-img-top {
-                height: 150px;
-            }
-            .card-body {
-                padding: 15px;
-            }
-            .card h5 {
-                font-size: 1.1rem;
-            }
-            .card p {
-                font-size: 0.9rem;
-            }
-            .footer .col-md-4 {
-                flex: 0 0 100%;
-                max-width: 100%;
-                text-align: center;
-                margin-bottom: 20px;
-            }
-        }
+        .marquee-section{background:#007bff;color:#fff;padding:10px 0;overflow:hidden;}
+        .marquee-section marquee{font-size:1.1rem;animation:scroll 15s linear infinite;}
 
-        @media (min-width: 768px) and (max-width: 1023.98px) {
-            .navbar-brand svg {
-                height: 35px;
-            }
-            .navbar-brand .logo-text {
-                font-size: 1.3rem;
-            }
-            .hero-section {
-                padding: 80px 0;
-            }
-            .hero-section h1 {
-                font-size: 2.5rem;
-            }
-            .card-img-top {
-                height: 180px;
-            }
-            .footer .col-md-4 {
-                flex: 0 0 33.33%;
-                max-width: 33.33%;
-                text-align: left;
-            }
-        }
+        .section-title{text-align:center;margin:40px 0 20px;font-weight:700;color:#007bff;}
+        .card{border:none;border-radius:15px;background:linear-gradient(145deg,#fff,#f0f0f0);transition:transform .3s,box-shadow .3s;overflow:hidden;position:relative;}
+        .card:hover{transform:translateY(-10px);box-shadow:0 12px 24px rgba(0,0,0,.1);}
+        .card-img-top{height:200px;object-fit:cover;transition:transform .3s;}
+        .card:hover .card-img-top{transform:scale(1.05);}
+        .badge-sticker{position:absolute;top:10px;left:10px;background:#007bff;color:#fff;padding:5px 10px;border-radius:10px;font-size:.8rem;font-weight:600;z-index:1;transform:rotate(-5deg);}
 
-        @media (min-width: 1024px) {
-            .hero-section {
-                padding: 100px 0;
-            }
-            .hero-section h1 {
-                font-size: 3.5rem;
-            }
-            .footer .col-md-4 {
-                flex: 0 0 33.33%;
-                max-width: 33.33%;
-                text-align: left;
-            }
+        .footer{background:#343a40;color:#fff;padding:40px 0;}
+        .footer a{color:#00d4ff;text-decoration:none;}
+        .footer a:hover{text-decoration:underline;}
+
+        /* Dark Mode */
+        .dark-mode{background:#1a1a1a;color:#e9ecef;}
+        .dark-mode .navbar-brand{color:#4dabf7!important;}
+        .dark-mode .hero-section{background:linear-gradient(135deg,#004085,#0083b0),url('https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg');}
+        .dark-mode .card{background:linear-gradient(145deg,#2c2c2c,#1a1a1a);}
+        .dark-mode .badge-sticker{background:#4dabf7;}
+        .dark-mode .btn-primary{background:#4dabf7;border-color:#4dabf7;}
+        .dark-mode .btn-primary:hover{background:#66bfff;border-color:#66bfff;}
+        .dark-mode .section-title{color:#66e0ff;}
+
+        /* WhatsApp */
+        .whatsapp-btn{position:fixed;bottom:20px;right:20px;background:#25D366;color:#fff;border-radius:50%;width:60px;height:60px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 8px rgba(0,0,0,.2);transition:background .3s,transform .3s;z-index:1000;}
+        .whatsapp-btn:hover{background:#20b958;transform:scale(1.1);}
+        .whatsapp-btn i{font-size:30px;}
+        .whatsapp-tooltip{position:absolute;bottom:80px;right:70px;background:#333;color:#fff;padding:5px 10px;border-radius:5px;font-size:.9rem;display:none;z-index:1000;}
+        .whatsapp-btn:hover .whatsapp-tooltip{display:block;}
+
+        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+        @keyframes slideIn{from{transform:translateY(-20px);opacity:0}to{transform:translateY(0);opacity:1}}
+        @keyframes scroll{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+
+        @media (max-width:767.98px){
+            .hero-section{padding:80px 0;}
+            .hero-section h1{font-size:2.2rem;}
+            .card-img-top{height:150px;}
         }
     </style>
 </head>
 <body>
-    <script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
 
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-    </script>
-
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container">
-            <a class="navbar-brand" href="/index.html">
-                <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="gradient-light" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#007bff;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:1" />
-                        </linearGradient>
-                        <linearGradient id="gradient-dark" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#004085;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#0083b0;stop-opacity:1" />
-                        </linearGradient>
-                    </defs>
-                    <path class="gradient-fill" fill="url(#gradient-light)" d="M10 30 V10 H15 V5 H25 V10 H30 V30 H25 V25 H15 V30 Z M15 15 H25 V20 H15 Z" />
-                    <path fill="#fff" d="M17 17 H23 V18 H17 Z M17 19 H23 V20 H17 Z" />
-                </svg>
-                <span class="logo-text">GateMate</span>
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="/index.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="/courses.html">Courses</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/workshops.html">Workshops</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/resources.html">Resources</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/bihar-prep.html">Bihar Exam Prep</a></li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="careerDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Career Support
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="careerDropdown">
-                            <li><a class="dropdown-item" href="/internship.html">Internships</a></li>
-                            <li><a class="dropdown-item" href="/careers.html">Careers</a></li>
-                            <li><a class="dropdown-item" href="/research-writing.html">Research Writing</a></li>
-                            <li><a class="dropdown-item" href="/hiring.html">Hiring</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item"><a class="nav-link" href="/notice.html">Notice Board</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/about.html">About</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/contact.html">Contact</a></li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Account
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item" href="/login.html">Login</a></li>
-                            <li><a class="dropdown-item" href="/register.html">Register</a></li>
-                            <li><a class="dropdown-item" href="/student-dashboard.html">Student Dashboard</a></li>
-                            <li><a class="dropdown-item" href="/faculty-dashboard.html">Faculty Dashboard</a></li>
-                            <li><a class="dropdown-item" href="/admin.html">Admin</a></li>
-                        </ul>
-                    </li>
-                </ul>
-                <button id="themeToggle" class="btn btn-outline-secondary ms-3" aria-label="Toggle Dark Mode">Toggle Dark Mode</button>
-            </div>
-        </div>
-    </nav>
-
-    <div class="marquee-section">
-        <marquee behavior="scroll" direction="left">
-            🎉 20% off on all courses! | Free trial classes this week! | Join our referral program for rewards! 🎉
-        </marquee>
-    </div>
-
-    <section class="hero-section">
-        <div class="container">
-            <h1>Explore Our Courses</h1>
-            <p class="lead mb-4">Choose from a wide range of expert-led courses to ace your exams.</p>
-            <a href="/register.html" class="btn btn-outline-light btn-lg">Get Started</a>
-        </div>
-    </section>
-
-    <section class="course-filter">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <select class="form-select" id="categoryFilter">
-                        <option value="all">All Categories</option>
-                        <option value="gate">GATE</option>
-                        <option value="ugc">UGC NET</option>
-                        <option value="bpsc">BPSC TRE</option>
-                        <option value="workshops">Workshops</option>
-                        <option value="internships">Internships</option>
-                    </select>
-                </div>
-                <div class="col-md-6">
-                    <select class="form-select" id="sortFilter">
-                        <option value="price-asc">Price: Low to High</option>
-                        <option value="price-desc">Price: High to Low</option>
-                        <option value="duration-asc">Duration: Short to Long</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="course-grid">
-        <div class="container">
-            <div class="row" id="courseList">
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <img src="https://images.pexels.com/photos/261895/pexels-photo-261895.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="GATE CS Course">
-                        <div class="card-body">
-                            <h5 class="card-title">GATE Computer Science</h5>
-                            <p class="card-text">₹9999 • 6 Months • Live Classes</p>
-                            <button class="btn btn-primary enroll-btn" data-course="gate-cs" data-price="9999">Enroll Now</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <img src="https://images.pexels.com/photos/256541/pexels-photo-256541.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="UGC NET Course">
-                        <div class="card-body">
-                            <h5 class="card-title">UGC NET Paper 1</h5>
-                            <p class="card-text">₹7999 • 4 Months • Recorded + Live</p>
-                            <button class="btn btn-primary enroll-btn" data-course="ugc-net" data-price="7999">Enroll Now</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <img src="https://images.pexels.com/photos/1438081/pexels-photo-1438081.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="BPSC TRE Course">
-                        <div class="card-body">
-                            <h5 class="card-title">BPSC TRE 4.0</h5>
-                            <p class="card-text">₹5999 • 3 Months • Mock Tests</p>
-                            <button class="btn btn-primary enroll-btn" data-course="bpsc-tre" data-price="5999">Enroll Now</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <img src="https://images.pexels.com/photos/3184297/pexels-photo-3184297.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="Workshop 1">
-                        <div class="card-body">
-                            <h5 class="card-title">Workshop: Data Structures</h5>
-                            <p class="card-text">₹1999 • 1 Week</p>
-                            <button class="btn btn-primary enroll-btn" data-course="data-structures" data-price="1999">Join Now</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <img src="https://images.pexels.com/photos/159711/books-bookstore-book-reading-159711.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="Workshop 2">
-                        <div class="card-body">
-                            <h5 class="card-title">Workshop: Research Writing</h5>
-                            <p class="card-text">₹1499 • 5 Days</p>
-                            <button class="btn btn-primary enroll-btn" data-course="research-writing" data-price="1499">Join Now</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <img src="https://images.pexels.com/photos/3184431/pexels-photo-3184431.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="Bihar Prep">
-                        <div class="card-body">
-                            <h5 class="card-title">Bihar Exam Prep</h5>
-                            <p class="card-text">₹4999 • 2 Months</p>
-                            <button class="btn btn-primary enroll-btn" data-course="bihar-prep" data-price="4999">Enroll Now</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <img src="https://images.pexels.com/photos/3183183/pexels-photo-3183183.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';" class="card-img-top" alt="Internships 2025">
-                        <div class="card-body">
-                            <h5 class="card-title">Top Market Trend Internships 2025 (BCA/BBA)</h5>
-                            <p class="card-text">₹7999 • 3 Months • Hands-On Training</p>
-                            <button class="btn btn-primary enroll-btn" data-course="internships-2025" data-price="7999">Enroll Now</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer class="footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4">
-                    <h5>About GATEMATE</h5>
-                    <p>India’s leading platform for GATE, UGC NET, BPSC TRE, and technical training with expert guidance.</p>
-                    <div class="social-icons">
-                        <a href="#" class="me-3"><i class="fab fa-facebook"></i></a>
-                        <a href="#" class="me-3"><i class="fab fa-youtube"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <h5>Quick Links</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="/index.html">Home</a></li>
-                        <li><a href="/courses.html">Courses</a></li>
-                        <li><a href="/workshops.html">Workshops</a></li>
-                        <li><a href="/resources.html">Resources</a></li>
-                        <li><a href="/bihar-prep.html">Bihar Exam Prep</a></li>
-                        <li><a href="/about.html">About Us</a></li>
-                        <li><a href="/contact.html">Contact</a></li>
+<!-- ====================== NAVBAR ====================== -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+        <a class="navbar-brand" href="/index.html">
+            <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="gradient-light" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#007bff;stop-opacity:1"/>
+                        <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:1"/>
+                    </linearGradient>
+                    <linearGradient id="gradient-dark" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#004085;stop-opacity:1"/>
+                        <stop offset="100%" style="stop-color:#0083b0;stop-opacity:1"/>
+                    </linearGradient>
+                </defs>
+                <path class="gradient-fill" fill="url(#gradient-light)" d="M10 30 V10 H15 V5 H25 V10 H30 V30 H25 V25 H15 V30 Z M15 15 H25 V20 H15 Z"/>
+                <path fill="#fff" d="M17 17 H23 V18 H17 Z M17 19 H23 V20 H17 Z"/>
+            </svg>
+            <span class="logo-text">GateMate</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="/index.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link active" href="/courses.html">Courses</a></li>
+                <li class="nav-item"><a class="nav-link" href="/workshops.html">Workshops</a></li>
+                <li class="nav-item"><a class="nav-link" href="/resources.html">Resources</a></li>
+                <li class="nav-item"><a class="nav-link" href="/bihar-prep.html">Bihar Exam Prep</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="careerDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">Career Support</a>
+                    <ul class="dropdown-menu" aria-labelledby="careerDropdown">
+                        <li><a class="dropdown-item" href="/internship.html">Internships</a></li>
+                        <li><a class="dropdown-item" href="/careers.html">Careers</a></li>
+                        <li><a class="dropdown-item" href="/research-writing.html">Research Writing</a></li>
+                        <li><a class="dropdown-item" href="/hiring.html">Hiring</a></li>
                     </ul>
-                </div>
-                <div class="col-md-4">
-                    <h5>Contact Us</h5>
-                    <p>123 Education Park, Patna, Bihar, India - 800001<br>
-                    +91 .<br>
-                    <a href="/cdn-cgi/l/email-protection#c8bbbdb8b8a7babc88afa9bcada5a9bcade6aba7e1a1a6"><span class="__cf_email__" data-cfemail="d3a0a6a3a3bca1a793b4b2a7b6beb2a7b6fdb0bcffbabb">[email&#160;protected]</span></a><br>
-                    Mon - Sat: 9:00 AM - 7:00 PM</p>
-                </div>
-            </div>
-            <hr>
-            <p class="text-center">© 2025 GATEMATE. All rights reserved. | <a href="/terms.html">Terms</a> | <a href="/privacy.html">Privacy</a> | <a href="/refund.html">Refund</a> | <a href="/sitemap.html">Sitemap</a></p>
+                </li>
+                <li class="nav-item"><a class="nav-link" href="/notice.html">Notice Board</a></li>
+                <li class="nav-item"><a class="nav-link" href="/about.html">About</a></li>
+                <li class="nav-item"><a class="nav-link" href="/contact.html">Contact</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">Account</a>
+                    <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" href="/login.html">Login</a></li>
+                        <li><a class="dropdown-item" href="/register.html">Register</a></li>
+                        <li><a class="dropdown-item" href="/student-dashboard.html">Student Dashboard</a></li>
+                        <li><a class="dropdown-item" href="/faculty-dashboard.html">Faculty Dashboard</a></li>
+                        <li><a class="dropdown-item" href="/admin.html">Admin</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <button id="themeToggle" class="btn btn-outline-secondary ms-3" aria-label="Toggle Dark Mode">
+                Dark Mode
+            </button>
         </div>
-    </footer>
-
-    <div class="payment-form" id="paymentForm">
-        <span class="btn-close" onclick="closePaymentForm()">&times;</span>
-        <h5>Registration & Payment</h5>
-        <form id="registrationForm">
-            <div class="form-group">
-                <input type="text" class="form-control" id="name" placeholder="Full Name" required>
-            </div>
-            <div class="form-group">
-                <input type="email" class="form-control" id="email" placeholder="Email" required>
-            </div>
-            <div class="form-group">
-                <input type="tel" class="form-control" id="phone" placeholder="Phone Number" pattern="[0-9]{10}" required>
-            </div>
-            <input type="hidden" id="courseId" value="">
-            <input type="hidden" id="coursePrice" value="">
-            <button type="submit" class="payment-button">Proceed to Pay</button>
-        </form>
     </div>
-    <div class="overlay" id="overlay"></div>
+</nav>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-    <script>
-        document.getElementById('themeToggle').addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
-        });
-        if (localStorage.getItem('theme') === 'dark') {
-            document.body.classList.add('dark-mode');
+<!-- ====================== MARQUEE ====================== -->
+<div class="marquee-section">
+    <marquee behavior="scroll" direction="left">
+        New Internships Added! | 20% off Bihar Exam Prep | GATE 2026 Crash Course
+    </marquee>
+</div>
+
+<!-- ====================== HERO ====================== -->
+<section class="hero-section">
+    <div class="container">
+        <h1>All Courses & Internships</h1>
+        <p class="lead mb-4">Live classes • Mock tests • Real-world internships</p>
+        <a href="/register.html" class="btn btn-outline-light btn-lg">Get Started</a>
+    </div>
+</section>
+
+<!-- ====================== FILTERS ====================== -->
+<section class="py-4 bg-white">
+    <div class="container">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <select class="form-select" id="categoryFilter">
+                    <option value="all">All Categories</option>
+                    <option value="gate">GATE</option>
+                    <option value="ugc-net">UGC NET</option>
+                    <option value="bpsc">BPSC / Bihar Exams</option>
+                    <option value="internship">Internships</option>
+                    <option value="tech">Tech Skills</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <select class="form-select" id="sortFilter">
+                    <option value="price-asc">Price: Low to High</option>
+                    <option value="price-desc">Price: High to Low</option>
+                    <option value="duration-asc">Duration: Short to Long</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ====================== ALL COURSES ====================== -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="section-title">Academic Courses</h2>
+        <div class="row" id="courseList"></div>
+    </div>
+</section>
+
+<!-- ====================== INTERNSHIPS ====================== -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="section-title">Internships</h2>
+        <div class="row" id="internshipList"></div>
+    </div>
+</section>
+
+<!-- ====================== BIHAR EXAM PREP ====================== -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="section-title">Bihar Exam Prep</h2>
+        <div class="row" id="biharPrepList"></div>
+    </div>
+</section>
+
+<!-- ====================== RAZORPAY ====================== -->
+<div class="text-center my-5">
+    <script src="https://checkout.razorpay.com/v1/payment-button.js"
+            data-payment_button_id="pl_QNvkmdeFepVdoB" async></script>
+</div>
+
+<!-- ====================== FOOTER ====================== -->
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h5>About GATEMATE</h5>
+                <p>India’s leading platform for GATE, UGC NET, BPSC TRE, Internships, and technical training.</p>
+                <div class="social-icons">
+                    <a href="#" class="me-3"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="me-3"><i class="fab fa-youtube"></i></a>
+                    <a href="#" class="me-3"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <h5>Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li><a href="/index.html">Home</a></li>
+                    <li><a href="/courses.html">Courses</a></li>
+                    <li><a href="/internship.html">Internships</a></li>
+                    <li><a href="/bihar-prep.html">Bihar Exam Prep</a></li>
+                    <li><a href="/about.html">About Us</a></li>
+                    <li><a href="/contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h5>Contact Us</h5>
+                <p>123 Education Park, Patna, Bihar, India - 800001<br>
+                    +91 9534427131<br>
+                    <a href="mailto:support@gatemate.co.in">support@gatemate.co.in</a><br>
+                    Mon - Sat: 9:00 AM - 7:00 PM</p>
+            </div>
+        </div>
+        <hr>
+        <p class="text-center">© 2025 GATEMATE. All rights reserved. |
+            <a href="/terms.html">Terms</a> | <a href="/privacy.html">Privacy</a> |
+            <a href="/refund.html">Refund</a> | <a href="/sitemap.html">Sitemap</a></p>
+    </div>
+</footer>
+
+<!-- ====================== WHATSAPP ====================== -->
+<div class="whatsapp-btn" id="whatsappBtn">
+    <i class="fab fa-whatsapp"></i>
+    <div class="whatsapp-tooltip">Need Help?</div>
+</div>
+
+<!-- ====================== MODAL (Course / Internship Detail) ====================== -->
+<div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailModalLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Duration:</strong> <span id="modalDuration"></span></p>
+                <p><strong>Price:</strong> <span id="modalPrice"></span></p>
+                <p id="modalDesc"></p>
+                <h6 class="mt-4">What You’ll Learn</h6>
+                <ul id="modalSyllabus" class="list-group list-group-flush"></ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a id="modalEnrollBtn" href="#" class="btn btn-primary">Enroll Now</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ====================== SCRIPTS ====================== -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+/* ---------- Dark Mode ---------- */
+document.getElementById('themeToggle').addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+});
+if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
+
+/* ---------- WhatsApp ---------- */
+document.getElementById('whatsappBtn').addEventListener('click', () => {
+    window.open('https://wa.me/919534427131?text=Hello%20GateMate,%20I%20need%20help%20with%20courses!', '_blank');
+});
+
+/* ---------- DATA ---------- */
+const academicCourses = [
+    {id:'gate-cs',title:'GATE Computer Science',img:'https://images.pexels.com/photos/159711/books-bookstore-book-reading-159711.jpeg',cat:'gate',price:4999,duration:'6 Months',desc:'Complete GATE CS prep with live classes & mocks.',syllabus:['Algorithms','OS','DBMS','Networks','Mock Tests'],enroll:'/enroll.html?course=gate-cs'},
+    {id:'ugc-net',title:'UGC NET Paper 1',img:'https://images.pexels.com/photos/3184297/pexels-photo-3184297.jpeg',cat:'ugc-net',price:2999,duration:'3 Months',desc:'Cover all 10 units with practice.',syllabus:['Teaching Aptitude','Research','Comprehension','Reasoning','Data Interpretation'],enroll:'/enroll.html?course=ugc-net'},
+    {id:'full-stack',title:'Full Stack Web Dev',img:'https://images.pexels.com/photos/3184431/pexels-photo-3184431.jpeg',cat:'tech',price:7999,duration:'5 Months',desc:'MERN stack with live projects.',syllabus:['HTML/CSS/JS','React','Node','MongoDB','Deployment'],enroll:'/enroll.html?course=full-stack'}
+];
+
+const internships = [
+    {id:'intern-web',title:'Web Development Internship',img:'https://images.pexels.com/photos/11035380/pexels-photo-11035380.jpeg',cat:'internship',price:0,duration:'2 Months',desc:'Build real websites for startups.',syllabus:['Frontend','Backend','Git','Deployment','Team Project'],enroll:'/enroll.html?intern=web'},
+    {id:'intern-data',title:'Data Science Internship',img:'https://images.pexels.com/photos/5468195/pexels-photo-5468195.jpeg',cat:'internship',price:0,duration:'3 Months',desc:'Work on Kaggle & live datasets.',syllabus:['Python','Pandas','ML Basics','Visualization','Capstone'],enroll:'/enroll.html?intern=data'}
+];
+
+const biharPrep = [
+    {id:'bpsc-tre',title:'BPSC TRE 4.0',img:'https://images.pexels.com/photos/6147148/pexels-photo-6147148.jpeg',cat:'bpsc',price:3999,duration:'4 Months',desc:'Full syllabus + previous papers.',syllabus:['General Studies','Subject Pedagogy','Mock Tests'],enroll:'/enroll.html?course=bpsc-tre'},
+    {id:'bihar-si',title:'Bihar Police SI',img:'https://images.pexels.com/photos/5212701/pexels-photo-5212701.jpeg',cat:'bpsc',price:3499,duration:'3 Months',desc:'Physical + written prep.',syllabus:['GK','Reasoning','Math','Physical Standards','Mock'],enroll:'/enroll.html?course=bihar-si'}
+];
+
+/* ---------- RENDER ---------- */
+function render(containerId, data) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+    data.forEach(item => {
+        const badge = item.badge ? `<span class="badge-sticker">${item.badge}</span>` : '';
+        const col = document.createElement('div');
+        col.className = 'col-md-4 mb-4';
+        col.innerHTML = `
+            <div class="card" data-id="${item.id}">
+                ${badge}
+                <img src="${item.img}?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                     onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';"
+                     class="card-img-top" alt="${item.title}">
+                <div class="card-body">
+                    <h5 class="card-title">${item.title}</h5>
+                    <p class="card-text">
+                        ${item.price===0?'Free':`₹${item.price}`} | ${item.duration}
+                    </p>
+                    <button class="btn btn-primary enroll-btn">Enroll Now</button>
+                </div>
+            </div>`;
+        container.appendChild(col);
+    });
+}
+render('courseList', academicCourses);
+render('internshipList', internships);
+render('biharPrepList', biharPrep);
+
+/* ---------- MODAL ---------- */
+document.addEventListener('click', e => {
+    if (!e.target.classList.contains('enroll-btn')) return;
+    const card = e.target.closest('.card');
+    const id = card.dataset.id;
+    const all = [...academicCourses, ...internships, ...biharPrep];
+    const item = all.find(i => i.id === id);
+    if (!item) return;
+
+    document.getElementById('detailModalLabel').textContent = item.title;
+    document.getElementById('modalDuration').textContent = item.duration;
+    document.getElementById('modalPrice').textContent = item.price===0?'Free':`₹${item.price}`;
+    document.getElementById('modalDesc').textContent = item.desc;
+
+    const list = document.getElementById('modalSyllabus');
+    list.innerHTML = '';
+    item.syllabus.forEach(m => {
+        const li = document.createElement('li');
+        li.className = 'list-group-item';
+        li.textContent = m;
+        list.appendChild(li);
+    });
+
+    document.getElementById('modalEnrollBtn').href = item.enroll;
+
+    new bootstrap.Modal(document.getElementById('detailModal')).show();
+});
+
+/* ---------- FILTER & SORT (All Sections) ---------- */
+function filterAndRender() {
+    const cat = document.getElementById('categoryFilter').value;
+    const sort = document.getElementById('sortFilter').value;
+
+    const filter = arr => cat==='all' ? arr : arr.filter(i => i.cat===cat);
+    const sortFn = (a,b) => {
+        if (sort==='price-asc') return a.price-b.price;
+        if (sort==='price-desc') return b.price-a.price;
+        if (sort==='duration-asc') {
+            const da = parseInt(a.duration); const db = parseInt(b.duration);
+            return da-db;
         }
+        return 0;
+    };
 
-        document.getElementById('categoryFilter').addEventListener('change', filterCourses);
-        document.getElementById('sortFilter').addEventListener('change', sortCourses);
+    const all = [...academicCourses, ...internships, ...biharPrep];
+    let filtered = filter(all);
+    filtered = filtered.sort(sortFn);
 
-        function filterCourses() {
-            const category = document.getElementById('categoryFilter').value;
-            const cards = document.querySelectorAll('#courseList .card');
-            cards.forEach(card => {
-                const title = card.querySelector('.card-title').textContent.toLowerCase();
-                if (category === 'all' || 
-                    (category === 'gate' && title.includes('gate')) ||
-                    (category === 'ugc' && title.includes('ugc')) ||
-                    (category === 'bpsc' && title.includes('bpsc')) ||
-                    (category === 'workshops' && title.includes('workshop')) ||
-                    (category === 'internships' && title.includes('internships'))) {
-                    card.parentElement.style.display = 'block';
-                } else {
-                    card.parentElement.style.display = 'none';
-                }
-            });
-        }
-
-        function sortCourses() {
-            const sortBy = document.getElementById('sortFilter').value;
-            const cards = Array.from(document.querySelectorAll('#courseList .card'));
-            cards.sort((a, b) => {
-                const aPrice = parseInt(a.querySelector('.card-text').textContent.match(/₹(\d+)/)[1]);
-                const bPrice = parseInt(b.querySelector('.card-text').textContent.match(/₹(\d+)/)[1]);
-                const aDuration = parseInt(a.querySelector('.card-text').textContent.match(/(\d+)\s*Months|(\d+)\s*Week|(\d+)\s*Days/)[1] || a.querySelector('.card-text').textContent.match(/(\d+)\s*Months|(\d+)\s*Week|(\d+)\s*Days/)[2] || a.querySelector('.card-text').textContent.match(/(\d+)\s*Months|(\d+)\s*Week|(\d+)\s*Days/)[3] || 0);
-                const bDuration = parseInt(b.querySelector('.card-text').textContent.match(/(\d+)\s*Months|(\d+)\s*Week|(\d+)\s*Days/)[1] || b.querySelector('.card-text').textContent.match(/(\d+)\s*Months|(\d+)\s*Week|(\d+)\s*Days/)[2] || b.querySelector('.card-text').textContent.match(/(\d+)\s*Months|(\d+)\s*Week|(\d+)\s*Days/)[3] || 0);
-                if (sortBy === 'price-asc') return aPrice - bPrice;
-                if (sortBy === 'price-desc') return bPrice - aPrice;
-                if (sortBy === 'duration-asc') return aDuration - bDuration;
-                return 0;
-            });
-            const courseList = document.getElementById('courseList');
-            courseList.innerHTML = '';
-            cards.forEach(card => courseList.appendChild(card.parentElement));
-        }
-
-        document.querySelectorAll('.enroll-btn').forEach(button => {
-            button.addEventListener('click', () => {
-                const courseId = button.getAttribute('data-course');
-                const coursePrice = button.getAttribute('data-price');
-                document.getElementById('courseId').value = courseId;
-                document.getElementById('coursePrice').value = coursePrice;
-                document.getElementById('paymentForm').classList.add('active');
-                document.getElementById('overlay').classList.add('active');
-            });
-        });
-
-        function closePaymentForm() {
-            document.getElementById('paymentForm').classList.remove('active');
-            document.getElementById('overlay').classList.remove('active');
-            document.getElementById('registrationForm').reset();
-        }
-
-        document.getElementById('registrationForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const phone = document.getElementById('phone').value;
-            const courseId = document.getElementById('courseId').value;
-            const coursePrice = document.getElementById('coursePrice').value;
-
-            // Send data to your backend (replace with your API endpoint)
-            fetch('/api/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ name, email, phone, courseId, coursePrice }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Initiate Razorpay payment
-                    const options = {
-                        key: 'YOUR_RAZORPAY_KEY_ID', // Replace with your Razorpay key
-                        amount: coursePrice * 100, // Amount in paise
-                        currency: 'INR',
-                        name: 'GateMate',
-                        description: `Payment for ${courseId}`,
-                        order_id: data.order_id, // Assuming backend returns order_id
-                        handler: function (response) {
-                            alert('Payment successful! Registration confirmed.');
-                            closePaymentForm();
-                        },
-                        prefill: {
-                            name: name,
-                            email: email,
-                            contact: phone,
-                        },
-                        theme: {
-                            color: '#007bff',
-                        },
-                    };
-                    const rzp = new Razorpay(options);
-                    rzp.open();
-                } else {
-                    alert('Registration failed. Please try again.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred. Please try again.');
-            });
-        });
-
-        document.getElementById('overlay').addEventListener('click', closePaymentForm);
-    </script>
-    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'936b97f3dc4dbd0d',t:'MTc0NTcyODMyMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+    // Split back into sections
+    render('courseList', filtered.filter(i=>['gate','ugc-net','tech'].includes(i.cat)));
+    render('internshipList', filtered.filter(i=>i.cat==='internship'));
+    render('biharPrepList', filtered.filter(i=>i.cat==='bpsc'));
+}
+document.getElementById('categoryFilter').addEventListener('change', filterAndRender);
+document.getElementById('sortFilter').addEventListener('change', filterAndRender);
+</script>
 </body>
 </html>
