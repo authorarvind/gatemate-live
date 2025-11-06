@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- ==== META ==== -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resources - GATEMATE.co.in</title>
@@ -10,371 +9,279 @@
     <meta name="keywords" content="GATE resources, UGC NET, BPSC TRE, study materials, practice tests">
     <meta name="author" content="GateMate Team">
 
-    <!-- ==== BOOTSTRAP / FONTS ==== -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-    <!-- ==== STYLES (same as index.html) ==== -->
     <style>
-        body {font-family:'Poppins',sans-serif;background:#f4f7fa;transition:background .3s,color .3s;margin:0;padding:0;overflow-x:hidden;}
-        .navbar-brand{font-weight:700;color:#007bff!important;display:flex;align-items:center;transition:color .3s;}
-        .navbar-brand svg{height:40px;margin-right:10px;transition:transform .3s;}
-        .navbar-brand .logo-text{font-size:1.5rem;font-weight:700;}
-        .navbar-brand:hover svg{transform:scale(1.1);}
-
-        .hero-section{
-            background:linear-gradient(135deg,#007bff,#00d4ff),url('https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
-            background-size:cover;background-blend-mode:overlay;color:#fff;padding:120px 0;text-align:center;position:relative;overflow:hidden;
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f4f7fa;
+            transition: background .3s, color .3s;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
         }
-        .hero-section::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.4);}
-        .hero-section h1{font-size:3.5rem;font-weight:700;}
-        .hero-section p{position:relative;z-index:1;}
 
-        .marquee-section{background:#007bff;color:#fff;padding:10px 0;overflow:hidden;}
-        .marquee-section marquee{font-size:1.1rem;animation:scroll 15s linear infinite;}
+        .navbar-brand {
+            font-weight: 700;
+            color: #007bff !important;
+        }
 
-        .card{border:none;border-radius:15px;background:linear-gradient(145deg,#fff,#f0f0f0);transition:transform .3s,box-shadow .3s;overflow:hidden;position:relative;}
-        .card:hover{transform:translateY(-10px);box-shadow:0 12px 24px rgba(0,0,0,.1);}
-        .card-img-top{height:200px;object-fit:cover;transition:transform .3s;}
-        .card:hover .card-img-top{transform:scale(1.05);}
-        .badge-sticker{position:absolute;top:10px;left:10px;background:#007bff;color:#fff;padding:5px 10px;border-radius:10px;font-size:.8rem;font-weight:600;z-index:1;transform:rotate(-5deg);}
+        .hero {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #e0f7ff, #c3e6f9);
+            text-align: center;
+        }
 
-        .footer{background:#343a40;color:#fff;padding:40px 0;}
-        .footer a{color:#00d4ff;text-decoration:none;}
-        .footer a:hover{text-decoration:underline;}
+        .resource-card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
 
-        /* Dark Mode */
-        .dark-mode{background:#1a1a1a;color:#e9ecef;}
-        .dark-mode .navbar-brand{color:#4dabf7!important;}
-        .dark-mode .hero-section{background:linear-gradient(135deg,#004085,#0083b0),url('https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');}
-        .dark-mode .card{background:linear-gradient(145deg,#2c2c2c,#1a1a1a);}
-        .dark-mode .badge-sticker{background:#4dabf7;}
-        .dark-mode .btn-primary{background:#4dabf7;border-color:#4dabf7;}
-        .dark-mode .btn-primary:hover{background:#66bfff;border-color:#66bfff;}
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
 
-        /* WhatsApp */
-        .whatsapp-btn{position:fixed;bottom:20px;right:20px;background:#25D366;color:#fff;border-radius:50%;width:60px;height:60px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 8px rgba(0,0,0,.2);transition:background .3s,transform .3s;z-index:1000;}
-        .whatsapp-btn:hover{background:#20b958;transform:scale(1.1);}
-        .whatsapp-btn i{font-size:30px;}
-        .whatsapp-tooltip{position:absolute;bottom:80px;right:70px;background:#333;color:#fff;padding:5px 10px;border-radius:5px;font-size:.9rem;display:none;z-index:1000;}
-        .whatsapp-btn:hover .whatsapp-tooltip{display:block;}
+        .access-btn {
+            cursor: pointer;
+        }
 
-        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-        @keyframes slideIn{from{transform:translateY(-20px);opacity:0}to{transform:translateY(0);opacity:1}}
-        @keyframes scroll{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+        /* All badges are now green (Free) */
+        .badge-free {
+            background-color: #28a745;
+            color: #fff;
+        }
 
-        @media (max-width:767.98px){
-            .hero-section{padding:80px 0;}
-            .hero-section h1{font-size:2rem;}
-            .card-img-top{height:150px;}
+        /* Price text is now just 'Free' */
+        .price-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #28a745; /* Green for Free */
+        }
+
+        .filter-controls {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
     </style>
 </head>
 <body>
 
-<!-- ====================== NAVBAR ====================== -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
     <div class="container">
-        <a class="navbar-brand" href="/index.html">
-            <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <linearGradient id="gradient-light" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:#007bff;stop-opacity:1"/>
-                        <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:1"/>
-                    </linearGradient>
-                    <linearGradient id="gradient-dark" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:#004085;stop-opacity:1"/>
-                        <stop offset="100%" style="stop-color:#0083b0;stop-opacity:1"/>
-                    </linearGradient>
-                </defs>
-                <path class="gradient-fill" fill="url(#gradient-light)" d="M10 30 V10 H15 V5 H25 V10 H30 V30 H25 V25 H15 V30 Z M15 15 H25 V20 H15 Z"/>
-                <path fill="#fff" d="M17 17 H23 V18 H17 Z M17 19 H23 V20 H17 Z"/>
-            </svg>
-            <span class="logo-text">GateMate</span>
-        </a>
+        <a class="navbar-brand" href="#">GATEMATE</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" href="/index.html">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="/courses.html">Courses</a></li>
-                <li class="nav-item"><a class="nav-link" href="/workshops.html">Workshops</a></li>
-                <li class="nav-item"><a class="nav-link active" href="/resources.html">Resources</a></li>
-                <li class="nav-item"><a class="nav-link" href="/bihar-prep.html">Bihar Exam Prep</a></li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="careerDropdown" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">Career Support</a>
-                    <ul class="dropdown-menu" aria-labelledby="careerDropdown">
-                        <li><a class="dropdown-item" href="/internship.html">Internships</a></li>
-                        <li><a class="dropdown-item" href="/careers.html">Careers</a></li>
-                        <li><a class="dropdown-item" href="/research-writing.html">Research Writing</a></li>
-                        <li><a class="dropdown-item" href="/hiring.html">Hiring</a></li>
-                    </ul>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Home</a>
                 </li>
-                <li class="nav-item"><a class="nav-link" href="/notice.html">Notice Board</a></li>
-                <li class="nav-item"><a class="nav-link" href="/about.html">About</a></li>
-                <li class="nav-item"><a class="nav-link" href="/contact.html">Contact</a></li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">Account</a>
-                    <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                        <li><a class="dropdown-item" href="/login.html">Login</a></li>
-                        <li><a class="dropdown-item" href="/register.html">Register</a></li>
-                        <li><a class="dropdown-item" href="/student-dashboard.html">Student Dashboard</a></li>
-                        <li><a class="dropdown-item" href="/faculty-dashboard.html">Faculty Dashboard</a></li>
-                        <li><a class="dropdown-item" href="/admin.html">Admin</a></li>
-                    </ul>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Resources</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
                 </li>
             </ul>
-            <button id="themeToggle" class="btn btn-outline-secondary ms-3" aria-label="Toggle Dark Mode">
-                Toggle Dark Mode
-            </button>
         </div>
     </div>
 </nav>
 
-<!-- ====================== MARQUEE ====================== -->
-<div class="marquee-section">
-    <marquee behavior="scroll" direction="left">
-        New resources added! | Free mock tests for GATE & UGC NET
-    </marquee>
-</div>
-
-<!-- ====================== HERO ====================== -->
-<section class="hero-section">
+<section class="hero">
     <div class="container">
-        <h1>Study Resources</h1>
-        <p class="lead mb-4">Notes, videos, mock tests – all in one place.</p>
-        <a href="/register.html" class="btn btn-outline-light btn-lg">Get Started</a>
+        <h1 class="display-4 fw-bold text-dark">Study Resources</h1>
+        <p class="lead text-muted">All study materials are now available for **Free** access.</p>
     </div>
 </section>
 
-<!-- ====================== FILTERS ====================== -->
-<section class="py-4 bg-white">
-    <div class="container">
-        <div class="row g-3">
-            <div class="col-md-6">
-                <select class="form-select" id="typeFilter">
-                    <option value="all">All Types</option>
-                    <option value="notes">Notes</option>
-                    <option value="videos">Videos</option>
-                    <option value="mock-tests">Mock Tests</option>
-                </select>
-            </div>
-            <div class="col-md-6">
-                <select class="form-select" id="sortFilter">
-                    <option value="updated-desc">Updated: Recent First</option>
-                    <option value="updated-asc">Updated: Oldest First</option>
-                </select>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ====================== RESOURCE GRID ====================== -->
 <section class="py-5">
     <div class="container">
-        <div class="row" id="resourceList">
-            <!-- Cards injected by JS -->
+        <div class="row mb-4 filter-controls">
+            <div class="col-md-6 mb-3 mb-md-0">
+                <label for="typeFilter" class="form-label fw-bold">Filter by Type</label>
+                <select id="typeFilter" class="form-select">
+                    <option value="all">All Types</option>
+                    <option value="Notes">Notes</option>
+                    <option value="Videos">Videos</option>
+                    <option value="Tests">Mock Tests</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label for="sortFilter" class="form-label fw-bold">Sort by</label>
+                <select id="sortFilter" class="form-select">
+                    <option value="updated-desc">Latest Update (Newest First)</option>
+                    <option value="updated-asc">Latest Update (Oldest First)</option>
+                </select>
+            </div>
         </div>
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="resourcesList">
+            </div>
     </div>
 </section>
 
-<!-- ====================== RAZORPAY ====================== -->
-<form class="my-4 text-center">
-    <script src="https://checkout.razorpay.com/v1/payment-button.js"
-            data-payment_button_id="pl_QNvkmdeFepVdoB" async></script>
-</form>
-
-<!-- ====================== FOOTER ====================== -->
-<footer class="footer">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4">
-                <h5>About GATEMATE</h5>
-                <p>India’s leading platform for GATE, UGC NET, BPSC TRE, and technical training with expert guidance.</p>
-                <div class="social-icons">
-                    <a href="#" class="me-3"><i class="fab fa-facebook"></i></a>
-                    <a href="#" class="me-3"><i class="fab fa-youtube"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <h5>Quick Links</h5>
-                <ul class="list-unstyled">
-                    <li><a href="/index.html">Home</a></li>
-                    <li><a href="/courses.html">Courses</a></li>
-                    <li><a href="/workshops.html">Workshops</a></li>
-                    <li><a href="/resources.html">Resources</a></li>
-                    <li><a href="/bihar-prep.html">Bihar Exam Prep</a></li>
-                    <li><a href="/about.html">About Us</a></li>
-                    <li><a href="/contact.html">Contact</a></li>
-                </ul>
-            </div>
-            <div class="col-md-4">
-                <h5>Contact Us</h5>
-                <p>123 Education Park, Patna, Bihar, India - 800001<br>
-                    +91 6201259584<br>
-                    <a href="mailto:support@gatemate.co.in">support@gatemate.co.in</a><br>
-                    Mon - Sat: 9:00 AM - 7:00 PM</p>
-            </div>
-        </div>
-        <hr>
-        <p class="text-center">© 2025 GATEMATE. All rights reserved. | <a href="/terms.html">Terms</a> | <a href="/privacy.html">Privacy</a> | <a href="/refund.html">Refund</a> | <a href="/sitemap.html">Sitemap</a></p>
-    </div>
-</footer>
-
-<!-- ====================== WHATSAPP BUTTON ====================== -->
-<div class="whatsapp-btn" id="whatsappBtn">
-    <i class="fab fa-whatsapp"></i>
-    <div class="whatsapp-tooltip">Need Help?</div>
-</div>
-
-<!-- ====================== RESOURCE DETAIL MODAL ====================== -->
 <div class="modal fade" id="resourceModal" tabindex="-1" aria-labelledby="resourceModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="resourceModalLabel"></h5>
+                <h5 class="modal-title" id="modalTitle">Resource Title</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p><strong>Updated:</strong> <span id="modalUpdated"></span></p>
-                <p><strong>Access:</strong> <span id="modalAccess"></span></p>
-                <p id="modalDesc"></p>
+                <p class="text-muted" id="modalDesc">Short description of the resource.</p>
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item">
+                        <i class="fas fa-tags me-2"></i> **Access:** <span id="modalAccess" class="fw-bold">Free</span>
+                    </li>
+                    <li class="list-group-item">
+                        <i class="fas fa-clock me-2"></i> **Last Updated:** <span id="modalUpdated"></span>
+                    </li>
+                </ul>
 
-                <h6 class="mt-4">Topics Covered</h6>
-                <ul id="modalTopics" class="list-group list-group-flush"></ul>
+                <h6><i class="fas fa-list-ul me-2"></i> Topics Covered:</h6>
+                <ul class="list-group list-group-flush mb-0" id="modalTopics">
+                    </ul>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <a id="modalDownloadBtn" href="#" class="btn btn-primary">Download / Access</a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <a id="modalDownloadBtn" class="btn btn-success text-white" href="#" role="button">Access</a>
             </div>
         </div>
     </div>
 </div>
 
-<!-- ====================== SCRIPTS ====================== -->
+<footer class="bg-dark text-white text-center py-3 mt-5">
+    <p class="mb-0">&copy; 2024 GATEMATE. All rights reserved.</p>
+</footer>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
 <script>
-/* ---------- Dark Mode ---------- */
-document.getElementById('themeToggle').addEventListener('click', () => {
-    document.body.classList.toggle('dark-mode');
-    localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
-});
-if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
-
-/* ---------- WhatsApp ---------- */
-document.getElementById('whatsappBtn').addEventListener('click', () => {
-    window.open('https://wa.me/919534427131?text=Hello%20GateMate,%20I%20need%20help%20with%20resources!', '_blank');
-});
-
-/* ---------- Resource Data (Edit Here) ---------- */
+/* ---------- Resource Data (ALL CONVERTED TO FREE) ---------- */
 const resourcesData = [
     {
-        id: 'gate-notes',
-        title: 'GATE CS Notes',
-        img: 'https://images.pexels.com/photos/159711/books-bookstore-book-reading-159711.jpeg',
-        type: 'notes',
-        updated: 'October 2025',
-        access: 'Free',
-        desc: 'Comprehensive notes for GATE Computer Science.',
-        topics: [
-            'Algorithms',
-            'Data Structures',
-            'Operating Systems',
-            'Databases'
-        ],
-        downloadLink: 'https://example.com/gate-cs-notes.pdf'
+        id: 1,
+        title: "GATE CS Complete Notes - All Subjects",
+        desc: "Comprehensive handwritten notes covering all core subjects for GATE Computer Science. Includes Algorithms, Data Structures, TOC, and more. Now completely **Free**!",
+        type: "Notes",
+        updated: "2024-05-10",
+        access: "Free",
+        price: "0",
+        downloadLink: "dummy_gate_cs_notes.pdf",
+        topics: ["Algorithms", "Data Structures", "Computer Networks", "DBMS", "Operating Systems"]
     },
     {
-        id: 'ugc-video',
-        title: 'UGC NET Video Lectures',
-        img: 'https://images.pexels.com/photos/3184297/pexels-photo-3184297.jpeg',
-        type: 'videos',
-        updated: 'September 2025',
-        access: 'Premium',
-        desc: 'Recorded lectures for UGC NET Paper 1.',
-        topics: [
-            'Teaching Aptitude',
-            'Research Methodology',
-            'Logical Reasoning',
-            'Data Interpretation'
-        ],
-        downloadLink: 'https://example.com/ugc-net-videos.zip'
+        id: 2,
+        title: "UGC NET Paper 1 Practice Video Series",
+        desc: "A series of video lectures and solved practice questions for UGC NET Paper 1, covering all 10 units. Available for **Free** access.",
+        type: "Videos",
+        updated: "2024-05-01",
+        access: "Free",
+        price: "0",
+        downloadLink: "dummy_ugc_net_videos.zip",
+        topics: ["Teaching Aptitude", "Research Aptitude", "Communication", "Data Interpretation", "Logical Reasoning"]
     },
     {
-        id: 'bpsc-mock',
-        title: 'BPSC TRE Mock Test',
-        img: 'https://images.pexels.com/photos/6147148/pexels-photo-6147148.jpeg',
-        type: 'mock-tests',
-        updated: 'August 2025',
-        access: 'Free',
-        desc: 'Practice mock test for BPSC TRE.',
-        topics: [
-            'General Studies',
-            'Subject Knowledge',
-            'Pedagogy'
-        ],
-        downloadLink: 'https://example.com/bpsc-mock.pdf'
+        id: 3,
+        title: "BPSC TRE Mock Test Series (Primary Teacher)",
+        desc: "Full-length mock test series based on the latest BPSC TRE (Teacher Recruitment Exam) syllabus for Primary Teachers (1-5). Access is now **Free**.",
+        type: "Tests",
+        updated: "2024-04-20",
+        access: "Free",
+        price: "0",
+        downloadLink: "dummy_bpsc_mock_test.pdf",
+        topics: ["General Studies", "Language (Hindi/English)", "Current Affairs", "Primary Maths", "EVS"]
     },
     {
-        id: 'ai-notes',
-        title: 'AI Basics Notes',
-        img: 'https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg',
-        type: 'notes',
-        updated: 'April 2025',
-        access: 'Premium',
-        desc: 'Introductory notes on Artificial Intelligence.',
-        topics: [
-            'Machine Learning Basics',
-            'Neural Networks',
-            'AI Ethics'
-        ],
-        downloadLink: 'https://example.com/ai-notes.pdf'
+        id: 4,
+        title: "Introduction to AI - Quick Revision Notes",
+        desc: "Concise revision notes covering the basics of Artificial Intelligence, including agents, search algorithms, and machine learning concepts.",
+        type: "Notes",
+        updated: "2024-05-15",
+        access: "Free",
+        price: "0",
+        downloadLink: "dummy_ai_notes.pdf",
+        topics: ["What is AI?", "Intelligent Agents", "Search Algorithms", "Machine Learning Basics"]
+    },
+    {
+        id: 5,
+        title: "UGC NET Commerce Full Syllabus Videos",
+        desc: "In-depth video course covering the entire UGC NET Commerce syllabus for Paper 2. Provided **Free** of cost.",
+        type: "Videos",
+        updated: "2024-04-05",
+        access: "Free",
+        price: "0",
+        downloadLink: "dummy_ugc_net_commerce_videos.zip",
+        topics: ["Accounting", "Business Economics", "Business Finance", "Legal Aspects of Business", "Marketing"]
+    },
+    // === ATTACHED INTERNSHIP RESOURCE (ID 6) ===
+    {
+        id: 6,
+        title: "Internship Roles for BBA & MBA Students (Download)",
+        desc: "The complete list of 10 internship roles across various domains for BBA & MBA students at GateMate. Click Access to get the full list of roles.",
+        type: "Notes",
+        updated: "2025-11-06",
+        access: "Free",
+        price: "0",
+        // Data URL containing the content of the PDF provided by the user
+        downloadLink: 'data:text/plain;charset=utf-8,Internship%20Opportunities%20at%20Gatemate%20Learning%20Pvt.%20Ltd.%0A%0AInternship%20Roles%20for%20BBA%20%26%20MBA%20Students%0A%0AWe%20are%20excited%20to%20announce%20a%20range%20of%20internship%20openings%20across%20various%20domains.%20The%20available%20positions%20are%3A%0A%0A1.%20Digital%20Marketing%20Intern%3A%20Work%20on%20SEO%2C%20social%20media%2C%20Google%20Ads%2C%20content%20strategy%2C%20and%20email%20campaigns.%0A2.%20Business%20Development%20Intern%3A%20Focus%20on%20lead%20generation%2C%20client%20outreach%2C%20partnership%20building%2C%20and%20sales%20strategy.%0A3.%20Human%20Resources%20(HR)%20Intern%3A%20Handle%20recruitment%2C%20onboarding%2C%20employee%20engagement%2C%20and%20HR%20operations.%0A4.%20Finance%20%26%20Accounting%20Intern%3A%20Assist%20in%20budgeting%2C%20financial%20reports%2C%20bookkeeping%2C%20and%20MIS%20preparation.%0A5.%20Market%20Research%20Intern%3A%20Conduct%20surveys%2C%20analyze%20competition%2C%20and%20prepare%20market%20intelligence%20reports.%0A6.%20Data%20Analytics%20Intern%3A%20Work%20with%20Excel%2C%20Power%20BI%2C%20or%20Tableau%20to%20drive%20business%20decisions%20with%20data.%0A7.%20Operations%20Management%20Intern%3A%20Optimize%20workflows%2C%20monitor%20efficiency%2C%20and%20help%20with%20logistics%20or%20project%20execution.%0A8.%20Social%20Media%20Marketing%20Intern%3A%20Create%20content%2C%20manage%20platforms%20(Instagram%2C%20LinkedIn)%2C%20and%20grow%20brand%20engagement.%0A9.%20Product%20Management%20Intern%3A%20Collaborate%20with%20development%2C%20marketing%2C%20and%20design%20teams%20to%20shape%20product%20features.%0A10.%20Customer%20Relationship%20Management%20(CRM)%20Intern%3A%20Support%20in%20managing%20client%20databases%2C%20communications%2C%20and%20retention%20strategies.',
+        topics: ["Digital Marketing", "Business Development", "Human Resources", "Finance & Accounting", "Data Analytics"]
     }
 ];
 
-/* ---------- Render Cards ---------- */
+/* ---------- Render Function (Updated button text) ---------- */
 function renderResources(data) {
-    const container = document.getElementById('resourceList');
-    container.innerHTML = '';
-    data.forEach(res => {
-        const col = document.createElement('div');
-        col.className = 'col-md-4 mb-4';
+    const listElement = document.getElementById('resourcesList');
+    listElement.innerHTML = '';
 
-        col.innerHTML = `
-            <div class="card" data-id="${res.id}">
-                <img src="${res.img}?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                     onerror="this.src='https://images.pexels.com/photos/159213/hall-corridor-lobby-waiting-room-159213.jpeg';"
-                     class="card-img-top" alt="${res.title}">
-                <div class="card-body">
-                    <h5 class="card-title">${res.title}</h5>
-                    <p class="card-text">
-                        Type: ${res.type.charAt(0).toUpperCase() + res.type.slice(1)} | Updated: ${res.updated} | ${res.access}
-                    </p>
-                    <button class="btn btn-primary access-btn">Access Now</button>
+    data.forEach(res => {
+        const card = `
+            <div class="col">
+                <div class="card h-100 resource-card" data-id="${res.id}">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <h5 class="card-title">${res.title}</h5>
+                            <span class="badge badge-free">Free</span>
+                        </div>
+                        <p class="card-text text-muted small">${res.type} | Updated: ${res.updated}</p>
+                        <p class="card-text">${res.desc}</p>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between align-items-center bg-white border-top-0">
+                        <span class="price-text">Free</span>
+                        <button class="btn btn-sm btn-success access-btn" 
+                                data-id="${res.id}">
+                            Access </button>
+                    </div>
                 </div>
-            </div>`;
-        container.appendChild(col);
+            </div>
+        `;
+        listElement.insertAdjacentHTML('beforeend', card);
     });
 }
 
-/* ---------- Modal ---------- */
-document.addEventListener('click', e => {
-    if (e.target.classList.contains('access-btn')) {
-        const card = e.target.closest('.card');
-        const id = card.dataset.id;
-        const res = resourcesData.find(r => r.id === id);
-        if (!res) return;
+/* ---------- Utility Function for Free Content ---------- */
+function redirectToContent(link) {
+    // This is no longer used for the internship download logic, but kept for clarity on other links
+    window.location.href = link;
+}
 
-        document.getElementById('resourceModalLabel').textContent = res.title;
+/* ---------- Resource Modal Logic (Updated button text) ---------- */
+document.getElementById('resourcesList').addEventListener('click', function (e) {
+    if (e.target.classList.contains('access-btn')) {
+        const resourceId = e.target.getAttribute('data-id');
+        const res = resourcesData.find(r => r.id == resourceId);
+
+        document.getElementById('modalTitle').textContent = res.title;
+        document.getElementById('modalAccess').textContent = 'Free'; 
         document.getElementById('modalUpdated').textContent = res.updated;
-        document.getElementById('modalAccess').textContent = res.access;
         document.getElementById('modalDesc').textContent = res.desc;
 
         const topicsList = document.getElementById('modalTopics');
@@ -386,15 +293,24 @@ document.addEventListener('click', e => {
             topicsList.appendChild(li);
         });
 
-        document.getElementById('modalDownloadBtn').href = res.downloadLink;
-        document.getElementById('modalDownloadBtn').textContent = res.access === 'Free' ? 'Download' : 'Purchase & Download';
+        const downloadBtn = document.getElementById('modalDownloadBtn');
+        downloadBtn.textContent = 'Access'; // Renamed from Download
+        downloadBtn.href = res.downloadLink;
+        downloadBtn.setAttribute('data-bs-dismiss', 'modal'); // Dismiss modal on click
+
+        // Special handling for the internship download to force a file name
+        if (res.id === 6) {
+             downloadBtn.setAttribute('download', 'Internship_Roles_BBA_MBA.txt');
+        } else {
+             downloadBtn.removeAttribute('download');
+        }
 
         const modal = new bootstrap.Modal(document.getElementById('resourceModal'));
         modal.show();
     }
 });
 
-/* ---------- Filter & Sort ---------- */
+/* ---------- Filter & Sort (Unchanged) ---------- */
 document.getElementById('typeFilter').addEventListener('change', filterAndSort);
 document.getElementById('sortFilter').addEventListener('change', filterAndSort);
 
