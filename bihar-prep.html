@@ -203,7 +203,7 @@
         <div class="row">
             <div class="col-md-4">
                 <h5>About GATEMATE</h5>
-                <p>India’s leading platform for GATE, UGC NET, BPSC TRE, and technical training with expert guidance.</p>
+                <p>India's leading platform for GATE, UGC NET, BPSC TRE, and technical training with expert guidance.</p>
                 <div class="social-icons">
                     <a href="#" class="me-3"><i class="fab fa-facebook"></i></a>
                     <a href="#" class="me-3"><i class="fab fa-youtube"></i></a>
@@ -286,7 +286,7 @@ const coursesData = [
     {
         id: 'bpsc-tre',
         title: 'BPSC TRE 4.0 Course',
-        img: 'https://images.pexels.com/photos/1438081/pexels-photo-1438081.jpeg',
+        img: 'https://images.pexels.com/photos/5212345/pexels-photo-5212345.jpeg',
         type: 'courses',
         price: 5999,
         duration: '3 Months',
@@ -303,7 +303,7 @@ const coursesData = [
     {
         id: 'bihar-prep',
         title: 'Bihar Exam Prep Course',
-        img: 'https://images.pexels.com/photos/3184431/pexels-photo-3184431.jpeg',
+        img: 'https://images.pexels.com/photos/5212347/pexels-photo-5212347.jpeg',
         type: 'courses',
         price: 4999,
         duration: '2 Months',
@@ -320,7 +320,7 @@ const coursesData = [
     {
         id: 'bihar-police-constable',
         title: 'Bihar Police Constable Course',
-        img: 'https://images.pexels.com/photos/7034988/pexels-photo-7034988.jpeg',
+        img: 'https://images.pexels.com/photos/5212350/pexels-photo-5212350.jpeg',
         type: 'courses',
         price: 999,
         duration: '3 Months',
@@ -337,7 +337,7 @@ const coursesData = [
     {
         id: 'bihar-police-si',
         title: 'Bihar Police SI Foundation Course',
-        img: 'https://images.pexels.com/photos/7034990/pexels-photo-7034990.jpeg',
+        img: 'https://images.pexels.com/photos/5212352/pexels-photo-5212352.jpeg',
         type: 'courses',
         price: 1499,
         duration: '6 Months',
@@ -354,7 +354,7 @@ const coursesData = [
     {
         id: 'bihar-home-guard',
         title: 'Bihar Home Guard Recruitment Course',
-        img: 'https://images.pexels.com/photos/7034989/pexels-photo-7034989.jpeg',
+        img: 'https://images.pexels.com/photos/5212354/pexels-photo-5212354.jpeg',
         type: 'courses',
         price: 799,
         duration: '3 Months',
@@ -369,26 +369,9 @@ const coursesData = [
         enrollLink: '/enroll.html?course=bihar-home-guard'
     },
     {
-        id: 'pet-prep',
-        title: 'Physical Efficiency Test (PET) Program',
-        img: 'https://images.pexels.com/photos/7034991/pexels-photo-7034991.jpeg',
-        type: 'courses',
-        price: 499,
-        duration: '1 Month',
-        badge: 'Bihar Police Prep',
-        desc: 'Intensive 30-day PET training – running, push-ups, long jump etc.',
-        syllabus: [
-            'Week 1 – Endurance Running',
-            'Week 2 – Strength Training',
-            'Week 3 – Speed & Agility',
-            'Week 4 – Mock PET'
-        ],
-        enrollLink: '/enroll.html?course=pet-prep'
-    },
-    {
         id: 'bihar-police-si-mains',
         title: 'Bihar Police SI Mains + Interview',
-        img: 'https://images.pexels.com/photos/7034987/pexels-photo-7034987.jpeg',
+        img: 'https://images.pexels.com/photos/5212358/pexels-photo-5212358.jpeg',
         type: 'courses',
         price: 1999,
         duration: 'Full Package',
@@ -405,7 +388,7 @@ const coursesData = [
     {
         id: 'bpsc-notes',
         title: 'BPSC TRE Notes',
-        img: 'https://images.pexels.com/photos/159711/books-bookstore-book-reading-159711.jpeg',
+        img: 'https://images.pexels.com/photos/5212360/pexels-photo-5212360.jpeg',
         type: 'resources',
         price: 0,
         duration: '',
@@ -417,7 +400,7 @@ const coursesData = [
     {
         id: 'bpsc-video',
         title: 'BPSC TRE Video Lectures',
-        img: 'https://images.pexels.com/photos/3184297/pexels-photo-3184297.jpeg',
+        img: 'https://images.pexels.com/photos/5212362/pexels-photo-5212362.jpeg',
         type: 'resources',
         price: 0,
         duration: '',
@@ -429,7 +412,7 @@ const coursesData = [
     {
         id: 'bpsc-mock',
         title: 'BPSC TRE Mock Test',
-        img: 'https://images.pexels.com/photos/6147148/pexels-photo-6147148.jpeg',
+        img: 'https://images.pexels.com/photos/5212364/pexels-photo-5212364.jpeg',
         type: 'tests',
         price: 0,
         duration: '',
@@ -492,13 +475,6 @@ document.addEventListener('click', e => {
             li.textContent = mod;
             syllabusList.appendChild(li);
         });
-
-        // The enrollment button logic has been removed since the button was removed from the HTML to prevent 404 errors.
-        // const enrollBtn = document.getElementById('modalEnrollBtn');
-        // enrollBtn.href = course.enrollLink;
-        // if (course.price === 0) enrollBtn.textContent = 'Download';
-        // else enrollBtn.textContent = 'Enroll Now';
-
 
         const modal = new bootstrap.Modal(document.getElementById('courseModal'));
         modal.show();
