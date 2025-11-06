@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- ==== META ==== -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hiring - GATEMATE.co.in</title>
@@ -10,12 +9,10 @@
     <meta name="keywords" content="hiring, jobs at gatemate, teaching jobs, career openings">
     <meta name="author" content="GateMate Team">
 
-    <!-- ==== BOOTSTRAP / FONTS ==== -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-    <!-- ==== STYLES (same as index.html) ==== -->
     <style>
         body {font-family:'Poppins',sans-serif;background:#f4f7fa;transition:background .3s,color .3s;margin:0;padding:0;overflow-x:hidden;}
         .navbar-brand{font-weight:700;color:#007bff!important;display:flex;align-items:center;transition:color .3s;}
@@ -52,6 +49,18 @@
         .dark-mode .badge-sticker{background:#4dabf7;}
         .dark-mode .btn-primary{background:#4dabf7;border-color:#4dabf7;}
         .dark-mode .btn-primary:hover{background:#66bfff;border-color:#66bfff;}
+        .dark-mode .modal-content {
+            background-color: #2c2c2c;
+            color: #e9ecef;
+        }
+        .dark-mode .modal-header .btn-close {
+            filter: invert(1);
+        }
+        .dark-mode .list-group-item {
+            background-color: transparent !important;
+            color: #e9ecef;
+            border-color: #444;
+        }
 
         /* WhatsApp */
         .whatsapp-btn{position:fixed;bottom:20px;right:20px;background:#25D366;color:#fff;border-radius:50%;width:60px;height:60px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 8px rgba(0,0,0,.2);transition:background .3s,transform .3s;z-index:1000;}
@@ -73,7 +82,6 @@
 </head>
 <body>
 
-<!-- ====================== NAVBAR ====================== -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
         <a class="navbar-brand" href="/index.html">
@@ -136,60 +144,54 @@
     </div>
 </nav>
 
-<!-- ====================== MARQUEE ====================== -->
 <div class="marquee-section">
     <marquee behavior="scroll" direction="left">
-        We're Hiring! | Teaching & Tech Roles Open | Apply Now
+        Hiring for full-time faculty and content developers! | Competitive salaries and growth!
     </marquee>
 </div>
 
-<!-- ====================== HERO ====================== -->
 <section class="hero-section">
     <div class="container">
-        <h1>Join Our Team</h1>
-        <p class="lead mb-4">Exciting opportunities for educators and professionals.</p>
-        <a href="/register.html" class="btn btn-outline-light btn-lg">Get Started</a>
+        <h1>Join the GateMate Team</h1>
+        <p class="lead mb-4">Explore career opportunities in education and technology.</p>
+        <p class="lead mb-0 fw-bold">To apply, mail your profile to: <a href="mailto:careers@gatemate.co.in" class="btn btn-outline-light btn-lg">careers@gatemate.co.in</a></p>
     </div>
 </section>
 
-<!-- ====================== FILTERS ====================== -->
-<section class="py-4 bg-white">
+<section class="job-filter py-4 bg-white">
     <div class="container">
         <div class="row g-3">
             <div class="col-md-6">
                 <select class="form-select" id="categoryFilter">
                     <option value="all">All Categories</option>
-                    <option value="teaching">Teaching</option>
-                    <option value="tech">Tech</option>
-                    <option value="support">Support</option>
+                    <option value="faculty">Faculty</option>
+                    <option value="content">Content</option>
+                    <option value="tech">Technology</option>
+                    <option value="operations">Operations</option>
                 </select>
             </div>
             <div class="col-md-6">
                 <select class="form-select" id="sortFilter">
-                    <option value="salary-asc">Salary: Low to High</option>
                     <option value="salary-desc">Salary: High to Low</option>
+                    <option value="salary-asc">Salary: Low to High</option>
                 </select>
             </div>
         </div>
     </div>
 </section>
 
-<!-- ====================== HIRING GRID ====================== -->
-<section class="py-5">
+<section class="job-grid py-5">
     <div class="container">
-        <div class="row" id="hiringList">
-            <!-- Cards injected by JS -->
-        </div>
+        <div class="row" id="jobList">
+            </div>
     </div>
 </section>
 
-<!-- ====================== RAZORPAY ====================== -->
 <form class="my-4 text-center">
     <script src="https://checkout.razorpay.com/v1/payment-button.js"
             data-payment_button_id="pl_QNvkmdeFepVdoB" async></script>
 </form>
 
-<!-- ====================== FOOTER ====================== -->
 <footer class="footer">
     <div class="container">
         <div class="row">
@@ -223,17 +225,17 @@
             </div>
         </div>
         <hr>
-        <p class="text-center">© 2025 GATEMATE. All rights reserved. | <a href="/terms.html">Terms</a> | <a href="/privacy.html">Privacy</a> | <a href="/refund.html">Refund</a> | <a href="/sitemap.html">Sitemap</a></p>
+        <p class="text-center">© 2025 GATEMATE. All rights reserved. |
+            <a href="/terms.html">Terms</a> | <a href="/privacy.html">Privacy</a> |
+            <a href="/refund.html">Refund</a> | <a href="/sitemap.html">Sitemap</a></p>
     </div>
 </footer>
 
-<!-- ====================== WHATSAPP BUTTON ====================== -->
 <div class="whatsapp-btn" id="whatsappBtn">
     <i class="fab fa-whatsapp"></i>
     <div class="whatsapp-tooltip">Need Help?</div>
 </div>
 
-<!-- ====================== JOB DETAIL MODAL ====================== -->
 <div class="modal fade" id="jobModal" tabindex="-1" aria-labelledby="jobModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -251,13 +253,11 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <a id="modalApplyBtn" href="#" class="btn btn-primary" target="_blank">Apply Now</a>
-            </div>
+                </div>
         </div>
     </div>
 </div>
 
-<!-- ====================== SCRIPTS ====================== -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
@@ -270,67 +270,84 @@ if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-
 
 /* ---------- WhatsApp ---------- */
 document.getElementById('whatsappBtn').addEventListener('click', () => {
-    window.open('https://wa.me/919534427131?text=Hello%20GateMate,%20I%20want%20to%20apply%20for%20a%20job!', '_blank');
+    window.open('https://wa.me/919534427131?text=Hello%20GateMate,%20I%20am%20interested%20in%20a%20job%20opening!', '_blank');
 });
 
 /* ---------- Job Data (Edit Here) ---------- */
 const jobsData = [
     {
-        id: 'teacher',
-        title: 'Teacher (GATE/UGC NET)',
+        id: 'gate-faculty',
+        title: 'GATE Faculty (CS/IT)',
         img: 'https://images.pexels.com/photos/159711/books-bookstore-book-reading-159711.jpeg',
-        category: 'teaching',
-        salary: '₹50,000 - ₹70,000',
+        category: 'faculty',
+        salary: '₹6L - ₹12L PA',
         experience: '2+ Years',
         badge: null,
-        desc: 'Deliver live classes for GATE and UGC NET.',
+        desc: 'Teach core subjects for GATE CS/IT. Develop course content and mentor students.',
         responsibilities: [
-            'Conduct live sessions',
-            'Prepare study materials',
-            'Mentor students',
-            'Evaluate progress'
+            'Conduct engaging live/recorded lectures.',
+            'Develop high-quality study materials and test series.',
+            'Provide one-on-one doubt clearing sessions.',
+            'Stay updated with GATE syllabus changes.'
         ],
-        applyLink: 'https://forms.gle/apply-teacher'
+        applyLink: '/apply.html?job=gate-faculty'
     },
     {
-        id: 'developer',
-        title: 'Software Developer',
+        id: 'content-developer',
+        title: 'Content Developer (UGC NET)',
         img: 'https://images.pexels.com/photos/3184297/pexels-photo-3184297.jpeg',
+        category: 'content',
+        salary: '₹3.6L - ₹6L PA',
+        experience: '1+ Years',
+        badge: null,
+        desc: 'Create and curate content for UGC NET Paper 1 and specific Paper 2 subjects.',
+        responsibilities: [
+            'Write and edit comprehensive notes and mock test questions.',
+            'Ensure content is accurate and aligned with the latest syllabus.',
+            'Work closely with faculty to refine course structure.',
+            'Manage content version control and updates.'
+        ],
+        applyLink: '/apply.html?job=content-developer'
+    },
+    {
+        id: 'web-developer',
+        title: 'Full Stack Web Developer',
+        img: 'https://images.pexels.com/photos/3184431/pexels-photo-3184431.jpeg',
         category: 'tech',
-        salary: '₹60,000 - ₹80,000',
+        salary: '₹4.8L - ₹9L PA',
+        experience: '1-3 Years',
+        badge: null,
+        desc: 'Develop and maintain the company’s e-learning platform and internal tools.',
+        responsibilities: [
+            'Design and implement new features (frontend/backend).',
+            'Troubleshoot and fix bugs in existing systems.',
+            'Manage database schema and optimization.',
+            'Participate in code reviews and architecture discussions.'
+        ],
+        applyLink: '/apply.html?job=web-developer'
+    },
+    {
+        id: 'operations-manager',
+        title: 'Operations Manager',
+        img: 'https://images.pexels.com/photos/6147148/pexels-photo-6147148.jpeg',
+        category: 'operations',
+        salary: '₹5L - ₹8L PA',
         experience: '3+ Years',
         badge: null,
-        desc: 'Build and maintain our learning platform.',
+        desc: 'Oversee daily operations, ensure smooth course delivery, and manage customer support.',
         responsibilities: [
-            'Develop features',
-            'Optimize code',
-            'Collaborate with team',
-            'Debug issues'
+            'Manage a team of support and administrative staff.',
+            'Optimize internal workflows and processes.',
+            'Handle vendor management and logistics.',
+            'Analyze operational data to identify areas for improvement.'
         ],
-        applyLink: 'https://forms.gle/apply-developer'
-    },
-    {
-        id: 'support',
-        title: 'Customer Support Executive',
-        img: 'https://images.pexels.com/photos/6147148/pexels-photo-6147148.jpeg',
-        category: 'support',
-        salary: '₹30,000 - ₹40,000',
-        experience: '1+ Year',
-        badge: null,
-        desc: 'Assist students with queries and issues.',
-        responsibilities: [
-            'Handle inquiries',
-            'Provide solutions',
-            'Maintain records',
-            'Follow up'
-        ],
-        applyLink: 'https://forms.gle/apply-support'
+        applyLink: '/apply.html?job=operations-manager'
     }
 ];
 
 /* ---------- Render Cards ---------- */
 function renderJobs(data) {
-    const container = document.getElementById('hiringList');
+    const container = document.getElementById('jobList');
     container.innerHTML = '';
     data.forEach(job => {
         const col = document.createElement('div');
@@ -347,9 +364,9 @@ function renderJobs(data) {
                 <div class="card-body">
                     <h5 class="card-title">${job.title}</h5>
                     <p class="card-text">
-                        Category: ${job.category.charAt(0).toUpperCase() + job.category.slice(1)} | Salary: ${job.salary} | Experience: ${job.experience}
+                        Category: ${job.category.charAt(0).toUpperCase() + job.category.slice(1)} | Salary: ${job.salary}
                     </p>
-                    <button class="btn btn-primary apply-btn">Apply Now</button>
+                    <button class="btn btn-primary detail-btn">View Details</button>
                 </div>
             </div>`;
         container.appendChild(col);
@@ -358,7 +375,7 @@ function renderJobs(data) {
 
 /* ---------- Modal ---------- */
 document.addEventListener('click', e => {
-    if (e.target.classList.contains('apply-btn')) {
+    if (e.target.classList.contains('detail-btn')) {
         const card = e.target.closest('.card');
         const id = card.dataset.id;
         const job = jobsData.find(j => j.id === id);
@@ -378,7 +395,8 @@ document.addEventListener('click', e => {
             respList.appendChild(li);
         });
 
-        document.getElementById('modalApplyBtn').href = job.applyLink;
+        // Application button and its link setting were removed to prevent 404 errors.
+        // document.getElementById('modalApplyBtn').href = job.applyLink;
 
         const modal = new bootstrap.Modal(document.getElementById('jobModal'));
         modal.show();
@@ -399,8 +417,9 @@ function filterAndSort() {
 
     const sort = document.getElementById('sortFilter').value;
     filtered.sort((a, b) => {
-        const salA = parseInt(a.salary.split('-')[0].replace(/[^\d]/g, ''));
-        const salB = parseInt(b.salary.split('-')[0].replace(/[^\d]/g, ''));
+        // Extract the first number from the salary string (e.g., "₹6L" -> 6) for comparison
+        const salA = parseInt(a.salary.split('-')[0].replace(/[^0-9]/g, ''));
+        const salB = parseInt(b.salary.split('-')[0].replace(/[^0-9]/g, ''));
         return sort === 'salary-asc' ? salA - salB : salB - salA;
     });
 
