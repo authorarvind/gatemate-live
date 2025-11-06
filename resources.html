@@ -9,43 +9,57 @@
     <meta name="keywords" content="GATE resources, UGC NET, BPSC TRE, study materials, practice tests">
     <meta name="author" content="GateMate Team">
 
+    <meta name="title" content="Gatemate - Best Courses, Internships, and Training for Students">
+    <meta name="description" content="Gatemate offers trending internships, certifications, courses, and training programs for B.Tech, BCA, BBA, MBA, M.Tech students. Join now and level up your career!">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://gatemate.co.in/">
+    <meta property="og:title" content="Gatemate - Best Courses, Internships, and Training for Students">
+    <meta property="og:description" content="Enroll in top trending internships and professional courses. Gatemate is your gateway to a successful career.">
+    <meta property="og:image" content="https://gatemate.co.in/your-banner-image.jpg">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://gatemate.co.in/">
+    <meta property="twitter:title" content="Gatemate - Best Courses, Internships, and Training for Students">
+    <meta property="twitter:description" content="Trending internships and training programs for CS, IT, Management students. Boost your career with Gatemate!">
+    <meta property="twitter:image" content="https://gatemate.co.in/your-banner-image.jpg">
+
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <link rel="canonical" href="https://gatemate.co.in/resources.html">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: #f4f7fa;
-            transition: background .3s, color .3s;
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-        }
+        /* General Styles from index.html */
+        body {font-family:'Poppins',sans-serif;background:#f4f7fa;transition:background .3s,color .3s;margin:0;padding:0;overflow-x:hidden;}
+        .navbar-brand{font-weight:700;color:#007bff!important;display:flex;align-items:center;transition:color .3s;}
+        .navbar-brand svg{height:40px;margin-right:10px;transition:transform .3s;}
+        .navbar-brand .logo-text{font-size:1.5rem;font-weight:700;}
+        .navbar-brand:hover svg{transform:scale(1.1);}
 
-        .navbar-brand {
-            font-weight: 700;
-            color: #007bff !important;
-        }
-
+        /* Hero Section (Adjusted for Resources Page - Simple Blue Gradient) */
         .hero {
             padding: 80px 0;
-            background: linear-gradient(135deg, #e0f7ff, #c3e6f9);
+            background: linear-gradient(135deg, #007bff, #00d4ff);
             text-align: center;
+            color: #fff;
         }
+        .hero h1{font-size:2.5rem;font-weight:700;}
 
+        /* Resource Card Styles */
         .resource-card {
             border: none;
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             transition: transform 0.3s, box-shadow 0.3s;
         }
-
         .resource-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
-
         .access-btn {
             cursor: pointer;
         }
@@ -55,19 +69,66 @@
             background-color: #28a745;
             color: #fff;
         }
-
         /* Price text is now just 'Free' */
         .price-text {
             font-size: 1.5rem;
             font-weight: 700;
             color: #28a745; /* Green for Free */
         }
-
         .filter-controls {
             background: #fff;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Marquee */
+        .marquee-section{background:#007bff;color:#fff;padding:10px 0;overflow:hidden;}
+        .marquee-section marquee{font-size:1.1rem;animation:scroll 15s linear infinite;}
+
+        /* Footer */
+        .footer{background:#343a40;color:#fff;padding:40px 0;}
+        .footer a{color:#00d4ff;text-decoration:none;}
+        .footer a:hover{text-decoration:underline;}
+
+        /* Dark Mode Styles */
+        .dark-mode{background:#1a1a1a;color:#e9ecef;}
+        .dark-mode .navbar-brand{color:#4dabf7!important;}
+        .dark-mode .hero {
+            background: linear-gradient(135deg, #004085, #0083b0);
+        }
+        .dark-mode .resource-card {
+            background: linear-gradient(145deg, #2c2c2c, #1a1a1a);
+        }
+        .dark-mode .filter-controls {
+            background: #1a1a1a;
+            box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+        }
+        .dark-mode .btn-outline-secondary {
+            color: #fff;
+            border-color: #fff;
+        }
+        .dark-mode .btn-outline-secondary:hover {
+            background: #4dabf7;
+            border-color: #4dabf7;
+        }
+
+        /* WhatsApp Button Styles */
+        .whatsapp-btn{position:fixed;bottom:20px;right:20px;background:#25D366;color:#fff;border-radius:50%;width:60px;height:60px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 8px rgba(0,0,0,.2);transition:background .3s,transform .3s;z-index:1000;}
+        .whatsapp-btn:hover{background:#20b958;transform:scale(1.1);}
+        .whatsapp-btn i{font-size:30px;}
+        .whatsapp-tooltip{position:absolute;bottom:80px;right:70px;background:#333;color:#fff;padding:5px 10px;border-radius:5px;font-size:.9rem;display:none;z-index:1000;}
+        .whatsapp-btn:hover .whatsapp-tooltip{display:block;}
+        .whatsapp-options{position:fixed;bottom:90px;right:20px;background:#fff;border-radius:12px;padding:10px;box-shadow:0 4px 12px rgba(0,0,0,.15);display:none;flex-direction:column;gap:8px;z-index:1000;width:180px;}
+        .whatsapp-options a{display:flex;align-items:center;gap:10px;color:#333;text-decoration:none;padding:8px 12px;border-radius:8px;transition:background .2s;}
+        .whatsapp-options a:hover{background:#f0f0f0;}
+
+        /* Keyframes */
+        @keyframes scroll{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+
+        @media (max-width:767.98px){
+            .hero{padding:60px 0;}
+            .hero h1{font-size:2rem;}
         }
     </style>
 </head>
@@ -75,31 +136,75 @@
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
     <div class="container">
-        <a class="navbar-brand" href="#">GATEMATE</a>
+        <a class="navbar-brand" href="/index.html">
+            <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="gradient-light" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#007bff;stop-opacity:1"/>
+                        <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:1"/>
+                    </linearGradient>
+                    <linearGradient id="gradient-dark" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#004085;stop-opacity:1"/>
+                        <stop offset="100%" style="stop-color:#0083b0;stop-opacity:1"/>
+                    </linearGradient>
+                </defs>
+                <path class="gradient-fill" fill="url(#gradient-light)" d="M10 30 V10 H15 V5 H25 V10 H30 V30 H25 V25 H15 V30 Z M15 15 H25 V20 H15 Z"/>
+                <path fill="#fff" d="M17 17 H23 V18 H17 Z M17 19 H23 V20 H17 Z"/>
+            </svg>
+            <span class="logo-text">GateMate</span>
+        </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Home</a>
+                <li class="nav-item"><a class="nav-link" href="/index.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="/courses.html">Courses</a></li>
+                <li class="nav-item"><a class="nav-link" href="/workshops.html">Workshops</a></li>
+                <li class="nav-item"><a class="nav-link active" href="/resources.html">Resources</a></li> <li class="nav-item"><a class="nav-link" href="/bihar-prep.html">Bihar Exam Prep</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="careerDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">Career Support</a>
+                    <ul class="dropdown-menu" aria-labelledby="careerDropdown">
+                        <li><a class="dropdown-item" href="/internship.html">Internships</a></li>
+                        <li><a class="dropdown-item" href="/careers.html">Careers</a></li>
+                        <li><a class="dropdown-item" href="/research-writing.html">Research Writing</a></li>
+                        <li><a class="dropdown-item" href="/hiring.html">Hiring</a></li>
+                    </ul>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Resources</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
+                <li class="nav-item"><a class="nav-link" href="/notice.html">Notice Board</a></li>
+                <li class="nav-item"><a class="nav-link" href="/about.html">About</a></li>
+                <li class="nav-item"><a class="nav-link" href="/contact.html">Contact</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">Account</a>
+                    <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" href="/login.html">Login</a></li>
+                        <li><a class="dropdown-item" href="/register.html">Register</a></li>
+                        <li><a class="dropdown-item" href="/student-dashboard.html">Student Dashboard</a></li>
+                        <li><a class="dropdown-item" href="/faculty-dashboard.html">Faculty Dashboard</a></li>
+                        <li><a class="dropdown-item" href="/admin.html">Admin</a></li>
+                    </ul>
                 </li>
             </ul>
+            <button id="themeToggle" class="btn btn-outline-secondary ms-3" aria-label="Toggle Dark Mode">
+                Toggle Dark Mode
+            </button>
         </div>
     </div>
 </nav>
 
+<div class="marquee-section">
+    <marquee behavior="scroll" direction="left">
+        New Batch Starting Soon! | GATE 2026 Crash Course | UGC NET Dec 2025 | BPSC TRE 4.0
+    </marquee>
+</div>
+
 <section class="hero">
     <div class="container">
-        <h1 class="display-4 fw-bold text-dark">Study Resources</h1>
-        <p class="lead text-muted">All study materials are now available for **Free** access.</p>
+        <h1 class="display-4 fw-bold">Study Resources</h1>
+        <p class="lead text-white-50">All study materials are now available for **Free** access.</p>
     </div>
 </section>
 
@@ -159,12 +264,83 @@
     </div>
 </div>
 
-<footer class="bg-dark text-white text-center py-3 mt-5">
-    <p class="mb-0">&copy; 2024 GATEMATE. All rights reserved.</p>
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h5>About GATEMATE</h5>
+                <p>India’s leading platform for GATE, UGC NET, BPSC TRE, and technical training with expert guidance.</p>
+                <div class="social-icons">
+                    <a href="#" class="me-3"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="me-3"><i class="fab fa-youtube"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <h5>Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li><a href="/index.html">Home</a></li>
+                    <li><a href="/courses.html">Courses</a></li>
+                    <li><a href="/workshops.html">Workshops</a></li>
+                    <li><a href="/resources.html">Resources</a></li>
+                    <li><a href="/bihar-prep.html">Bihar Exam Prep</a></li>
+                    <li><a href="/about.html">About Us</a></li>
+                    <li><a href="/contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h5>Contact Us</h5>
+                <p>123 Education Park, Patna, Bihar, India - 800001<br>
+                    +91 9534427131<br>
+                    <a href="/cdn-cgi/l/email-protection#34070104041b06003413150011191500115a171b5a1d1a"><span class="__cf_email__" data-cfemail="736543464659444273515742535b574253185559185f58">[email&#160;protected]</span></a><br>
+                    Mon - Sat: 9:00 AM - 7:00 PM</p>
+            </div>
+        </div>
+        <hr>
+        <p class="text-center">© 2025 GATEMATE. All rights reserved. | <a href="/terms.html">Terms</a> | <a href="/privacy.html">Privacy</a> | <a href="/refund.html">Refund</a> | <a href="/sitemap.html">Sitemap</a></p>
+    </div>
 </footer>
 
+<div class="whatsapp-btn" id="whatsappBtn">
+    <i class="fab fa-whatsapp"></i>
+    <div class="whatsapp-tooltip">Need Help?</div>
+</div>
+<div class="whatsapp-options" id="whatsappOptions">
+    <a href="https://wa.me/919534427131?text=Hello%20GateMate%20Team,%20I%20need%20help%20with%20my%20studies!" target="_blank">
+        <i class="fas fa-comment"></i> Message Us
+    </a>
+    <a href="tel:+919534427131">
+        <i class="fas fa-phone"></i> Call Us
+    </a>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+/* ---------- Theme and WhatsApp Logic (From index.html) ---------- */
+document.getElementById('themeToggle').addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+});
+if (localStorage.getItem('theme') === 'dark') {
+    document.body.classList.add('dark-mode');
+}
+
+// WhatsApp Button Toggle
+const whatsappBtn = document.getElementById('whatsappBtn');
+const whatsappOptions = document.getElementById('whatsappOptions');
+whatsappBtn.addEventListener('click', () => {
+    whatsappOptions.style.display = whatsappOptions.style.display === 'flex' ? 'none' : 'flex';
+});
+
+// Close WhatsApp options when clicking outside
+document.addEventListener('click', (e) => {
+    if (!whatsappBtn.contains(e.target) && !whatsappOptions.contains(e.target)) {
+        whatsappOptions.style.display = 'none';
+    }
+});
+
+
 /* ---------- Resource Data (ALL CONVERTED TO FREE) ---------- */
 const resourcesData = [
     {
@@ -225,7 +401,7 @@ const resourcesData = [
     // === ATTACHED INTERNSHIP RESOURCE (ID 6) ===
     {
         id: 6,
-        title: "Internship Roles for BBA & MBA Students (Download)",
+        title: "Internship Roles for BBA & MBA Students (Access)",
         desc: "The complete list of 10 internship roles across various domains for BBA & MBA students at GateMate. Click Access to get the full list of roles.",
         type: "Notes",
         updated: "2025-11-06",
@@ -267,12 +443,6 @@ function renderResources(data) {
     });
 }
 
-/* ---------- Utility Function for Free Content ---------- */
-function redirectToContent(link) {
-    // This is no longer used for the internship download logic, but kept for clarity on other links
-    window.location.href = link;
-}
-
 /* ---------- Resource Modal Logic (Updated button text) ---------- */
 document.getElementById('resourcesList').addEventListener('click', function (e) {
     if (e.target.classList.contains('access-btn')) {
@@ -294,7 +464,7 @@ document.getElementById('resourcesList').addEventListener('click', function (e) 
         });
 
         const downloadBtn = document.getElementById('modalDownloadBtn');
-        downloadBtn.textContent = 'Access'; // Renamed from Download
+        downloadBtn.textContent = 'Access'; // Renamed from Download to Access
         downloadBtn.href = res.downloadLink;
         downloadBtn.setAttribute('data-bs-dismiss', 'modal'); // Dismiss modal on click
 
@@ -310,7 +480,7 @@ document.getElementById('resourcesList').addEventListener('click', function (e) 
     }
 });
 
-/* ---------- Filter & Sort (Unchanged) ---------- */
+/* ---------- Filter & Sort ---------- */
 document.getElementById('typeFilter').addEventListener('change', filterAndSort);
 document.getElementById('sortFilter').addEventListener('change', filterAndSort);
 
