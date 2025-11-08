@@ -296,7 +296,9 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <span class="text-danger fw-bold">Enrollment Coming Soon!</span>
+                <a href="https://forms.gle/XfpUvR1S93peUnLV8" target="_blank" class="btn btn-primary">
+                    Enroll/Apply Now <i class="fas fa-external-link-alt"></i>
+                </a>
             </div>
         </div>
     </div>
@@ -340,6 +342,25 @@
 
     // Featured Courses Data
     const featuredCourses = [
+        // NEW COURSE ADDED HERE with specified price range
+        {
+            id: 'book-research-writing',
+            title: 'Book Writing and Research Writing',
+            img: 'https://images.pexels.com/photos/3401403/pexels-photo-3401403.jpeg',
+            type: 'training',
+            price: '7999 - 49999', // Updated to the specified range
+            duration: '2 Months',
+            badge: 'Hot',
+            desc: 'Master the art of writing for publication, covering thesis/research papers and non-fiction books. Learn structuring, formatting (IEEE/APA), and the publication process.',
+            syllabus: [
+                'Module 1: Research Paper Structure & Formatting (IEEE/APA)',
+                'Module 2: Literature Review and Citation Techniques',
+                'Module 3: Book Outline and Chapter Development',
+                'Module 4: Editing, Proofreading, and Publication Process'
+            ],
+            enrollLink: 'https://forms.gle/XfpUvR1S93peUnLV8'
+        },
+        // EXISTING COURSES BELOW
         {
             id: 'gate-cs',
             title: 'GATE Computer Science',
@@ -406,6 +427,7 @@
 
             const badge = course.badge ? `<span class="badge-sticker">${course.badge}</span>` : '';
 
+            // UPDATED BUTTONS: Added 'Enroll Now' (primary) and linked it to the Google Form
             col.innerHTML = `
                 <div class="card" data-id="${course.id}">
                     ${badge}
@@ -415,14 +437,15 @@
                     <div class="card-body">
                         <h5 class="card-title">${course.title}</h5>
                         <p class="card-text">Price: ₹${course.price} | Duration: ${course.duration}</p>
-                        <button class="btn btn-primary enroll-btn">View Details</button>
+                        <a href="https://forms.gle/XfpUvR1S93peUnLV8" target="_blank" class="btn btn-primary me-2">Enroll Now</a>
+                        <button class="btn btn-secondary enroll-btn">View Details</button>
                     </div>
                 </div>`;
             container.appendChild(col);
         });
     }
 
-    // Modal Population
+    // Modal Population (Logic remains the same to show details on 'View Details' click)
     document.addEventListener('click', e => {
         if (e.target.classList.contains('enroll-btn')) {
             const card = e.target.closest('.card');
@@ -443,8 +466,6 @@
                 li.textContent = mod;
                 syllabusList.appendChild(li);
             });
-
-            // REMOVED: document.getElementById('modalEnrollBtn').href = course.enrollLink;
 
             const modal = new bootstrap.Modal(document.getElementById('courseModal'));
             modal.show();
